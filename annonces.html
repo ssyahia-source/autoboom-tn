@@ -534,7 +534,7 @@
                 contact: '12 345 678',
                 nom: 'Ahmed',
                 date: genererDateAleatoire(),
-                hasPhotos: false
+                photos: ['https://via.placeholder.com/300x200/3B82F6/FFFFFF?text=Volkswagen+Golf']
             },
             {
                 id: 2,
@@ -550,7 +550,7 @@
                 contact: '98 765 432',
                 nom: 'Marie',
                 date: genererDateAleatoire(),
-                hasPhotos: false
+                photos: ['https://via.placeholder.com/300x200/EF4444/FFFFFF?text=Renault+Clio']
             },
             {
                 id: 3,
@@ -566,7 +566,7 @@
                 contact: '55 123 456',
                 nom: 'Mohamed',
                 date: genererDateAleatoire(),
-                hasPhotos: false
+                photos: ['https://via.placeholder.com/300x200/10B981/FFFFFF?text=Hyundai+Tucson']
             },
             {
                 id: 4,
@@ -582,7 +582,7 @@
                 contact: '33 987 654',
                 nom: 'Sophie',
                 date: genererDateAleatoire(),
-                hasPhotos: false
+                photos: ['https://via.placeholder.com/300x200/F59E0B/FFFFFF?text=Peugeot+208']
             },
             {
                 id: 5,
@@ -598,7 +598,7 @@
                 contact: '77 456 123',
                 nom: 'Karim',
                 date: genererDateAleatoire(),
-                hasPhotos: false
+                photos: ['https://via.placeholder.com/300x200/8B5CF6/FFFFFF?text=Kia+Sportage']
             },
             {
                 id: 6,
@@ -614,7 +614,7 @@
                 contact: '22 333 444',
                 nom: 'Ali',
                 date: genererDateAleatoire(),
-                hasPhotos: false
+                photos: ['https://via.placeholder.com/300x200/6B7280/FFFFFF?text=Mercedes+Classe+A']
             },
             {
                 id: 7,
@@ -630,7 +630,7 @@
                 contact: '66 777 888',
                 nom: 'Samir',
                 date: genererDateAleatoire(),
-                hasPhotos: false
+                photos: ['https://via.placeholder.com/300x200/000000/FFFFFF?text=Audi+A3']
             },
             {
                 id: 8,
@@ -646,7 +646,7 @@
                 contact: '99 888 777',
                 nom: 'Youssef',
                 date: genererDateAleatoire(),
-                hasPhotos: false
+                photos: ['https://via.placeholder.com/300x200/374151/FFFFFF?text=BMW+Serie+1']
             }
         ];
 
@@ -755,7 +755,10 @@
             container.innerHTML = annoncesPage.map(annonce => `
                 <div class="annonce-card">
                     <div class="annonce-image">
-                           '<img src="https://via.placeholder.com/300x200/3B82F6/FFFFFF?text=' + annonce.marque + '+' + annonce.modele + '" style="width: 100%; height: 100%; object-fit: cover;">'
+                        ${annonce.photos && annonce.photos.length > 0 ? 
+                            `<img src="${annonce.photos[0]}" alt="${annonce.marque} ${annonce.modele}" style="width: 100%; height: 100%; object-fit: cover;">` : 
+                            '<img src="https://via.placeholder.com/300x200/3B82F6/FFFFFF?text=' + annonce.marque + '+' + annonce.modele + '" style="width: 100%; height: 100%; object-fit: cover;">'
+                        }
                     </div>
                     <div class="annonce-content">
                         <h3 class="annonce-title">
@@ -772,7 +775,7 @@
                         <div class="annonce-location">📍 ${annonce.ville}, Tunisie</div>
                         <div style="font-size: 0.875rem; color: #6b7280; margin-bottom: 1rem;">
                             📞 ${annonce.nom} • Publié le ${annonce.date}
-                            ${annonce.hasPhotos ? ' • 📸 Avec photos' : ''}
+                            ${annonce.photos && annonce.photos.length > 0 ? ' • 📸 Avec photos' : ''}
                         </div>
                         <a href="details-annonce.html?id=${annonce.id}" style="text-decoration: none;">
                             <button class="contact-btn" style="width: 100%;">
@@ -873,5 +876,4 @@
         });
     </script>
 </body>
-
 </html>
