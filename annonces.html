@@ -503,7 +503,21 @@
         // Variables de pagination
         let pageActuelle = 1;
         const annoncesParPage = 6;
-
+function verifierEtCorrigerDonnees() {
+    try {
+        const annonces = JSON.parse(localStorage.getItem('annonces')) || [];
+        // Vérifier que chaque annonce a bien ses photos
+        annonces.forEach(annonce => {
+            if (!annonce.photos || !Array.isArray(annonce.photos)) {
+                annonce.photos = ['https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=300&h=200&fit=crop'];
+            }
+        });
+        localStorage.setItem('annonces', JSON.stringify(annonces));
+    } catch (error) {
+        console.log('Correction des données...');
+        localStorage.setItem('annonces', JSON.stringify([]));
+    }
+}
         // Générer des dates aléatoires réalistes
         function genererDateAleatoire() {
             const aujourdhui = new Date();
@@ -764,8 +778,9 @@ const annoncesParDefaut = [
                 <div class="annonce-card">
                     <div class="annonce-image">
                         ${annonce.photos && annonce.photos.length > 0 ? 
-                            `<img src="${annonce.photos[0]}" alt="${annonce.marque} ${annonce.modele}" style="width: 100%; height: 100%; object-fit: cover;">` : 
-                            '<img src="https://via.placeholder.com/300x200/3B82F6/FFFFFF?text=' + annonce.marque + '+' + annonce.modele + '" style="width: 100%; height: 100%; object-fit: cover;">'
+                            <img src="${annonce.photos && annonce.photos[0] ? annonce.photos[0] : 'https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=300&h=200&fit=crop'}" 
+     alt="${annonce.marque} ${annonce.modele}" 
+     style="width: 100%; height: 100%; object-fit: cover;">
                         }
                     </div>
                     <div class="annonce-content">
@@ -885,4 +900,5 @@ const annoncesParDefaut = [
     </script>
 </body>
 </html>
+
 
