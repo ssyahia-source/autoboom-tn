@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Test</title>
+</head>
+<body>
+    <h1>🔧 TEST DE DÉBUGAGE</h1>
+    
+    <h2>1. Test lien simple :</h2>
+    <a href="details-annonce.html?id=999">🔗 Lien simple vers ID 999</a>
+    
+    <h2>2. Test avec JavaScript :</h2>
+    <button onclick="testJS()">🧪 Test JavaScript</button>
+    
+    <h2>3. Vérification fichiers :</h2>
+    <div id="file-check"></div>
+
+    <script>
+        function testJS() {
+            window.location.href = 'details-annonce.html?id=888';
+        }
+        
+        // Vérifier si le fichier existe
+        fetch('details-annonce.html')
+            .then(response => {
+                document.getElementById('file-check').innerHTML = 
+                    '✅ details-annonce.html existe et est accessible';
+            })
+            .catch(error => {
+                document.getElementById('file-check').innerHTML = 
+                    '❌ details-annonce.html NON TROUVÉ';
+            });
+    </script>
+</body>
+</html>

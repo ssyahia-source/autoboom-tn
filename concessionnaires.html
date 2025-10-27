@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Concessionnaires - AutoBoom TN</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8fafc;
+            color: #1f2937;
+        }
+
+        .navbar {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 1rem 0;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2563eb;
+        }
+
+        .logo span {
+            color: #f97316;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #4b5563;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #2563eb;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+        }
+
+        .hero {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            color: white;
+            padding: 80px 20px;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .features {
+            padding: 60px 0;
+        }
+
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+
+        .feature-card {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .pricing {
+            background: white;
+            padding: 60px 0;
+        }
+
+        .pricing-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .pricing-card {
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            transition: border-color 0.3s;
+        }
+
+        .pricing-card:hover {
+            border-color: #2563eb;
+        }
+
+        .pricing-card.recommended {
+            border-color: #f97316;
+            position: relative;
+        }
+
+        .recommended-badge {
+            background: #f97316;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.875rem;
+            font-weight: 600;
+        }
+
+        .price {
+            font-size: 2rem;
+            font-weight: bold;
+            color: #1f2937;
+            margin: 1rem 0;
+        }
+
+        .price span {
+            font-size: 1rem;
+            color: #6b7280;
+        }
+
+        .benefits {
+            list-style: none;
+            margin: 1.5rem 0;
+        }
+
+        .benefits li {
+            padding: 0.5rem 0;
+            color: #6b7280;
+        }
+
+        .btn-orange {
+            background: #f97316;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            width: 100%;
+        }
+
+        .btn-orange:hover {
+            background: #ea580c;
+        }
+
+        .concessionnaires-list {
+            padding: 60px 0;
+        }
+
+        .dealer-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .dealer-logo {
+            width: 100px;
+            height: 100px;
+            background: #f3f4f6;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+
+        .dealer-info h3 {
+            color: #1f2937;
+            margin-bottom: 0.5rem;
+        }
+
+        .dealer-stats {
+            display: flex;
+            gap: 2rem;
+            margin-top: 1rem;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2563eb;
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: #6b7280;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">AutoBoom<span>.tn</span></div>
+            <div class="nav-links">
+                <a href="index.html">Accueil</a>
+                <a href="annonces.html">Annonces</a>
+                <a href="deposer-annonce.html">Déposer une annonce</a>
+                <a href="concessionnaires.html" style="color: #2563eb;">Concessionnaires</a>
+               <a href="Assureurs.html">Assureurs</a>
+            </div>
+            <a href="deposer-annonce.html" class="btn-primary">+ Vendre ma voiture</a>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <h1>🏢 Espace Concessionnaires</h1>
+            <p>Développez votre business automobile en Tunisie</p>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features">
+        <div class="container">
+            <div class="feature-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">👥</div>
+                    <h3>50,000+ visiteurs/mois</h3>
+                    <p>Touchrez le plus grand marché automobile de Tunisie</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📈</div>
+                    <h3>+300% de visibilité</h3>
+                    <p>Annonces mises en avant sur toute la plateforme</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3>Clients qualifiés</h3>
+                    <p>Des acheteurs sérieux près de chez vous</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section class="pricing">
+        <div class="container">
+            <h2 style="text-align: center; margin-bottom: 3rem; font-size: 2rem;">Nos Offres Professionnelles</h2>
+            <div class="pricing-grid">
+                <!-- Offre Starter -->
+                <div class="pricing-card">
+                    <h3>Starter</h3>
+                    <div class="price">199 <span>TND/mois</span></div>
+                    <ul class="benefits">
+                        <li>✅ 10 annonces actives</li>
+                        <li>✅ Page vitrine basique</li>
+                        <li>✅ Statistiques de vues</li>
+                        <li>❌ Mise en avant limitée</li>
+                    </ul>
+                    <button class="btn-orange">Commencer</button>
+                </div>
+
+                <!-- Offre Pro -->
+                <div class="pricing-card recommended">
+                    <div class="recommended-badge">POPULAIRE</div>
+                    <h3>Professionnel</h3>
+                    <div class="price">499 <span>TND/mois</span></div>
+                    <ul class="benefits">
+                        <li>✅ 50 annonces actives</li>
+                        <li>✅ Page vitrine premium</li>
+                        <li>✅ Mise en avant prioritaire</li>
+                        <li>✅ Statistiques avancées</li>
+                        <li>✅ Support dédié</li>
+                    </ul>
+                    <button class="btn-orange">Commencer</button>
+                </div>
+
+                <!-- Offre Enterprise -->
+                <div class="pricing-card">
+                    <h3>Enterprise</h3>
+                    <div class="price">899 <span>TND/mois</span></div>
+                    <ul class="benefits">
+                        <li>✅ Annonces illimitées</li>
+                        <li>✅ Page vitrine sur mesure</li>
+                        <li>✅ Mise en avant maximale</li>
+                        <li>✅ API d'intégration</li>
+                        <li>✅ Manager dédié</li>
+                    </ul>
+                    <button class="btn-orange">Nous contacter</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Concessionnaires partenaires -->
+    <section class="concessionnaires-list">
+        <div class="container">
+            <h2 style="text-align: center; margin-bottom: 3rem; font-size: 2rem;">Nos Concessionnaires Partenaires</h2>
+            
+            <div class="dealer-card">
+                <div class="dealer-logo">🚗</div>
+                <div class="dealer-info">
+                    <h3>Auto Premium Tunis</h3>
+                    <p>Spécialiste des voitures allemandes premium. Plus de 15 ans d'expérience.</p>
+                    <div class="dealer-stats">
+                        <div class="stat">
+                            <div class="stat-number">247</div>
+                            <div class="stat-label">Voitures vendues</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number">4.9★</div>
+                            <div class="stat-label">Avis clients</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number">Tunis</div>
+                            <div class="stat-label">Localisation</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dealer-card">
+                <div class="dealer-logo">🏎️</div>
+                <div class="dealer-info">
+                    <h3>Mega Motors Sfax</h3>
+                    <p>Le plus grand stock de véhicules d'occasion du Sud Tunisien.</p>
+                    <div class="dealer-stats">
+                        <div class="stat">
+                            <div class="stat-number">512</div>
+                            <div class="stat-label">Voitures vendues</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number">4.7★</div>
+                            <div class="stat-label">Avis clients</div>
+                        </div>
+                        <div class="stat">
+                            <div class="stat-number">Sfax</div>
+                            <div class="stat-label">Localisation</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</body>
+</html>

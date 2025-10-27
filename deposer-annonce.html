@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Déposer une annonce - AutoBoom TN</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f8fafc;
+            color: #1f2937;
+        }
+
+        /* Navigation */
+        .navbar {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 1rem 0;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: #4b5563;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover {
+            color: #2563eb;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2563eb;
+            white-space: nowrap;
+        }
+
+        .logo span {
+            color: #f97316;
+        }
+
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .btn-primary:hover {
+            background: #1d4ed8;
+        }
+
+        /* Formulaire */
+        .form-container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 20px;
+        }
+
+        .form-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            padding: 2rem;
+        }
+
+        .form-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            margin-bottom: 2rem;
+            color: #1f2937;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .form-input, .form-select, .form-textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            outline: none;
+            border-color: #2563eb;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+
+        .photo-upload {
+            border: 2px dashed #d1d5db;
+            border-radius: 8px;
+            padding: 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        .photo-upload:hover {
+            border-color: #2563eb;
+        }
+
+        .upload-icon {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #6b7280;
+        }
+
+        .btn-orange {
+            background: #f97316;
+            color: white;
+            border: none;
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.3s;
+            width: 100%;
+        }
+
+        .btn-orange:hover {
+            background: #ea580c;
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+            padding-bottom: 2rem;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .section-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            color: #1f2937;
+        }
+
+        .price-preview {
+            background: #f0f9ff;
+            border: 1px solid #bae6fd;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+        }
+
+        .price-amount {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #059669;
+        }
+
+        #image-preview {
+            margin-top: 1rem;
+        }
+
+        .preview-image {
+            position: relative;
+            width: 100px;
+            height: 100px;
+            margin: 0.5rem;
+            display: inline-block;
+        }
+
+        .preview-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 2px solid #e5e7eb;
+        }
+
+        .remove-btn {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: red;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        #confirmation {
+            display: none;
+            background: #d1fae5;
+            border: 1px solid #a7f3d0;
+            border-radius: 8px;
+            padding: 1rem;
+            margin-top: 1rem;
+            text-align: center;
+        }
+
+        .photo-count {
+            font-size: 0.875rem;
+            color: #6b7280;
+            margin-top: 0.5rem;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
+        }
+
+        .photo-controls {
+            margin-top: 1rem;
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">AutoBoom<span>.tn</span></div>
+            <div class="nav-links">
+                <a href="index.html">Accueil</a>
+                <a href="annonces.html">Annonces</a>
+                <a href="deposer-annonce.html" style="color: #2563eb;">Déposer une annonce</a>
+                <a href="concessionnaires.html">Concessionnaires</a>
+                <a href="assureurs.html">Assureurs</a>
+            </div>
+            <a href="annonces.html" class="btn-primary">🔍 Voir les annonces</a>
+        </div>
+    </nav>
+
+    <!-- Formulaire de dépôt -->
+    <div class="form-container">
+        <div class="form-card">
+            <h1 class="form-title">➕ Déposer votre annonce</h1>
+
+            <!-- Informations véhicule -->
+            <div class="form-section">
+                <h2 class="section-title">🚗 Informations du véhicule</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Marque *</label>
+                        <select class="form-select" id="marque" required>
+                            <option value="">Choisir une marque</option>
+                            <option>Toyota</option>
+<option>Volkswagen</option>
+<option>Mercedes-Benz</option>
+<option>BMW</option>
+<option>Audi</option>
+<option>Ford</option>
+<option>Chevrolet</option>
+<option>Honda</option>
+<option>Hyundai</option>
+<option>Nissan</option>
+<option>Kia</option>
+<option>Peugeot</option>
+<option>Renault</option>
+<option>Citroën</option>
+<option>Fiat</option>
+<option>Jeep</option>
+<option>Volvo</option>
+<option>Tesla</option>
+<option>Land Rover</option>
+<option>Jaguar</option>
+<option>Mazda</option>
+<option>Mitsubishi</option>
+<option>Suzuki</option>
+<option>Subaru</option>
+<option>Skoda</option>
+<option>Seat</option>
+<option>Opel</option>
+<option>GMC</option>
+<option>Cadillac</option>
+<option>Buick</option>
+<option>Dodge</option>
+<option>Chrysler</option>
+<option>Ram</option>
+<option>Infiniti</option>
+<option>Acura</option>
+<option>Lexus</option>
+<option>Porsche</option>
+<option>Ferrari</option>
+<option>Lamborghini</option>
+<option>Maserati</option>
+<option>Alfa Romeo</option>
+<option>Bugatti</option>
+<option>Bentley</option>
+<option>Rolls-Royce</option>
+<option>Aston Martin</option>
+<option>Mini</option>
+<option>Smart</option>
+<option>Tata Motors</option>
+<option>BYD</option>
+<option>Geely</option>
+<option>Chery</option>
+<option>Great Wall</option>
+<option>Dongfeng</option>
+<option>SAIC</option>
+<option>Haval</option>
+<option>Lucid</option>
+<option>Rivian</option>
+<option>NIO</option>
+<option>XPeng</option>
+<option>Polestar</option>
+<option>Dacia</option>
+<option>Mahindra</option>
+<option>Proton</option>
+<option>Perodua</option>
+<option>Genesis</option>
+<option>Isuzu</option>
+<option>Daewoo</option>
+<option>Lancia</option>
+<option>Roewe</option>
+<option>Fisker</option>
+<option>Koenigsegg</option>
+<option>Pagani</option>
+<option>McLaren</option>
+<option>Scania</option>
+<option>MAN</option>
+<option>Peterbilt</option>
+<option>Freightliner</option>
+<option>Mack</option>
+<option>Lincoln</option>
+<option>Holden</option>
+<option>Vauxhall</option>
+<option>Saab</option>
+<option>Maybach</option>
+<option>DS Automobiles</option>
+<option>Faraday Future</option>
+<option>Aptera</option>
+<option>VinFast</option>
+<option>Wuling</option>
+<option>Zotye</option>
+<option>FAW</option>
+<option>BAIC</option>
+<option>JAC Motors</option>
+<option>Hongqi</option>
+<option>Seres</option>
+<option>Aiways</option>
+<option>Leapmotor</option>
+<option>Denza</option>
+<option>Borgward</option>
+<option>Lotus</option>
+<option>TVR</option>
+<option>Caterham</option>
+<option>Ruf</option>
+<option>Brabus</option>
+<option>Vector</option>
+<option>Arrinera</option>
+<option>De Tomaso</option>
+<option>Pininfarina</option>
+<option>Saleen</option>
+<option>SSC North America</option>
+<option>Hummer</option>
+<option>Eagle</option>
+<option>Plymouth</option>
+<option>Saturn</option>
+<option>Oldsmobile</option>
+<option>Mercury</option>
+<option>Hudson</option>
+<option>Packard</option>
+<option>Studebaker</option>
+<option>DeLorean</option>
+<option>Lucra</option>
+<option>Wiesmann</option>
+<option>Marussia</option>
+<option>Spyker</option>
+<option>Rimac</option>
+<option>Zenvo</option>
+<option>Gumpert</option>
+<option>Vanderhall</option>
+<option>Rezvani</option>
+<option>Drako Motors</option>
+<option>Hennessey</option>
+<option>Arash</option>
+<option>Radical</option>
+<option>Noble</option>
+<option>Donkervoort</option>
+<option>Brilliance</option>
+<option>Chang’an</option>
+<option>JMC</option>
+<option>ZAZ</option>
+<option>Lifan</option>
+<option>BAW</option>
+<option>Wey</option>
+<option>Ora</option>
+<option>Hongyan</option>
+<option>Vanderhall</option>
+<option>Maxus</option>
+<option>Soueast</option>
+<option>Everus</option>
+<option>Luxgen</option>
+<option>Haima</option>
+<option>Dongnan</option>
+<option>Yulon</option>
+<option>Kamaz</option>
+<option>UAZ</option>
+<option>GAZ</option>
+<option>Lada</option>
+<option>Zil</option>
+<option>Derways</option>
+<option>TagAZ</option>
+<option>Iran Khodro</option>
+<option>Saipa</option>
+<option>Perana</option>
+<option>BAIC BJEV</option>
+<option>Leapmotor</option>
+<option>Aiways</option>
+<option>Seres</option>
+<option>Hongqi</option>
+
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Modèle *</label>
+                        <input type="text" class="form-input" id="modele" placeholder="Ex: Golf 7, Clio 5..." required>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Année *</label>
+                        <input type="number" class="form-input" id="annee" placeholder="Ex: 2020" min="1990" max="2024" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Kilométrage *</label>
+                        <input type="number" class="form-input" id="kilometrage" placeholder="Ex: 45000" required>
+                    </div>
+                </div>
+
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Carburant *</label>
+                        <select class="form-select" id="carburant" required>
+                            <option value="">Choisir</option>
+                            <option>Essence</option>
+                            <option>Diesel</option>
+                            <option>Électrique</option>
+                            <option>Hybride</option>
+                            <option>Gaz / GPL</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Transmission *</label>
+                        <select class="form-select" id="transmission" required>
+                            <option value="">Choisir</option>
+                            <option>Manuelle</option>
+                            <option>Automatique</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Prix et localisation -->
+            <div class="form-section">
+                <h2 class="section-title">💰 Prix et localisation</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Prix (TND) *</label>
+                        <input type="number" class="form-input" id="prix" placeholder="Ex: 28500" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Ville *</label>
+                        <select class="form-select" id="ville" required>
+                            <option value="">Choisir une ville</option>
+                            <option>Tunis</option>
+<option>Ariana</option>
+<option>Ben Arous</option>
+<option>Manouba</option>
+<option>Nabeul</option>
+<option>Zaghouan</option>
+<option>Bizerte</option>
+<option>Beja</option>
+<option>Jendouba</option>
+<option>Kef</option>
+<option>Siliana</option>
+<option>Kairouan</option>
+<option>Kasserine</option>
+<option>Sidi Bouzid</option>
+<option>Sousse</option>
+<option>Monastir</option>
+<option>Mahdia</option>
+<option>Sfax</option>
+<option>Gabès</option>
+<option>Medenine</option>
+<option>Tataouine</option>
+<option>Gafsa</option>
+<option>Tozeur</option>
+<option>Kebili</option>
+
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Description -->
+            <div class="form-section">
+                <h2 class="section-title">📝 Description</h2>
+                <div class="form-group">
+                    <label class="form-label">Description détaillée *</label>
+                    <textarea class="form-textarea" id="description" placeholder="Décrivez votre véhicule : état, options, historique..." required></textarea>
+                </div>
+            </div>
+
+            <!-- Photos -->
+            <div class="form-section">
+                <h2 class="section-title">📸 Photos</h2>
+                <div class="photo-upload" onclick="document.getElementById('file-input').click()">
+                    <div class="upload-icon">📁</div>
+                    <p>Cliquez pour ajouter des photos</p>
+                    <small style="color: #6b7280;">Jusqu'à 10 photos (max 5MB chacune)</small>
+                </div>
+                <input type="file" id="file-input" multiple accept="image/*" style="display: none;" onchange="previewImages()">
+                
+                <div class="photo-controls">
+                    <button type="button" class="btn-danger" onclick="supprimerToutesPhotos()">
+                        🗑️ Supprimer toutes les photos
+                    </button>
+                </div>
+                
+                <div id="image-preview" style="display: none;">
+                    <div id="preview-container"></div>
+                    <div class="photo-count" id="photo-count">0 photo(s) sélectionnée(s)</div>
+                </div>
+            </div>
+
+            <!-- Contact -->
+            <div class="form-section">
+                <h2 class="section-title">📞 Contact</h2>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label class="form-label">Nom *</label>
+                        <input type="text" class="form-input" id="nom" placeholder="Votre nom" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Téléphone *</label>
+                        <input type="tel" class="form-input" id="telephone" placeholder="XX XXX XXX" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-input" id="email" placeholder="votre@email.com">
+                </div>
+            </div>
+
+            <!-- Soumission -->
+            <button class="btn-orange" onclick="publierAnnonce()">✅ Publier mon annonce</button>
+
+            <!-- Confirmation -->
+            <div id="confirmation">
+                <h3 style="color: #059669;">🎉 Annonce publiée avec succès !</h3>
+                <p>Votre annonce est maintenant visible dans la section annonces.</p>
+                <a href="annonces.html" class="btn-primary" style="display: inline-block; margin-top: 0.5rem;">Voir mon annonce</a>
+            </div>
+
+            <div class="price-preview">
+                <strong>Annonce gratuite pour les particuliers</strong>
+                <p>Votre annonce sera visible immédiatement</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let imagesBase64 = []; // Stocker les images en base64
+
+        function previewImages() {
+            const input = document.getElementById('file-input');
+            const previewContainer = document.getElementById('preview-container');
+            const imagePreview = document.getElementById('image-preview');
+            const photoCount = document.getElementById('photo-count');
+            
+            if (input.files.length > 0) {
+                imagePreview.style.display = 'block';
+                
+                // Calculer le nombre total de photos (existantes + nouvelles)
+                const nouvellesPhotos = Array.from(input.files);
+                const totalPhotos = imagesBase64.length + nouvellesPhotos.length;
+                
+                if (totalPhotos > 10) {
+                    alert(`Vous ne pouvez pas ajouter plus de 10 photos. Vous avez déjà ${imagesBase64.length} photo(s) et vous essayez d'ajouter ${nouvellesPhotos.length} photo(s) supplémentaires.`);
+                    return;
+                }
+                
+                // Traiter seulement les nouvelles photos
+                nouvellesPhotos.forEach((file, index) => {
+                    // Vérifier la taille (max 5MB)
+                    if (file.size > 5 * 1024 * 1024) {
+                        alert(`La photo "${file.name}" est trop volumineuse (max 5MB)`);
+                        return;
+                    }
+                    
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        // AJOUTER la nouvelle image au tableau (ne pas remplacer)
+                        imagesBase64.push(e.target.result);
+                        
+                        // Créer l'aperçu
+                        const imgDiv = document.createElement('div');
+                        imgDiv.className = 'preview-image';
+                        
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.alt = `Photo ${imagesBase64.length}`;
+                        
+                        const removeBtn = document.createElement('button');
+                        removeBtn.className = 'remove-btn';
+                        removeBtn.textContent = '×';
+                        removeBtn.onclick = function() {
+                            // Trouver l'index de cette photo dans le tableau
+                            const photoIndex = imagesBase64.indexOf(e.target.result);
+                            if (photoIndex > -1) {
+                                imagesBase64.splice(photoIndex, 1);
+                            }
+                            imgDiv.remove();
+                            
+                            // Mettre à jour le compteur
+                            const newCount = imagesBase64.length;
+                            photoCount.textContent = `${newCount} photo(s) sélectionnée(s)`;
+                            
+                            if (newCount === 0) {
+                                imagePreview.style.display = 'none';
+                            }
+                        };
+                        
+                        imgDiv.appendChild(img);
+                        imgDiv.appendChild(removeBtn);
+                        previewContainer.appendChild(imgDiv);
+                        
+                        // Mettre à jour le compteur
+                        photoCount.textContent = `${imagesBase64.length} photo(s) sélectionnée(s)`;
+                    };
+                    
+                    reader.readAsDataURL(file);
+                });
+                
+                // Réinitialiser l'input file pour permettre de sélectionner les mêmes fichiers à nouveau
+                input.value = '';
+            }
+        }
+
+        function supprimerToutesPhotos() {
+            if (imagesBase64.length === 0) {
+                alert("Aucune photo à supprimer");
+                return;
+            }
+            
+            if (confirm(`Voulez-vous vraiment supprimer toutes les ${imagesBase64.length} photo(s) ?`)) {
+                imagesBase64 = [];
+                document.getElementById('preview-container').innerHTML = '';
+                document.getElementById('image-preview').style.display = 'none';
+                document.getElementById('photo-count').textContent = '0 photo(s) sélectionnée(s)';
+            }
+        }
+
+        function publierAnnonce() {
+            // Récupérer les valeurs du formulaire
+            const marque = document.getElementById('marque').value;
+            const modele = document.getElementById('modele').value;
+            const prix = document.getElementById('prix').value;
+            const annee = document.getElementById('annee').value;
+            const kilometrage = document.getElementById('kilometrage').value;
+            const carburant = document.getElementById('carburant').value;
+            const transmission = document.getElementById('transmission').value;
+            const ville = document.getElementById('ville').value;
+            const description = document.getElementById('description').value;
+            const telephone = document.getElementById('telephone').value;
+            const nom = document.getElementById('nom').value;
+            const email = document.getElementById('email').value;
+            
+            if (!marque || !modele || !prix || !annee || !kilometrage || !carburant || !transmission || !ville || !description || !telephone || !nom) {
+                alert('Veuillez remplir tous les champs obligatoires (*)');
+                return;
+            }
+            
+            // Sauvegarder l'annonce dans le localStorage
+            const nouvelleAnnonce = {
+                id: Date.now(),
+                marque: marque,
+                modele: modele,
+                prix: prix + ' TND',
+                annee: annee,
+                kilometrage: kilometrage + ' km',
+                carburant: carburant,
+                transmission: transmission,
+                ville: ville,
+                description: description,
+                contact: telephone,
+                nom: nom,
+                email: email,
+                date: new Date().toLocaleDateString('fr-FR'),
+                photos: imagesBase64, // Sauvegarder les photos
+                hasPhotos: imagesBase64.length > 0
+            };
+            
+            // Récupérer les annonces existantes
+            let annonces = JSON.parse(localStorage.getItem('annonces')) || [];
+            annonces.unshift(nouvelleAnnonce); // Ajouter au début
+            localStorage.setItem('annonces', JSON.stringify(annonces));
+            
+            // Afficher la confirmation
+            document.getElementById('confirmation').style.display = 'block';
+            
+            // Rediriger après 3 secondes
+            setTimeout(() => {
+                window.location.href = 'annonces.html';
+            }, 3000);
+        }
+    </script>
+</body>
+</html>

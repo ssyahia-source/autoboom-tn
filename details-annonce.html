@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détails de l'annonce - AutoBoom TN</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+        body { background-color: #f8fafc; color: #1f2937; }
+        .navbar { background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 1rem 0; }
+        .nav-container { max-width: 1200px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .nav-links { display: flex; gap: 2rem; align-items: center; }
+        .nav-links a { text-decoration: none; color: #4b5563; font-weight: 500; transition: color 0.3s; }
+        .nav-links a:hover { color: #2563eb; }
+        .logo { font-size: 1.5rem; font-weight: bold; color: #2563eb; white-space: nowrap; }
+        .logo span { color: #f97316; }
+        .btn-primary { background: #2563eb; color: white; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; transition: background 0.3s; }
+        .btn-primary:hover { background: #1d4ed8; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .breadcrumb { padding: 1rem 0; color: #6b7280; font-size: 0.875rem; }
+        .breadcrumb a { color: #2563eb; text-decoration: none; }
+        .annonce-detail { display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; margin: 2rem 0; }
+        .photo-gallery { background: white; border-radius: 12px; padding: 1rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        .main-photo { width: 100%; height: 400px; border-radius: 8px; background: #f3f4f6; display: flex; align-items: center; justify-content: center; margin-bottom: 1rem; overflow: hidden; }
+        .main-photo img { width: 100%; height: 100%; object-fit: cover; }
+        .photo-thumbnails { display: flex; gap: 0.5rem; flex-wrap: wrap; }
+        .thumbnail { width: 80px; height: 80px; border-radius: 6px; background: #f3f4f6; cursor: pointer; border: 2px solid transparent; overflow: hidden; }
+        .thumbnail:hover { border-color: #2563eb; }
+        .thumbnail.active { border-color: #f97316; }
+        .thumbnail img { width: 100%; height: 100%; object-fit: cover; }
+.thumbnail {
+    width: 80px;
+    height: 80px;
+    border-radius: 6px;
+    background: #f3f4f6;
+    cursor: pointer;
+    border: 2px solid transparent;
+    overflow: hidden;
+    transition: border-color 0.3s;
+}
+
+.thumbnail:hover {
+    border-color: #2563eb;
+}
+
+.thumbnail.active {
+    border-color: #f97316;
+}
+
+.thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+🔧 STRUCTURE COMPLÈTE DE LA BALISE <style> :
+css
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    
+    body {
+        background-color: #f8fafc;
+        color: #1f2937;
+    }
+
+    /* ... tout le CSS existant ... */
+
+    /* GALERIE PHOTOS - AJOUTEZ ICI */
+    .thumbnail {
+        width: 80px;
+        height: 80px;
+        border-radius: 6px;
+        background: #f3f4f6;
+        cursor: pointer;
+        border: 2px solid transparent;
+        overflow: hidden;
+        transition: border-color 0.3s;
+    }
+
+    .thumbnail:hover {
+        border-color: #2563eb;
+    }
+
+    .thumbnail.active {
+        border-color: #f97316;
+    }
+
+    .thumbnail img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        display: block;
+    }
+
+
+        .info-sidebar { background: white; border-radius: 12px; padding: 2rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); height: fit-content; }
+        .annonce-title { font-size: 1.75rem; font-weight: 600; margin-bottom: 1rem; color: #1f2937; }
+        .annonce-price { font-size: 2rem; font-weight: bold; color: #059669; margin-bottom: 1.5rem; }
+        .details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 2rem; }
+        .detail-item { display: flex; flex-direction: column; gap: 0.25rem; }
+        .detail-label { font-size: 0.875rem; color: #6b7280; }
+        .detail-value { font-weight: 500; color: #1f2937; }
+        .contact-section { border-top: 1px solid #e5e7eb; padding-top: 1.5rem; }
+        .contact-info { margin-bottom: 1.5rem; }
+        .contact-name { font-weight: 600; margin-bottom: 0.5rem; }
+        .contact-phone { font-size: 1.25rem; font-weight: bold; color: #2563eb; margin-bottom: 0.5rem; }
+        .contact-email { color: #6b7280; }
+        .btn-orange { background: #f97316; color: white; border: none; padding: 1rem 2rem; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: background 0.3s; width: 100%; }
+        .btn-orange:hover { background: #ea580c; }
+        .description-section { background: white; border-radius: 12px; padding: 2rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); margin-bottom: 2rem; }
+        .section-title { font-size: 1.25rem; font-weight: 600; margin-bottom: 1rem; color: #1f2937; }
+        .description-text { line-height: 1.6; color: #4b5563; white-space: pre-line; }
+        .no-photo { font-size: 4rem; color: #9ca3af; }
+        .new-badge { background: #f97316; color: white; padding: 0.25rem 0.5rem; border-radius: 12px; font-size: 0.75rem; font-weight: 600; margin-left: 0.5rem; }
+        .error-message { text-align: center; padding: 4rem; }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">AutoBoom<span>.tn</span></div>
+            <div class="nav-links">
+                <a href="index.html">Accueil</a>
+                <a href="annonces.html">Annonces</a>
+                <a href="deposer-annonce.html">Déposer une annonce</a>
+                <a href="concessionnaires.html">Concessionnaires</a>
+                <a href="assureurs.html">Assureurs</a>
+            </div>
+            <a href="deposer-annonce.html" class="btn-primary">+ Vendre ma voiture</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="breadcrumb">
+            <a href="index.html">Accueil</a> > 
+            <a href="annonces.html">Annonces</a> > 
+            <span id="breadcrumb-title">Détails de l'annonce</span>
+        </div>
+
+        <div id="annonce-content">
+            <div class="error-message">
+                <div style="font-size: 4rem; margin-bottom: 1rem;">😕</div>
+                <h2 style="color: #6b7280; margin-bottom: 1rem;">Chargement...</h2>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function getAnnonceIdFromURL() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const id = urlParams.get('id');
+            return id ? parseInt(id) : null;
+        }
+
+        function chargerDetailsAnnonce() {
+            const annonceId = getAnnonceIdFromURL();
+            
+            if (!annonceId) {
+                afficherErreur("ID d'annonce non spécifié");
+                return;
+            }
+
+            const annonces = JSON.parse(localStorage.getItem('annonces')) || [];
+            const annoncesParDefaut = [
+                {
+                    id: 1, marque: 'Volkswagen', modele: 'Golf 7', prix: '28,500 TND', annee: '2018', kilometrage: '45,000 km',
+                    carburant: 'Diesel', transmission: 'Automatique', ville: 'Tunis',
+                    description: 'Voiture en excellent état, entretien chez concessionnaire, 1 seul propriétaire. Carrosserie impeccable, intérieur cuir, climatisation automatique.',
+                    contact: '12 345 678', nom: 'Ahmed', email: 'ahmed@email.com', date: '15/10/2024', hasPhotos: false
+                },
+                {
+                    id: 2, marque: 'Renault', modele: 'Clio 5', prix: '35,000 TND', annee: '2021', kilometrage: '25,000 km',
+                    carburant: 'Essence', transmission: 'Manuelle', ville: 'Sfax',
+                    description: 'Presque neuve, garantie constructeur encore valable. Achetée neuve, toujours entretenue chez Renault.',
+                    contact: '98 765 432', nom: 'Marie', email: 'marie@email.com', date: '20/10/2024', hasPhotos: false
+                }
+            ];
+
+            const toutesAnnonces = [...annonces, ...annoncesParDefaut];
+            const annonce = toutesAnnonces.find(a => a.id === annonceId);
+            
+            if (!annonce) {
+                afficherErreur("Annonce non trouvée");
+                return;
+            }
+            
+            afficherAnnonce(annonce);
+        }
+
+        function afficherErreur(message) {
+            document.getElementById('annonce-content').innerHTML = `
+                <div class="error-message">
+                    <div style="font-size: 4rem; margin-bottom: 1rem;">😕</div>
+                    <h2 style="color: #6b7280; margin-bottom: 1rem;">${message}</h2>
+                    <p style="color: #9ca3af; margin-bottom: 2rem;">Cette annonce n'existe pas ou a été supprimée.</p>
+                    <a href="annonces.html" class="btn-primary">← Retour aux annonces</a>
+                </div>
+            `;
+        }
+
+        function afficherAnnonce(annonce) {
+    const datePublication = new Date(annonce.date.split('/').reverse().join('-'));
+    const maintenant = new Date();
+    const differenceJours = (maintenant - datePublication) / (1000 * 60 * 60 * 24);
+    const isNew = differenceJours < 7;
+
+    document.getElementById('annonce-content').innerHTML = `
+        <div class="annonce-detail">
+            <div class="photo-gallery">
+                <div class="main-photo" id="main-photo">
+                    ${annonce.hasPhotos && annonce.photos && annonce.photos.length > 0 ? 
+                        `<img src="${annonce.photos[0]}" alt="${annonce.marque} ${annonce.modele}" style="width: 100%; height: 100%; object-fit: cover;">` : 
+                        '<div class="no-photo">🚗</div>'
+                    }
+                </div>
+                <div class="photo-thumbnails" id="photo-thumbnails">
+                    ${annonce.hasPhotos && annonce.photos && annonce.photos.length > 0 ? 
+                        annonce.photos.map((photo, index) => `
+                            <div class="thumbnail ${index === 0 ? 'active' : ''}" data-photo="${photo}">
+                                <img src="${photo}" alt="Photo ${index + 1}" style="width: 100%; height: 100%; object-fit: cover;">
+                            </div>
+                        `).join('') : ''
+                    }
+                </div>
+            </div>
+
+            <div class="info-sidebar">
+                <h1 class="annonce-title">
+                    ${annonce.marque} ${annonce.modele}
+                    ${isNew ? '<span class="new-badge">NOUVEAU</span>' : ''}
+                </h1>
+                <div class="annonce-price">${annonce.prix}</div>
+                
+                <div class="details-grid">
+                    <div class="detail-item"><span class="detail-label">Marque</span><span class="detail-value">${annonce.marque}</span></div>
+                    <div class="detail-item"><span class="detail-label">Modèle</span><span class="detail-value">${annonce.modele}</span></div>
+                    <div class="detail-item"><span class="detail-label">Année</span><span class="detail-value">${annonce.annee}</span></div>
+                    <div class="detail-item"><span class="detail-label">Kilométrage</span><span class="detail-value">${annonce.kilometrage}</span></div>
+                    <div class="detail-item"><span class="detail-label">Carburant</span><span class="detail-value">${annonce.carburant}</span></div>
+                    <div class="detail-item"><span class="detail-label">Transmission</span><span class="detail-value">${annonce.transmission}</span></div>
+                    <div class="detail-item"><span class="detail-label">Ville</span><span class="detail-value">${annonce.ville}</span></div>
+                    <div class="detail-item"><span class="detail-label">Date de publication</span><span class="detail-value">${annonce.date}</span></div>
+                </div>
+
+                <div class="contact-section">
+                    <div class="contact-info">
+                        <div class="contact-name">${annonce.nom}</div>
+                        <div class="contact-phone">${annonce.contact}</div>
+                        <div class="contact-email">${annonce.email || 'Non renseigné'}</div>
+                    </div>
+                    <button class="btn-orange" onclick="appelerVendeur('${annonce.contact}')">📞 Appeler le vendeur</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="description-section">
+            <h2 class="section-title">📝 Description du véhicule</h2>
+            <div class="description-text">${annonce.description}</div>
+        </div>
+    `;
+
+    // AJOUTEZ CES LIGNES APRÈS l'innerHTML :
+    setTimeout(() => {
+        const thumbnails = document.querySelectorAll('.thumbnail');
+        thumbnails.forEach(thumb => {
+            thumb.addEventListener('click', function() {
+                const photoSrc = this.getAttribute('data-photo');
+                changerPhotoPrincipale(photoSrc, this);
+            });
+        });
+    }, 100);
+
+    document.getElementById('breadcrumb-title').textContent = `${annonce.marque} ${annonce.modele}`;
+}
+       function changerPhotoPrincipale(photoSrc, element) {
+    // Changer la photo principale
+    const mainPhoto = document.getElementById('main-photo');
+    mainPhoto.innerHTML = `<img src="${photoSrc}" alt="Photo principale" style="width: 100%; height: 100%; object-fit: cover;">`;
+    
+    // Mettre à jour les miniatures actives
+    document.querySelectorAll('.thumbnail').forEach(thumb => {
+        thumb.classList.remove('active');
+    });
+    element.classList.add('active');
+}
+
+        function appelerVendeur(phone) {
+            if (phone && phone !== '--') {
+                if (confirm(`Voulez-vous appeler le numéro ${phone} ?`)) {
+                    window.location.href = `tel:${phone}`;
+                }
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', chargerDetailsAnnonce);
+    </script>
+</body>
+</html>
