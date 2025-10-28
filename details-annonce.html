@@ -151,153 +151,166 @@ css
     </div>
 
     <script>
-        function getAnnonceIdFromURL() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const id = urlParams.get('id');
-            return id ? parseInt(id) : null;
+        // Fonction pour récupérer l'ID depuis l'URL
+function getAnnonceIdFromURL() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get('id');
+    console.log('ID récupéré depuis URL:', id);
+    return id ? parseInt(id) : null;
+}
+
+// Charger et afficher l'annonce
+function chargerEtAfficherAnnonce() {
+    const annonceId = getAnnonceIdFromURL();
+    const container = document.getElementById('annonce-details');
+    
+    if (!annonceId) {
+        container.innerHTML = `
+            <div style="text-align: center; padding: 3rem;">
+                <div style="font-size: 4rem; margin-bottom: 1rem;">❌</div>
+                <h2 style="color: #6b7280; margin-bottom: 1rem;">ID d'annonce manquant</h2>
+                <p style="color: #9ca3af;">L'URL ne contient pas d'ID d'annonce valide.</p>
+                <a href="annonces.html" class="btn-primary" style="display: inline-block; margin-top: 1rem;">← Retour aux annonces</a>
+            </div>
+        `;
+        return;
+    }
+    
+    // Charger toutes les annonces
+    const annoncesSauvegardees = JSON.parse(localStorage.getItem('annonces')) || [];
+    const annoncesParDefaut = [
+        {
+            id: 1, marque: 'Volkswagen', modele: 'Golf 7', prix: '28,500 TND', annee: '2018', kilometrage: '45,000 km',
+            carburant: 'Diesel', transmission: 'Automatique', ville: 'Tunis', photos: ['https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=600&h=400&fit=crop']
+        },
+        {
+            id: 2, marque: 'Renault', modele: 'Clio 5', prix: '35,000 TND', annee: '2021', kilometrage: '25,000 km',
+            carburant: 'Essence', transmission: 'Manuelle', ville: 'Sfax', photos: ['https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=600&h=400&fit=crop']
+        },
+        {
+            id: 3, marque: 'Hyundai', modele: 'Tucson', prix: '52,000 TND', annee: '2020', kilometrage: '30,000 km',
+            carburant: 'Diesel', transmission: 'Automatique', ville: 'Sousse', photos: ['https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=600&h=400&fit=crop']
+        },
+        {
+            id: 4, marque: 'Peugeot', modele: '208', prix: '19,500 TND', annee: '2016', kilometrage: '80,000 km',
+            carburant: 'Essence', transmission: 'Manuelle', ville: 'Nabeul', photos: ['https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=600&h=400&fit=crop']
+        },
+        {
+            id: 5, marque: 'Kia', modele: 'Sportage', prix: '42,000 TND', annee: '2019', kilometrage: '55,000 km',
+            carburant: 'Diesel', transmission: 'Automatique', ville: 'Tunis', photos: ['https://images.unsplash.com/photo-1621135802920-133df287f89c?w=600&h=400&fit=crop']
+        },
+        {
+            id: 6, marque: 'Mercedes', modele: 'Classe A', prix: '68,000 TND', annee: '2020', kilometrage: '35,000 km',
+            carburant: 'Essence', transmission: 'Automatique', ville: 'Sfax', photos: ['https://images.unsplash.com/photo-1563720223485-239d6db13e3c?w=600&h=400&fit=crop']
+        },
+        {
+            id: 7, marque: 'Audi', modele: 'A3', prix: '45,000 TND', annee: '2019', kilometrage: '40,000 km',
+            carburant: 'Essence', transmission: 'Automatique', ville: 'Tunis', photos: ['https://images.unsplash.com/photo-1555215695-3004980ad54e?w=600&h=400&fit=crop']
+        },
+        {
+            id: 8, marque: 'BMW', modele: 'Série 1', prix: '58,000 TND', annee: '2020', kilometrage: '28,000 km',
+            carburant: 'Essence', transmission: 'Automatique', ville: 'Sousse', photos: ['https://images.unsplash.com/photo-1555215695-3004980ad54e?w=600&h=400&fit=crop']
         }
-
-        function chargerDetailsAnnonce() {
-            const annonceId = getAnnonceIdFromURL();
-            
-            if (!annonceId) {
-                afficherErreur("ID d'annonce non spécifié");
-                return;
-            }
-
-            const annonces = JSON.parse(localStorage.getItem('annonces')) || [];
-            const annoncesParDefaut = [
-                {
-                    id: 1, marque: 'Volkswagen', modele: 'Golf 7', prix: '28,500 TND', annee: '2018', kilometrage: '45,000 km',
-                    carburant: 'Diesel', transmission: 'Automatique', ville: 'Tunis',
-                    description: 'Voiture en excellent état, entretien chez concessionnaire, 1 seul propriétaire. Carrosserie impeccable, intérieur cuir, climatisation automatique.',
-                    contact: '12 345 678', nom: 'Ahmed', email: 'ahmed@email.com', date: '15/10/2024', hasPhotos: false
-                },
-                {
-                    id: 2, marque: 'Renault', modele: 'Clio 5', prix: '35,000 TND', annee: '2021', kilometrage: '25,000 km',
-                    carburant: 'Essence', transmission: 'Manuelle', ville: 'Sfax',
-                    description: 'Presque neuve, garantie constructeur encore valable. Achetée neuve, toujours entretenue chez Renault.',
-                    contact: '98 765 432', nom: 'Marie', email: 'marie@email.com', date: '20/10/2024', hasPhotos: false
-                }
-            ];
-
-            const toutesAnnonces = [...annonces, ...annoncesParDefaut];
-            const annonce = toutesAnnonces.find(a => a.id === annonceId);
-            
-            if (!annonce) {
-                afficherErreur("Annonce non trouvée");
-                return;
-            }
-            
-            afficherAnnonce(annonce);
-        }
-
-        function afficherErreur(message) {
-            document.getElementById('annonce-content').innerHTML = `
-                <div class="error-message">
-                    <div style="font-size: 4rem; margin-bottom: 1rem;">😕</div>
-                    <h2 style="color: #6b7280; margin-bottom: 1rem;">${message}</h2>
-                    <p style="color: #9ca3af; margin-bottom: 2rem;">Cette annonce n'existe pas ou a été supprimée.</p>
-                    <a href="annonces.html" class="btn-primary">← Retour aux annonces</a>
-                </div>
-            `;
-        }
-
-        function afficherAnnonce(annonce) {
-    const datePublication = new Date(annonce.date.split('/').reverse().join('-'));
-    const maintenant = new Date();
-    const differenceJours = (maintenant - datePublication) / (1000 * 60 * 60 * 24);
-    const isNew = differenceJours < 7;
-
-    document.getElementById('annonce-content').innerHTML = `
-        <div class="annonce-detail">
-            <div class="photo-gallery">
-                <div class="main-photo" id="main-photo">
-                    ${annonce.hasPhotos && annonce.photos && annonce.photos.length > 0 ? 
-                        `<img src="${annonce.photos[0]}" alt="${annonce.marque} ${annonce.modele}" style="width: 100%; height: 100%; object-fit: cover;">` : 
-                        '<div class="no-photo">🚗</div>'
-                    }
-                </div>
-                <div class="photo-thumbnails" id="photo-thumbnails">
-                    ${annonce.hasPhotos && annonce.photos && annonce.photos.length > 0 ? 
-                        annonce.photos.map((photo, index) => `
-                            <div class="thumbnail ${index === 0 ? 'active' : ''}" data-photo="${photo}">
-                                <img src="${photo}" alt="Photo ${index + 1}" style="width: 100%; height: 100%; object-fit: cover;">
+    ];
+    
+    const toutesAnnonces = [...annoncesSauvegardees, ...annoncesParDefaut];
+    console.log('Total annonces:', toutesAnnonces.length);
+    console.log('Recherche ID:', annonceId);
+    
+    // Trouver l'annonce
+    const annonce = toutesAnnonces.find(a => a.id == annonceId);
+    console.log('Annonce trouvée:', annonce);
+    
+    if (!annonce) {
+        container.innerHTML = `
+            <div style="text-align: center; padding: 3rem;">
+                <div style="font-size: 4rem; margin-bottom: 1rem;">🔍</div>
+                <h2 style="color: #6b7280; margin-bottom: 1rem;">Annonce non trouvée</h2>
+                <p style="color: #9ca3af;">Cette annonce n'existe pas ou a été supprimée.</p>
+                <a href="annonces.html" class="btn-primary" style="display: inline-block; margin-top: 1rem;">← Retour aux annonces</a>
+            </div>
+        `;
+        return;
+    }
+    
+    // AFFICHER L'ANNONCE AVEC PHOTOS
+    container.innerHTML = `
+        <div class="details-container">
+            <!-- Photos -->
+            <div class="photos-section">
+                <h3>📸 Photos</h3>
+                <div class="photos-grid">
+                    ${annonce.photos && annonce.photos.length > 0 ? 
+                        annonce.photos.map(photo => `
+                            <div class="photo-item">
+                                <img src="${photo}" alt="${annonce.marque} ${annonce.modele}">
                             </div>
-                        `).join('') : ''
+                        `).join('') : 
+                        `<div class="photo-item">
+                            <img src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=600&h=400&fit=crop" 
+                                 alt="${annonce.marque} ${annonce.modele}">
+                         </div>`
                     }
                 </div>
             </div>
-
-            <div class="info-sidebar">
-                <h1 class="annonce-title">
-                    ${annonce.marque} ${annonce.modele}
-                    ${isNew ? '<span class="new-badge">NOUVEAU</span>' : ''}
-                </h1>
-                <div class="annonce-price">${annonce.prix}</div>
+            
+            <!-- Détails -->
+            <div class="info-section">
+                <h1>${annonce.marque} ${annonce.modele}</h1>
+                <div class="price">${annonce.prix}</div>
                 
                 <div class="details-grid">
-                    <div class="detail-item"><span class="detail-label">Marque</span><span class="detail-value">${annonce.marque}</span></div>
-                    <div class="detail-item"><span class="detail-label">Modèle</span><span class="detail-value">${annonce.modele}</span></div>
-                    <div class="detail-item"><span class="detail-label">Année</span><span class="detail-value">${annonce.annee}</span></div>
-                    <div class="detail-item"><span class="detail-label">Kilométrage</span><span class="detail-value">${annonce.kilometrage}</span></div>
-                    <div class="detail-item"><span class="detail-label">Carburant</span><span class="detail-value">${annonce.carburant}</span></div>
-                    <div class="detail-item"><span class="detail-label">Transmission</span><span class="detail-value">${annonce.transmission}</span></div>
-                    <div class="detail-item"><span class="detail-label">Ville</span><span class="detail-value">${annonce.ville}</span></div>
-                    <div class="detail-item"><span class="detail-label">Date de publication</span><span class="detail-value">${annonce.date}</span></div>
-                </div>
-
-                <div class="contact-section">
-                    <div class="contact-info">
-                        <div class="contact-name">${annonce.nom}</div>
-                        <div class="contact-phone">${annonce.contact}</div>
-                        <div class="contact-email">${annonce.email || 'Non renseigné'}</div>
+                    <div class="detail-item">
+                        <strong>📍 Ville:</strong> ${annonce.ville}
                     </div>
-                    <button class="btn-orange" onclick="appelerVendeur('${annonce.contact}')">📞 Appeler le vendeur</button>
+                    <div class="detail-item">
+                        <strong>📅 Année:</strong> ${annonce.annee}
+                    </div>
+                    <div class="detail-item">
+                        <strong>🎯 Kilométrage:</strong> ${annonce.kilometrage}
+                    </div>
+                    <div class="detail-item">
+                        <strong>⛽ Carburant:</strong> ${annonce.carburant}
+                    </div>
+                    <div class="detail-item">
+                        <strong>⚙️ Transmission:</strong> ${annonce.transmission}
+                    </div>
+                    <div class="detail-item">
+                        <strong>📞 Contact:</strong> ${annonce.contact}
+                    </div>
+                    <div class="detail-item">
+                        <strong>👤 Vendeur:</strong> ${annonce.nom}
+                    </div>
+                </div>
+                
+                <!-- Description -->
+                <div class="description-section">
+                    <h3>📝 Description</h3>
+                    <p>${annonce.description || 'Aucune description fournie.'}</p>
+                </div>
+                
+                <!-- Boutons d'action -->
+                <div class="action-buttons">
+                    <button class="btn-primary" onclick="afficherContact('${annonce.contact}', '${annonce.nom}', '${annonce.marque} ${annonce.modele}')">
+                        📞 Contacter le vendeur
+                    </button>
+                    <a href="annonces.html" class="btn-secondary">← Retour aux annonces</a>
                 </div>
             </div>
         </div>
-
-        <div class="description-section">
-            <h2 class="section-title">📝 Description du véhicule</h2>
-            <div class="description-text">${annonce.description}</div>
-        </div>
     `;
-
-    // AJOUTEZ CES LIGNES APRÈS l'innerHTML :
-    setTimeout(() => {
-        const thumbnails = document.querySelectorAll('.thumbnail');
-        thumbnails.forEach(thumb => {
-            thumb.addEventListener('click', function() {
-                const photoSrc = this.getAttribute('data-photo');
-                changerPhotoPrincipale(photoSrc, this);
-            });
-        });
-    }, 100);
-
-    document.getElementById('breadcrumb-title').textContent = `${annonce.marque} ${annonce.modele}`;
-}
-       function changerPhotoPrincipale(photoSrc, element) {
-    // Changer la photo principale
-    const mainPhoto = document.getElementById('main-photo');
-    mainPhoto.innerHTML = `<img src="${photoSrc}" alt="Photo principale" style="width: 100%; height: 100%; object-fit: cover;">`;
-    
-    // Mettre à jour les miniatures actives
-    document.querySelectorAll('.thumbnail').forEach(thumb => {
-        thumb.classList.remove('active');
-    });
-    element.classList.add('active');
 }
 
-        function appelerVendeur(phone) {
-            if (phone && phone !== '--') {
-                if (confirm(`Voulez-vous appeler le numéro ${phone} ?`)) {
-                    window.location.href = `tel:${phone}`;
-                }
-            }
-        }
+// Fonction pour afficher le contact
+function afficherContact(telephone, nom, vehicule) {
+    alert(`📞 Contact de ${nom}\n🚗 ${vehicule}\n📱 Téléphone: ${telephone}\n\nAppelez ce numéro pour plus d'informations sur le véhicule`);
+}
 
-        document.addEventListener('DOMContentLoaded', chargerDetailsAnnonce);
+// Charger au démarrage
+document.addEventListener('DOMContentLoaded', function() {
+    chargerEtAfficherAnnonce();
+});
     </script>
 </body>
+
 </html>
