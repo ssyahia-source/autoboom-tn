@@ -770,81 +770,84 @@ async function sauvegarderAnnonceFirebase(annonce) {
                     console.error('Erreur:', error);
                 }
             }
-            
+                     
             return uploadedUrls;
+       async function publierAnnonce() {
+    const marque = document.getElementById('marque').value;
+    const modele = document.getElementById('modele').value;
+    const prix = document.getElementById('prix').value;
+    const annee = document.getElementById('annee').value;
+    const kilometrage = document.getElementById('kilometrage').value;
+    const carburant = document.getElementById('carburant').value;
+    const transmission = document.getElementById('transmission').value;
+    const ville = document.getElementById('ville').value;
+    const description = document.getElementById('description').value;
+    const telephone = document.getElementById('telephone').value;
+    const nom = document.getElementById('nom').value;
+    const email = document.getElementById('email').value;
+    
+    if (!marque || !modele || !prix || !annee || !kilometrage || !carburant || !transmission || !ville || !description || !telephone || !nom) {
+        alert('Veuillez remplir tous les champs obligatoires (*)');
+        return;
+    }
+    
+    // Afficher loading
+    const submitBtn = document.querySelector('.btn-orange');
+    submitBtn.disabled = true;
+    submitBtn.textContent = '📤 Upload des photos...';
+    
+    try {
+        // Uploader les photos vers ImgBB
+        let photoUrls = [];
+        if (imagesBase64.length > 0) {
+            photoUrls = await uploaderPhotosVersImgBB();
         }
-
-        async function publierAnnonce() {
-            const marque = document.getElementById('marque').value;
-            const modele = document.getElementById('modele').value;
-            const prix = document.getElementById('prix').value;
-            const annee = document.getElementById('annee').value;
-            const kilometrage = document.getElementById('kilometrage').value;
-            const carburant = document.getElementById('carburant').value;
-            const transmission = document.getElementById('transmission').value;
-            const ville = document.getElementById('ville').value;
-            const description = document.getElementById('description').value;
-            const telephone = document.getElementById('telephone').value;
-            const nom = document.getElementById('nom').value;
-            const email = document.getElementById('email').value;
+        
+        // Créer l'objet annonce
+        const nouvelleAnnonce = {
+            marque: marque,
+            modele: modele,
+            prix: prix + ' TND',
+            annee: annee,
+            kilometrage: kilometrage + ' km',
+            carburant: carburant,
+            transmission: transmission,
+            ville: ville,
+            description: description,
+            contact: telephone,
+            nom: nom,
+            email: email || '',
+            photos: photoUrls,
+            hasPhotos: photoUrls.length > 0,
+            isNew: true,
+            date: new Date().toLocaleDateString('fr-FR')
+        };
+        
+        // SAUVEGARDER DANS FIREBASE
+        const annonceId = await sauvegarderAnnonceFirebase(nouvelleAnnonce);
+        
+        if (annonceId) {
+            // Succès - Firebase
+            submitBtn.textContent = '✅ Annonce publiée !';
+            document.getElementById('confirmation').style.display = 'block';
             
-            if (!marque || !modele || !prix || !annee || !kilometrage || !carburant || !transmission || !ville || !description || !telephone || !nom) {
-                alert('Veuillez remplir tous les champs obligatoires (*)');
-                return;
-            }
-            
-            // Afficher loading
-            const submitBtn = document.querySelector('.btn-orange');
-            submitBtn.disabled = true;
-            submitBtn.textContent = '📤 Upload des photos...';
-            
-            try {
-                // Uploader les photos vers ImgBB
-                let photoUrls = [];
-                if (imagesBase64.length > 0) {
-                    photoUrls = await uploaderPhotosVersImgBB();
+            setTimeout(() => {
+                window.location.href = 'annonces.html';
+            }, 2000);
+        } else {
+            throw new Error('Erreur sauvegarde Firebase');
+        }
+        
+    } catch (error) {
+        console.error('Erreur:', error);
+        submitBtn.disabled = false;
+        submitBtn.textContent = '✅ Publier mon annonce';
+        alert('Erreur lors de la publication. Réessayez.');
+    }
+}
+        
+        }
                 }
-                
-                // Sauvegarder l'annonce
-                const nouvelleAnnonce = {
-                    id: Date.now(),
-                    marque: marque,
-                    modele: modele,
-                    prix: prix + ' TND',
-                    annee: annee,
-                    kilometrage: kilometrage + ' km',
-                    carburant: carburant,
-                    transmission: transmission,
-                    ville: ville,
-                    description: description,
-                    contact: telephone,
-                    nom: nom,
-                    email: email,
-                    date: new Date().toLocaleDateString('fr-FR'),
-                    photos: photoUrls,
-                    hasPhotos: photoUrls.length > 0,
-                    isNew: true
-                };
-                
-                let annonces = JSON.parse(localStorage.getItem('annonces')) || [];
-                annonces.unshift(nouvelleAnnonce);
-                localStorage.setItem('annonces', JSON.stringify(annonces));
-                
-                // Succès
-                submitBtn.textContent = '✅ Annonce publiée !';
-                document.getElementById('confirmation').style.display = 'block';
-                
-                setTimeout(() => {
-                    window.location.href = 'annonces.html';
-                }, 3000);
-                
-            } catch (error) {
-                console.error('Erreur:', error);
-                submitBtn.disabled = false;
-                submitBtn.textContent = '✅ Publier mon annonce';
-                alert('Erreur lors de la publication. Réessayez.');
-            }
-        }
     </script>
 </body>
 </html>
@@ -852,4 +855,5 @@ async function sauvegarderAnnonceFirebase(annonce) {
            
 
         
+
 
