@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+َ<!DOCTYPE html>
 <html lang="fr">
 <head>
     <meta charset="UTF-8">
@@ -93,6 +93,23 @@
 
         .btn-secondary:hover {
             background: #4b5563;
+        }
+
+        .btn-danger {
+            background: #ef4444;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.3s;
+            border: none;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        .btn-danger:hover {
+            background: #dc2626;
         }
 
         /* Conteneur principal */
@@ -246,19 +263,65 @@
         </div>
     </div>
 
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
+
     <script>
+        // Configuration Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyCPay-0BB2o9Cefuj4w5k0b70mBG2kwR4E",
+            authDomain: "autoboom-tn.firebaseapp.com",
+            databaseURL: "https://autoboom-tn-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "autoboom-tn",
+            storageBucket: "autoboom-tn.firebasestorage.app",
+            messagingSenderId: "291199404228",
+            appId: "1:291199404228:web:b07c622a5f7b8bc9a4e191"
+        };
+
+        // Initialiser Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
         // Fonction pour récupérer l'ID depuis l'URL
         function getAnnonceIdFromURL() {
             const urlParams = new URLSearchParams(window.location.search);
             const id = urlParams.get('id');
             console.log('ID récupéré depuis URL:', id);
-            return id ? parseInt(id) : null;
+            return id;
         }
 
-        // Annonces par défaut
+        // Fonction pour charger une annonce depuis Firebase
+        async function chargerAnnonceFirebase(annonceId) {
+            try {
+                console.log('Chargement annonce Firebase ID:', annonceId);
+                const snapshot = await database.ref('annonces/' + annonceId).once('value');
+                const annonce = snapshot.val();
+                console.log('Annonce chargée Firebase:', annonce);
+                return annonce;
+            } catch (error) {
+                console.error('Erreur Firebase:', error);
+                return null;
+            }
+        }
+
+        // Fonction pour charger depuis localStorage (compatibilité)
+        function chargerAnnonceLocale(annonceId) {
+            try {
+                const annonces = JSON.parse(localStorage.getItem('annonces')) || [];
+                const annonce = annonces.find(a => a.id == annonceId);
+                console.log('Annonce chargée locale:', annonce);
+                return annonce;
+            } catch (error) {
+                console.error('Erreur localStorage:', error);
+                return null;
+            }
+        }
+
+        // Annonces par défaut (fallback)
         const annoncesParDefaut = [
             {
-                id: 1,
+                id: "1",
                 marque: 'Volkswagen',
                 modele: 'Golf 7',
                 prix: '28,500 TND',
@@ -274,7 +337,7 @@
                 photos: ['https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=600&h=400&fit=crop']
             },
             {
-                id: 2,
+                id: "2",
                 marque: 'Renault',
                 modele: 'Clio 5',
                 prix: '35,000 TND',
@@ -288,107 +351,11 @@
                 nom: 'Marie',
                 date: '26/10/2024',
                 photos: ['https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=600&h=400&fit=crop']
-            },
-            {
-                id: 3,
-                marque: 'Hyundai',
-                modele: 'Tucson',
-                prix: '52,000 TND',
-                annee: '2020',
-                kilometrage: '30,000 km',
-                carburant: 'Diesel',
-                transmission: 'Automatique',
-                ville: 'Sousse',
-                description: 'SUV familial spacieux, tous options, clim automatique. Parfait pour famille nombreuse.',
-                contact: '55 123 456',
-                nom: 'Mohamed',
-                date: '25/10/2024',
-                photos: ['https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=600&h=400&fit=crop']
-            },
-            {
-                id: 4,
-                marque: 'Peugeot',
-                modele: '208',
-                prix: '19,500 TND',
-                annee: '2016',
-                kilometrage: '80,000 km',
-                carburant: 'Essence',
-                transmission: 'Manuelle',
-                ville: 'Nabeul',
-                description: 'Parfaite pour ville, consommation réduite, bon état général. Idéale première voiture.',
-                contact: '33 987 654',
-                nom: 'Sophie',
-                date: '24/10/2024',
-                photos: ['https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=600&h=400&fit=crop']
-            },
-            {
-                id: 5,
-                marque: 'Kia',
-                modele: 'Sportage',
-                prix: '42,000 TND',
-                annee: '2019',
-                kilometrage: '55,000 km',
-                carburant: 'Diesel',
-                transmission: 'Automatique',
-                ville: 'Tunis',
-                description: 'SUV confortable, entretien régulier, carnet d entretien complet. Très bon rapport qualité-prix.',
-                contact: '77 456 123',
-                nom: 'Karim',
-                date: '23/10/2024',
-                photos: ['https://images.unsplash.com/photo-1621135802920-133df287f89c?w=600&h=400&fit=crop']
-            },
-            {
-                id: 6,
-                marque: 'Mercedes',
-                modele: 'Classe A',
-                prix: '68,000 TND',
-                annee: '2020',
-                kilometrage: '35,000 km',
-                carburant: 'Essence',
-                transmission: 'Automatique',
-                ville: 'Sfax',
-                description: 'Voiture premium, toutes options, très bon état. Entretien chez concessionnaire.',
-                contact: '22 333 444',
-                nom: 'Ali',
-                date: '22/10/2024',
-                photos: ['https://images.unsplash.com/photo-1563720223485-239d6db13e3c?w=600&h=400&fit=crop']
-            },
-            {
-                id: 7,
-                marque: 'Audi',
-                modele: 'A3',
-                prix: '45,000 TND',
-                annee: '2019',
-                kilometrage: '40,000 km',
-                carburant: 'Essence',
-                transmission: 'Automatique',
-                ville: 'Tunis',
-                description: 'Compacte premium, toutes options, état impeccable. Design moderne et élégant.',
-                contact: '66 777 888',
-                nom: 'Samir',
-                date: '21/10/2024',
-                photos: ['https://images.unsplash.com/photo-1555215695-3004980ad54e?w=600&h=400&fit=crop']
-            },
-            {
-                id: 8,
-                marque: 'BMW',
-                modele: 'Série 1',
-                prix: '58,000 TND',
-                annee: '2020',
-                kilometrage: '28,000 km',
-                carburant: 'Essence',
-                transmission: 'Automatique',
-                ville: 'Sousse',
-                description: 'Berline compacte sportive, entretien BMW. Conduite dynamique et agréable.',
-                contact: '99 888 777',
-                nom: 'Youssef',
-                date: '20/10/2024',
-                photos: ['https://images.unsplash.com/photo-1555215695-3004980ad54e?w=600&h=400&fit=crop']
             }
         ];
 
         // Charger et afficher l'annonce
-        function chargerEtAfficherAnnonce() {
+        async function chargerEtAfficherAnnonce() {
             const annonceId = getAnnonceIdFromURL();
             const container = document.getElementById('annonce-details');
             
@@ -404,15 +371,20 @@
                 return;
             }
             
-            // Charger toutes les annonces
-            const annoncesSauvegardees = JSON.parse(localStorage.getItem('annonces')) || [];
-            const toutesAnnonces = [...annoncesSauvegardees, ...annoncesParDefaut];
+            console.log('Début chargement annonce ID:', annonceId);
             
-            console.log('Recherche annonce ID:', annonceId);
-            console.log('Total annonces disponibles:', toutesAnnonces.length);
+            // Essayer Firebase d'abord, puis localStorage, puis annonces par défaut
+            let annonce = await chargerAnnonceFirebase(annonceId);
             
-            // Trouver l'annonce (utilisation == pour gérer les strings/numbers)
-            const annonce = toutesAnnonces.find(a => a.id == annonceId);
+            if (!annonce) {
+                console.log('Pas trouvé dans Firebase, recherche locale...');
+                annonce = chargerAnnonceLocale(annonceId);
+            }
+            
+            if (!annonce) {
+                console.log('Pas trouvé localement, recherche dans annonces par défaut...');
+                annonce = annoncesParDefaut.find(a => a.id == annonceId);
+            }
             
             if (!annonce) {
                 container.innerHTML = `
@@ -428,6 +400,11 @@
             
             console.log('Annonce trouvée:', annonce);
             
+            // Garantir que les photos existent
+            if (!annonce.photos || !Array.isArray(annonce.photos) || annonce.photos.length === 0) {
+                annonce.photos = ['https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=600&h=400&fit=crop'];
+            }
+            
             // AFFICHER L'ANNONCE
             container.innerHTML = `
                 <div class="details-container">
@@ -435,17 +412,11 @@
                     <div class="photos-section">
                         <h3>📸 Photos</h3>
                         <div class="photos-grid">
-                            ${annonce.photos && annonce.photos.length > 0 ? 
-                                annonce.photos.map(photo => `
-                                    <div class="photo-item">
-                                        <img src="${photo}" alt="${annonce.marque} ${annonce.modele}">
-                                    </div>
-                                `).join('') : 
-                                `<div class="photo-item">
-                                    <img src="https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=600&h=400&fit=crop" 
-                                         alt="${annonce.marque} ${annonce.modele}">
-                                 </div>`
-                            }
+                            ${annonce.photos.map(photo => `
+                                <div class="photo-item">
+                                    <img src="${photo}" alt="${annonce.marque} ${annonce.modele}">
+                                </div>
+                            `).join('')}
                         </div>
                     </div>
                     
@@ -477,7 +448,7 @@
                                 <strong>👤 Vendeur:</strong> ${annonce.nom}
                             </div>
                             <div class="detail-item">
-                                <strong>📅 Publiée le:</strong> ${annonce.date}
+                                <strong>📅 Publiée le:</strong> ${annonce.date || 'Date inconnue'}
                             </div>
                         </div>
                         
@@ -492,6 +463,9 @@
                             <button class="btn-primary" onclick="afficherContact('${annonce.contact}', '${annonce.nom}', '${annonce.marque} ${annonce.modele}')">
                                 📞 Contacter le vendeur
                             </button>
+                            <button class="btn-danger" onclick="signalerAnnonce('${annonceId}')">
+                                🚩 Signaler cette annonce
+                            </button>
                             <a href="annonces.html" class="btn-secondary">← Retour aux annonces</a>
                         </div>
                     </div>
@@ -502,6 +476,23 @@
         // Fonction pour afficher le contact
         function afficherContact(telephone, nom, vehicule) {
             alert(`📞 Contact de ${nom}\n🚗 ${vehicule}\n📱 Téléphone: ${telephone}\n\nAppelez ce numéro pour plus d'informations sur le véhicule`);
+        }
+
+        // Fonction pour signaler une annonce
+        function signalerAnnonce(annonceId) {
+            const raison = prompt('Pourquoi signalez-vous cette annonce ?\n- Photo inappropriée\n- Information fausse\n- Arnaque\n- Autre');
+            if (raison) {
+                const emailBody = `
+Signalement Annonce: ${annonceId}
+Raison: ${raison}
+URL: ${window.location.href}
+
+Merci de modérer cette annonce.
+                `.trim();
+                
+                window.location.href = `mailto:admin@autoboom.tn?subject=Signalement Annonce ${annonceId}&body=${encodeURIComponent(emailBody)}`;
+                alert('Merci pour votre signalement ! Un email a été généré.');
+            }
         }
 
         // Charger au démarrage
