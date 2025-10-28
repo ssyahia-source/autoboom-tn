@@ -529,7 +529,7 @@ function genererDateAleatoire() {
     });
 }
 
-// Annonces par défaut CORRIGÉES
+// Annonces par défaut avec images garanties - 8 ANNONCES
 const annoncesParDefaut = [
     {
         id: 1,
@@ -578,9 +578,88 @@ const annoncesParDefaut = [
         nom: 'Mohamed',
         date: genererDateAleatoire(),
         photos: ['https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=300&h=200&fit=crop']
+    },
+    {
+        id: 4,
+        marque: 'Peugeot',
+        modele: '208',
+        prix: '19,500 TND',
+        annee: '2016',
+        kilometrage: '80,000 km',
+        carburant: 'Essence',
+        transmission: 'Manuelle',
+        ville: 'Nabeul',
+        description: 'Parfaite pour ville, consommation réduite, bon état général',
+        contact: '33 987 654',
+        nom: 'Sophie',
+        date: genererDateAleatoire(),
+        photos: ['https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=300&h=200&fit=crop']
+    },
+    {
+        id: 5,
+        marque: 'Kia',
+        modele: 'Sportage',
+        prix: '42,000 TND',
+        annee: '2019',
+        kilometrage: '55,000 km',
+        carburant: 'Diesel',
+        transmission: 'Automatique',
+        ville: 'Tunis',
+        description: 'SUV confortable, entretien régulier, carnet d entretien complet',
+        contact: '77 456 123',
+        nom: 'Karim',
+        date: genererDateAleatoire(),
+        photos: ['https://images.unsplash.com/photo-1621135802920-133df287f89c?w=300&h=200&fit=crop']
+    },
+    {
+        id: 6,
+        marque: 'Mercedes',
+        modele: 'Classe A',
+        prix: '68,000 TND',
+        annee: '2020',
+        kilometrage: '35,000 km',
+        carburant: 'Essence',
+        transmission: 'Automatique',
+        ville: 'Sfax',
+        description: 'Voiture premium, toutes options, très bon état',
+        contact: '22 333 444',
+        nom: 'Ali',
+        date: genererDateAleatoire(),
+        photos: ['https://images.unsplash.com/photo-1563720223485-239d6db13e3c?w=300&h=200&fit=crop']
+    },
+    {
+        id: 7,
+        marque: 'Audi',
+        modele: 'A3',
+        prix: '45,000 TND',
+        annee: '2019',
+        kilometrage: '40,000 km',
+        carburant: 'Essence',
+        transmission: 'Automatique',
+        ville: 'Tunis',
+        description: 'Compacte premium, toutes options, état impeccable',
+        contact: '66 777 888',
+        nom: 'Samir',
+        date: genererDateAleatoire(),
+        photos: ['https://images.unsplash.com/photo-1555215695-3004980ad54e?w=300&h=200&fit=crop']
+    },
+    {
+        id: 8,
+        marque: 'BMW',
+        modele: 'Série 1',
+        prix: '58,000 TND',
+        annee: '2020',
+        kilometrage: '28,000 km',
+        carburant: 'Essence',
+        transmission: 'Automatique',
+        ville: 'Sousse',
+        description: 'Berline compacte sportive, entretien BMW',
+        contact: '99 888 777',
+        nom: 'Youssef',
+        date: genererDateAleatoire(),
+        photos: ['https://images.unsplash.com/photo-1555215695-3004980ad54e?w=300&h=200&fit=crop']
     }
 ];
-
 // Charger les annonces - VERSION STABLE
 function chargerAnnonces() {
     reinitialiserDonnees();
@@ -774,6 +853,7 @@ document.addEventListener('DOMContentLoaded', function() {
     </script>
 </body>
 </html>
+
 
 
 
