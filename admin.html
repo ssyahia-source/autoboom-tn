@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin AutoBoom TN - Tableau de Bord</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
+        body { background: #f8fafc; color: #1f2937; }
+        
+        .navbar { background: white; box-shadow: 0 2px 10px rgba(0,0,0,0.1); padding: 1rem 0; }
+        .nav-container { max-width: 1400px; margin: 0 auto; padding: 0 20px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.5rem; font-weight: bold; color: #2563eb; }
+        
+        .admin-container { max-width: 1400px; margin: 2rem auto; padding: 0 20px; }
+        .admin-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
+        
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+        .stat-card { background: white; padding: 1.5rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); text-align: center; }
+        .stat-number { font-size: 2rem; font-weight: bold; color: #2563eb; }
+        
+        .filters { background: white; padding: 1rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); margin-bottom: 1rem; display: flex; gap: 1rem; flex-wrap: wrap; }
+        .search-box, .filter-select { padding: 0.5rem; border: 1px solid #d1d5db; border-radius: 6px; }
+        .search-box { width: 300px; }
+        
+        .annonces-grid { display: grid; gap: 1rem; }
+        .annonce-card { 
+            background: white; 
+            border-radius: 8px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1); 
+            padding: 1.5rem; 
+            display: grid; 
+            grid-template-columns: 120px 1fr auto; 
+            gap: 1rem; 
+            align-items: start; 
+            border-left: 4px solid #2563eb;
+        }
+        .annonce-card.local { 
+            border-left-color: #8b5cf6;
+            background: #faf5ff;
+        }
+        .annonce-image { 
+            width: 120px; 
+            height: 90px; 
+            border-radius: 6px; 
+            object-fit: cover; 
+            background: #f3f4f6; 
+        }
+        .no-photo { 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            background: #e5e7eb; 
+            color: #6b7280; 
+            font-size: 0.8rem; 
+        }
+        
+        .btn { 
+            padding: 0.5rem 1rem; 
+            border: none; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            transition: all 0.3s; 
+            text-decoration: none; 
+            display: inline-block; 
+            font-size: 0.875rem;
+        }
+        .btn-danger { background: #ef4444; color: white; }
+        .btn-primary { background: #2563eb; color: white; }
+        .btn-success { background: #10b981; color: white; }
+        .btn-warning { background: #f59e0b; color: white; }
+        .btn-purple { background: #8b5cf6; color: white; }
+        .btn-orange { background: #ea580c; color: white; }
+        
+        .modal { 
+            display: none; 
+            position: fixed; 
+            top: 0; left: 0; 
+            width: 100%; 
+            height: 100%; 
+            background: rgba(0,0,0,0.5); 
+            justify-content: center; 
+            align-items: center; 
+            z-index: 1000;
+        }
+        .modal-content { 
+            background: white; 
+            padding: 2rem; 
+            border-radius: 8px; 
+            max-width: 600px; 
+            width: 90%; 
+            max-height: 80vh; 
+            overflow-y: auto; 
+        }
+        
+        .loading { text-align: center; padding: 2rem; color: #6b7280; }
+        .error { background: #fef2f2; border: 1px solid #fecaca; color: #dc2626; padding: 1rem; border-radius: 6px; margin-bottom: 1rem; }
+        
+        .photo-gallery {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+        .photo-gallery img {
+            width: 100px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 4px;
+            border: 1px solid #e5e7eb;
+        }
+        
+        .source-badge {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            margin-left: 0.5rem;
+        }
+        .badge-firebase { background: #dc2626; color: white; }
+        .badge-local { background: #8b5cf6; color: white; }
+
+        .actions-grid {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">🚗 AutoBoom.tn - Admin</div>
+            <div style="display: flex; gap: 0.5rem;">
+                <a href="index.html" class="btn btn-primary">← Site Public</a>
+            </div>
+        </div>
+    </nav>
+
+    <div class="admin-container">
+        <div class="admin-header">
+            <h1>📈 Tableau de Bord Administratif</h1>
+            <div id="last-update" style="color: #6b7280;"></div>
+        </div>
+
+        <!-- Actions globales -->
+        <div class="actions-grid">
+            <button class="btn btn-purple" onclick="migrerLocalStorageVersFirebase()">🚀 Migrer vers Firebase</button>
+            <button class="btn btn-warning" onclick="supprimerDoublons()">🗑️ Supprimer doublons</button>
+            <button class="btn btn-orange" onclick="reinitialiserLocalStorage()">🔄 Réinitialiser LocalStorage</button>
+            <button class="btn btn-success" onclick="exporterDonnees()">📊 Exporter Excel</button>
+        </div>
+
+        <!-- Statistiques en temps réel -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="total-annonces">0</div>
+                <div>Annonces Total</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="firebase-annonces">0</div>
+                <div>Dans Firebase</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="local-annonces">0</div>
+                <div>Dans LocalStorage</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="avec-photos">0</div>
+                <div>Avec Photos</div>
+            </div>
+        </div>
+
+        <!-- Filtres avancés -->
+        <div class="filters">
+            <input type="text" id="search" class="search-box" placeholder="🔍 Rechercher marque, modèle, ville...">
+            <select id="filter-marque" class="filter-select">
+                <option value="">Toutes les marques</option>
+            </select>
+            <select id="filter-ville" class="filter-select">
+                <option value="">Toutes les villes</option>
+            </select>
+            <select id="filter-source" class="filter-select">
+                <option value="">Toutes sources</option>
+                <option value="firebase">Firebase uniquement</option>
+                <option value="localstorage">LocalStorage uniquement</option>
+            </select>
+        </div>
+
+        <!-- Liste des annonces -->
+        <div id="annonces-container">
+            <div class="loading" id="loading-message">
+                🔄 Chargement des annonces depuis Firebase + LocalStorage...
+            </div>
+            <div class="annonces-grid" id="annonces-list"></div>
+        </div>
+    </div>
+
+    <!-- Modal pour voir les détails -->
+    <div class="modal" id="detail-modal">
+        <div class="modal-content">
+            <h3 id="modal-title">Détails de l'annonce</h3>
+            <div id="modal-content"></div>
+            <div style="margin-top: 1rem; display: flex; gap: 0.5rem;">
+                <button class="btn btn-danger" onclick="supprimerAnnonceModal()">🗑️ Supprimer</button>
+                <button class="btn btn-primary" onclick="fermerModal()">Fermer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
+    
+    <script>
+        // Configuration Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyCPay-0BB2o9Cefuj4w5k0b70mBG2kwR4E",
+            authDomain: "autoboom-tn.firebaseapp.com",
+            databaseURL: "https://autoboom-tn-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "autoboom-tn",
+            storageBucket: "autoboom-tn.firebasestorage.app",
+            messagingSenderId: "291199404228",
+            appId: "1:291199404228:web:b07c622a5f7b8bc9a4e191"
+        };
+
+        // Initialiser Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        let toutesAnnonces = [];
+        let annonceSelectionnee = null;
+
+        // FONCTIONS DE CHARGEMENT
+        async function chargerAnnoncesFirebase() {
+            try {
+                const snapshot = await database.ref('annonces').once('value');
+                const annoncesFirebase = snapshot.val() || {};
+                
+                const annoncesArray = Object.keys(annoncesFirebase).map(key => ({
+                    id: key,
+                    ...annoncesFirebase[key],
+                    source: 'firebase'
+                }));
+                
+                console.log(`🔥 Firebase: ${annoncesArray.length} annonces`);
+                return annoncesArray;
+            } catch (error) {
+                console.error('Erreur Firebase:', error);
+                return [];
+            }
+        }
+
+        function chargerAnnoncesLocale() {
+            try {
+                const annonces = JSON.parse(localStorage.getItem('annonces')) || [];
+                
+                const annoncesAvecSource = annonces.map((annonce, index) => {
+                    // GARANTIR un ID valide
+                    let safeId;
+                    if (annonce.id && typeof annonce.id === 'string') {
+                        safeId = annonce.id;
+                    } else if (annonce.id) {
+                        safeId = String(annonce.id);
+                    } else {
+                        safeId = 'local-' + Date.now() + '-' + index;
+                    }
+                    
+                    return {
+                        ...annonce,
+                        id: safeId,
+                        source: 'localstorage'
+                    };
+                });
+                
+                console.log(`💾 LocalStorage: ${annoncesAvecSource.length} annonces`);
+                return annoncesAvecSource;
+            } catch (error) {
+                console.error('❌ Erreur localStorage:', error);
+                return [];
+            }
+        }
+
+        // FONCTION PRINCIPALE DE CHARGEMENT
+        async function chargerAnnonces() {
+            console.log("🔄 Chargement depuis TOUTES les sources...");
+            
+            try {
+                const annoncesFirebase = await chargerAnnoncesFirebase();
+                const annoncesLocale = chargerAnnoncesLocale();
+                const toutesAnnoncesFusionnees = [...annoncesFirebase, ...annoncesLocale];
+                
+                console.log(`📊 TOTAL FUSIONNÉ: ${toutesAnnoncesFusionnees.length} annonces`);
+                
+                window.toutesAnnonces = toutesAnnoncesFusionnees;
+                afficherStats(annoncesFirebase.length, annoncesLocale.length);
+                afficherAnnonces(toutesAnnoncesFusionnees);
+                peuplerFiltres(toutesAnnoncesFusionnees);
+                
+                document.getElementById('loading-message').style.display = 'none';
+                document.getElementById('last-update').textContent = 
+                    `Dernière mise à jour: ${new Date().toLocaleTimeString('fr-FR')}`;
+                    
+            } catch (error) {
+                console.error('❌ Erreur chargement:', error);
+                document.getElementById('loading-message').style.display = 'none';
+                document.getElementById('annonces-list').innerHTML = 
+                    `<div class="error">Erreur de chargement: ${error.message}</div>`;
+            }
+        }
+
+        // Afficher les statistiques détaillées
+        function afficherStats(firebaseCount, localCount) {
+            const total = firebaseCount + localCount;
+            const avecPhotos = window.toutesAnnonces.filter(annonce => 
+                (annonce.photos && annonce.photos.length > 0) || 
+                (annonce.imagesBase64 && annonce.imagesBase64.length > 0)
+            ).length;
+            
+            document.getElementById('total-annonces').textContent = total;
+            document.getElementById('firebase-annonces').textContent = firebaseCount;
+            document.getElementById('local-annonces').textContent = localCount;
+            document.getElementById('avec-photos').textContent = avecPhotos;
+        }
+
+        // Afficher les annonces
+        function afficherAnnonces(annonces) {
+            const container = document.getElementById('annonces-list');
+            
+            if (annonces.length === 0) {
+                container.innerHTML = '<div class="error">🔍 Aucune annonce trouvée</div>';
+                return;
+            }
+            
+            container.innerHTML = annonces.map(annonce => {
+                // GARANTIR que l'ID existe et est une string
+                const safeId = String(annonce.id || `unknown-${Date.now()}-${Math.random()}`);
+                const escapedId = safeId.replace(/'/g, "\\'");
+                
+                const isLocal = annonce.source === 'localstorage';
+                let hasPhotos = false;
+                let firstPhoto = null;
+                
+                // Gestion des photos pour localStorage
+                if (isLocal) {
+                    hasPhotos = (annonce.imagesBase64 && annonce.imagesBase64.length > 0) || 
+                               (annonce.photos && annonce.photos.length > 0);
+                    if (annonce.imagesBase64 && annonce.imagesBase64.length > 0) {
+                        firstPhoto = annonce.imagesBase64[0];
+                    } else if (annonce.photos && annonce.photos.length > 0) {
+                        firstPhoto = annonce.photos[0];
+                    }
+                } else {
+                    hasPhotos = annonce.photos && annonce.photos.length > 0;
+                    firstPhoto = hasPhotos ? annonce.photos[0] : null;
+                }
+                
+                const badgeClass = isLocal ? 'badge-local' : 'badge-firebase';
+                const badgeText = isLocal ? 'Local' : 'Firebase';
+                
+                return `
+                    <div class="annonce-card ${isLocal ? 'local' : ''}">
+                        <div class="annonce-image ${!hasPhotos ? 'no-photo' : ''}">
+                            ${hasPhotos ? 
+                                `<img src="${firstPhoto}" alt="${annonce.marque} ${annonce.modele}" 
+                                      style="width: 100%; height: 100%; object-fit: cover; border-radius: 6px;"
+                                      onclick="voirDetails('${escapedId}')">` : 
+                                '📷 Sans photo'
+                            }
+                        </div>
+                        <div class="annonce-info">
+                            <h3 onclick="voirDetails('${escapedId}')" style="cursor: pointer;">
+                                ${annonce.marque || 'N/A'} ${annonce.modele || ''}
+                                <span class="source-badge ${badgeClass}">${badgeText}</span>
+                            </h3>
+                            <div style="color: #6b7280; font-size: 0.9rem; margin-bottom: 0.5rem;">
+                                <strong>${annonce.prix || 'N/A'}</strong> • ${annonce.annee || 'N/A'} • ${annonce.kilometrage || 'N/A'}<br>
+                                ${annonce.carburant || 'N/A'} • ${annonce.transmission || 'N/A'} • 📍 ${annonce.ville || 'N/A'}<br>
+                                👤 ${annonce.nom || 'N/A'} • 📞 ${annonce.contact || 'N/A'}<br>
+                                📅 ${annonce.date || 'Date inconnue'}
+                                ${hasPhotos ? `<br>📸 ${isLocal ? (annonce.imagesBase64 ? annonce.imagesBase64.length : annonce.photos?.length || 0) : annonce.photos.length} photo(s)` : ''}
+                            </div>
+                            <div style="color: #4b5563; font-size: 0.875rem;">
+                                ${annonce.description ? 
+                                    (annonce.description.length > 150 ? 
+                                        annonce.description.substring(0, 150) + '...' : 
+                                        annonce.description
+                                    ) : 
+                                    'Aucune description'
+                                }
+                            </div>
+                        </div>
+                        <div style="display: flex; flex-direction: column; gap: 0.5rem;">
+                            <button class="btn btn-danger" onclick="supprimerAnnonce('${escapedId}', '${annonce.source}')">
+                                🗑️ Supprimer
+                            </button>
+                            <button class="btn btn-primary" onclick="voirDetails('${escapedId}')">
+                                👁️ Détails
+                            </button>
+                            ${isLocal ? `
+                                <button class="btn btn-warning" onclick="migrerUneAnnonce('${escapedId}')">
+                                    🚀 Migrer
+                                </button>
+                            ` : ''}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Voir les détails d'une annonce
+        function voirDetails(id) {
+            annonceSelectionnee = window.toutesAnnonces.find(a => a.id === id);
+            if (!annonceSelectionnee) {
+                console.error('❌ Annonce non trouvée:', id);
+                return;
+            }
+            
+            const isLocal = annonceSelectionnee.source === 'localstorage';
+            const sourceText = isLocal ? 'LocalStorage' : 'Firebase';
+            
+            document.getElementById('modal-title').textContent = 
+                `${annonceSelectionnee.marque || 'N/A'} ${annonceSelectionnee.modele || ''} (${sourceText})`;
+            
+            // Gestion des photos
+            let hasPhotos = false;
+            let photos = [];
+            
+            if (isLocal) {
+                hasPhotos = (annonceSelectionnee.imagesBase64 && annonceSelectionnee.imagesBase64.length > 0) || 
+                           (annonceSelectionnee.photos && annonceSelectionnee.photos.length > 0);
+                
+                if (annonceSelectionnee.imagesBase64 && annonceSelectionnee.imagesBase64.length > 0) {
+                    photos = annonceSelectionnee.imagesBase64;
+                } else if (annonceSelectionnee.photos && annonceSelectionnee.photos.length > 0) {
+                    photos = annonceSelectionnee.photos;
+                }
+            } else {
+                hasPhotos = annonceSelectionnee.photos && annonceSelectionnee.photos.length > 0;
+                photos = annonceSelectionnee.photos || [];
+            }
+            
+            let modalHTML = `
+                <div style="line-height: 1.6;">
+                    <p><strong>📦 Source:</strong> ${sourceText}</p>
+                    <p><strong>💰 Prix:</strong> ${annonceSelectionnee.prix || 'N/A'}</p>
+                    <p><strong>📅 Année:</strong> ${annonceSelectionnee.annee || 'N/A'}</p>
+                    <p><strong>🛣️ Kilométrage:</strong> ${annonceSelectionnee.kilometrage || 'N/A'}</p>
+                    <p><strong>⛽ Carburant:</strong> ${annonceSelectionnee.carburant || 'N/A'}</p>
+                    <p><strong>⚙️ Transmission:</strong> ${annonceSelectionnee.transmission || 'N/A'}</p>
+                    <p><strong>📍 Ville:</strong> ${annonceSelectionnee.ville || 'N/A'}</p>
+                    <p><strong>👤 Contact:</strong> ${annonceSelectionnee.nom || 'N/A'} - ${annonceSelectionnee.contact || 'N/A'}</p>
+                    <p><strong>📧 Email:</strong> ${annonceSelectionnee.email || 'Non renseigné'}</p>
+                    <p><strong>📅 Date de publication:</strong> ${annonceSelectionnee.date || 'N/A'}</p>
+                    <p><strong>📝 Description:</strong><br>${annonceSelectionnee.description || 'Aucune description'}</p>
+                    <p><strong>🔑 ID:</strong> ${annonceSelectionnee.id}</p>
+            `;
+            
+            if (hasPhotos && photos.length > 0) {
+                modalHTML += `
+                    <div style="margin-top: 1rem;">
+                        <strong>📸 Photos (${photos.length}):</strong>
+                        <div class="photo-gallery">
+                            ${photos.map((photo, index) => {
+                                const photoSrc = photo.startsWith('data:image') ? photo : photo;
+                                return `<img src="${photoSrc}" alt="Photo ${index + 1}" 
+                                        onclick="window.open('${photoSrc}', '_blank')" 
+                                        style="cursor: pointer;"
+                                        onerror="this.style.display='none'">`;
+                            }).join('')}
+                        </div>
+                    </div>
+                `;
+            } else {
+                modalHTML += `<p><strong>📸 Photos:</strong> Aucune photo</p>`;
+            }
+            
+            modalHTML += `</div>`;
+            
+            document.getElementById('modal-content').innerHTML = modalHTML;
+            document.getElementById('detail-modal').style.display = 'flex';
+        }
+
+        function fermerModal() {
+            document.getElementById('detail-modal').style.display = 'none';
+            annonceSelectionnee = null;
+        }
+
+        function supprimerAnnonceModal() {
+            if (annonceSelectionnee) {
+                supprimerAnnonce(annonceSelectionnee.id, annonceSelectionnee.source);
+                fermerModal();
+            }
+        }
+
+        // Supprimer une annonce
+        function supprimerAnnonce(id, source) {
+            if (!confirm('Êtes-vous sûr de vouloir supprimer cette annonce ?')) return;
+
+            if (source === 'firebase') {
+                database.ref('annonces/' + id).remove()
+                    .then(() => {
+                        console.log('✅ Annonce Firebase supprimée:', id);
+                        alert('Annonce Firebase supprimée');
+                        chargerAnnonces();
+                    })
+                    .catch(error => {
+                        console.error('❌ Erreur suppression Firebase:', error);
+                        alert('Erreur suppression Firebase: ' + error.message);
+                    });
+            } else {
+                const annoncesLocale = JSON.parse(localStorage.getItem('annonces')) || [];
+                const nouvellesAnnonces = annoncesLocale.filter(annonce => annonce.id !== id);
+                localStorage.setItem('annonces', JSON.stringify(nouvellesAnnonces));
+                console.log('✅ Annonce LocalStorage supprimée:', id);
+                alert('Annonce LocalStorage supprimée');
+                chargerAnnonces();
+            }
+        }
+
+        // MIGRATION VERS FIREBASE - VERSION AMÉLIORÉE
+        async function migrerLocalStorageVersFirebase() {
+            const annoncesLocale = chargerAnnoncesLocale();
+            
+            if (annoncesLocale.length === 0) {
+                alert('❌ Aucune annonce dans localStorage à migrer');
+                return;
+            }
+            
+            if (!confirm(`Migrer ${annoncesLocale.length} annonces du localStorage vers Firebase ?`)) {
+                return;
+            }
+            
+            let succes = 0;
+            let erreurs = 0;
+            let dejaExistantes = 0;
+            
+            for (const annonce of annoncesLocale) {
+                try {
+                    // VÉRIFIER SI L'ANNONCE EXISTE DÉJÀ
+                    const annonceExistante = await verifierAnnonceExistante(annonce);
+                    
+                    if (annonceExistante) {
+                        console.log(`⏭️ Annonce déjà dans Firebase: ${annonce.marque} ${annonce.modele}`);
+                        dejaExistantes++;
+                        continue;
+                    }
+                    
+                    const { id, source, ...annoncePropre } = annonce;
+                    await sauvegarderAnnonceFirebase(annoncePropre);
+                    succes++;
+                    
+                    console.log(`✅ Migrée: ${annonce.marque} ${annonce.modele}`);
+                } catch (error) {
+                    console.error('❌ Erreur migration:', error);
+                    erreurs++;
+                }
+            }
+            
+            // VIDER localStorage
+            localStorage.removeItem('annonces');
+            console.log('🗑️ localStorage vidé');
+            
+            alert(`🎉 Migration terminée:\n✅ ${succes} nouvelles annonces migrées\n⏭️ ${dejaExistantes} déjà existantes\n❌ ${erreurs} erreurs`);
+            
+            chargerAnnonces();
+        }
+
+        // Vérifier si une annonce existe déjà dans Firebase
+        async function verifierAnnonceExistante(annonce) {
+            const snapshot = await database.ref('annonces').once('value');
+            const annoncesFirebase = snapshot.val() || {};
+            
+            return Object.values(annoncesFirebase).some(annonceFB => 
+                annonceFB.marque === annonce.marque &&
+                annonceFB.modele === annonce.modele && 
+                annonceFB.contact === annonce.contact &&
+                annonceFB.prix === annonce.prix
+            );
+        }
+
+        async function migrerUneAnnonce(id) {
+            const annonce = window.toutesAnnonces.find(a => a.id === id && a.source === 'localstorage');
+            if (!annonce) return;
+            
+            if (!confirm(`Migrer l'annonce ${annonce.marque} ${annonce.modele} vers Firebase ?`)) return;
+            
+            try {
+                // Vérifier si existe déjà
+                const existeDeja = await verifierAnnonceExistante(annonce);
+                if (existeDeja) {
+                    alert('❌ Cette annonce existe déjà dans Firebase');
+                    return;
+                }
+                
+                const { id: oldId, source, ...annoncePropre } = annonce;
+                await sauvegarderAnnonceFirebase(annoncePropre);
+                
+                const annoncesLocale = JSON.parse(localStorage.getItem('annonces')) || [];
+                const nouvellesAnnonces = annoncesLocale.filter(a => a.id !== id);
+                localStorage.setItem('annonces', JSON.stringify(nouvellesAnnonces));
+                
+                alert('✅ Annonce migrée vers Firebase avec succès');
+                chargerAnnonces();
+            } catch (error) {
+                console.error('❌ Erreur migration:', error);
+                alert('Erreur lors de la migration: ' + error.message);
+            }
+        }
+
+        // SUPPRIMER LES DOUBLONS
+        function supprimerDoublons() {
+            if (!confirm('Supprimer les annonces en double ? Cette action supprimera les doublons de localStorage.')) return;
+            
+            const annoncesParContact = {};
+            const doublons = [];
+            
+            window.toutesAnnonces.forEach(annonce => {
+                const cle = `${annonce.marque}-${annonce.modele}-${annonce.contact}-${annonce.prix}`;
+                
+                if (annoncesParContact[cle]) {
+                    // Préférer garder la version Firebase
+                    if (annonce.source === 'localstorage') {
+                        doublons.push(annonce);
+                    } else if (annoncesParContact[cle].source === 'localstorage') {
+                        doublons.push(annoncesParContact[cle]);
+                        annoncesParContact[cle] = annonce;
+                    }
+                } else {
+                    annoncesParContact[cle] = annonce;
+                }
+            });
+            
+            console.log(`🔍 ${doublons.length} doublons trouvés`);
+            
+            if (doublons.length === 0) {
+                alert('✅ Aucun doublon trouvé');
+                return;
+            }
+            
+            // Supprimer les doublons (uniquement de localStorage)
+            let suppressions = 0;
+            doublons.forEach(annonce => {
+                if (annonce.source === 'localstorage') {
+                    const annoncesLocale = JSON.parse(localStorage.getItem('annonces')) || [];
+                    const nouvellesAnnonces = annoncesLocale.filter(a => a.id !== annonce.id);
+                    localStorage.setItem('annonces', JSON.stringify(nouvellesAnnonces));
+                    suppressions++;
+                }
+            });
+            
+            alert(`🗑️ ${suppressions} doublons supprimés de localStorage`);
+            chargerAnnonces();
+        }
+
+        // RÉINITIALISER LOCALSTORAGE
+        function reinitialiserLocalStorage() {
+            if (!confirm('ATTENTION! Cela va supprimer TOUTES les données localStorage. Continuer ?')) return;
+            
+            localStorage.removeItem('annonces');
+            console.log('🗑️ Toutes les données localStorage supprimées');
+            alert('✅ LocalStorage réinitialisé');
+            chargerAnnonces();
+        }
+
+        async function sauvegarderAnnonceFirebase(annonce) {
+            try {
+                const newAnnonceRef = database.ref('annonces').push();
+                annonce.id = newAnnonceRef.key;
+                annonce.date = annonce.date || new Date().toLocaleDateString('fr-FR');
+                annonce.timestamp = Date.now();
+                await newAnnonceRef.set(annonce);
+                return annonce.id;
+            } catch (error) {
+                console.error('Erreur sauvegarde Firebase:', error);
+                throw error;
+            }
+        }
+
+        // Peupler les filtres
+        function peuplerFiltres(annonces) {
+            const marques = [...new Set(annonces.map(a => a.marque).filter(Boolean))].sort();
+            const villes = [...new Set(annonces.map(a => a.ville).filter(Boolean))].sort();
+            
+            document.getElementById('filter-marque').innerHTML = 
+                '<option value="">Toutes les marques</option>' +
+                marques.map(marque => `<option value="${marque}">${marque}</option>`).join('');
+                
+            document.getElementById('filter-ville').innerHTML = 
+                '<option value="">Toutes les villes</option>' +
+                villes.map(ville => `<option value="${ville}">${ville}</option>`).join('');
+        }
+
+        // Exporter les données
+        function exporterDonnees() {
+            if (!window.toutesAnnonces || window.toutesAnnonces.length === 0) {
+                alert('Aucune donnée à exporter');
+                return;
+            }
+            
+            const csv = convertirEnCSV(window.toutesAnnonces);
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            
+            link.setAttribute('href', url);
+            link.setAttribute('download', `autoboom-annonces-${new Date().toISOString().split('T')[0]}.csv`);
+            link.style.visibility = 'hidden';
+            
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            
+            alert(`✅ ${window.toutesAnnonces.length} annonces exportées en CSV`);
+        }
+
+        function convertirEnCSV(annonces) {
+            const headers = ['Source', 'Marque', 'Modèle', 'Prix', 'Année', 'Kilométrage', 'Carburant', 'Transmission', 'Ville', 'Nom', 'Téléphone', 'Email', 'Date', 'ID'];
+            const rows = annonces.map(annonce => [
+                annonce.source,
+                `"${annonce.marque || ''}"`,
+                `"${annonce.modele || ''}"`,
+                `"${annonce.prix || ''}"`,
+                annonce.annee || '',
+                `"${annonce.kilometrage || ''}"`,
+                `"${annonce.carburant || ''}"`,
+                `"${annonce.transmission || ''}"`,
+                `"${annonce.ville || ''}"`,
+                `"${annonce.nom || ''}"`,
+                `"${annonce.contact || ''}"`,
+                `"${annonce.email || ''}"`,
+                `"${annonce.date || ''}"`,
+                `"${annonce.id || ''}"`
+            ]);
+            
+            return [headers.join(','), ...rows.map(row => row.join(','))].join('\n');
+        }
+
+        // Filtrage
+        function filtrerAnnonces() {
+            const searchTerm = document.getElementById('search').value.toLowerCase();
+            const marqueFilter = document.getElementById('filter-marque').value;
+            const villeFilter = document.getElementById('filter-ville').value;
+            const sourceFilter = document.getElementById('filter-source').value;
+            
+            const annoncesFiltrees = window.toutesAnnonces.filter(annonce => {
+                const matchSearch = !searchTerm || 
+                    (annonce.marque && annonce.marque.toLowerCase().includes(searchTerm)) ||
+                    (annonce.modele && annonce.modele.toLowerCase().includes(searchTerm)) ||
+                    (annonce.ville && annonce.ville.toLowerCase().includes(searchTerm)) ||
+                    (annonce.description && annonce.description.toLowerCase().includes(searchTerm));
+                    
+                const matchMarque = !marqueFilter || annonce.marque === marqueFilter;
+                const matchVille = !villeFilter || annonce.ville === villeFilter;
+                const matchSource = !sourceFilter || annonce.source === sourceFilter;
+                
+                return matchSearch && matchMarque && matchVille && matchSource;
+            });
+            
+            afficherAnnonces(annoncesFiltrees);
+        }
+
+        // Événements
+        document.getElementById('search').addEventListener('input', filtrerAnnonces);
+        document.getElementById('filter-marque').addEventListener('change', filtrerAnnonces);
+        document.getElementById('filter-ville').addEventListener('change', filtrerAnnonces);
+        document.getElementById('filter-source').addEventListener('change', filtrerAnnonces);
+
+        // Charger au démarrage
+        document.addEventListener('DOMContentLoaded', chargerAnnonces);
+
+        // Fermer modal avec ESC
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') fermerModal();
+        });
+    </script>
+</body>
+</html>
