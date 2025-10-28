@@ -1,3 +1,40 @@
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
+
+<script>
+// Configuration Firebase (LA MÊME QUE annonces.html)
+const firebaseConfig = {
+    apiKey: "AIzaSyCPay-0BB2o9Cefuj4w5k0b70mBG2kwR4E",
+    authDomain: "autoboom-tn.firebaseapp.com",
+    databaseURL: "https://autoboom-tn-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "autoboom-tn",
+    storageBucket: "autoboom-tn.firebasestorage.app",
+    messagingSenderId: "291199404228",
+    appId: "1:291199404228:web:b07c622a5f7b8bc9a4e191"
+};
+
+// Initialiser Firebase
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
+
+// Fonction pour sauvegarder dans Firebase
+async function sauvegarderAnnonceFirebase(annonce) {
+    try {
+        const newAnnonceRef = database.ref('annonces').push();
+        annonce.id = newAnnonceRef.key; // Utiliser la clé Firebase comme ID
+        annonce.date = new Date().toLocaleDateString('fr-FR');
+        await newAnnonceRef.set(annonce);
+        return annonce.id;
+    } catch (error) {
+        console.error('Erreur sauvegarde Firebase:', error);
+        throw error;
+    }
+}
+</script>
+
+
+
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -815,3 +852,4 @@
            
 
         
+
