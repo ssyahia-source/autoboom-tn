@@ -713,19 +713,23 @@ const annoncesParDefaut = [
     }
 ];
 // Charger les annonces - VERSION STABLE
-function chargerAnnonces() {
-    reinitialiserDonnees();
+
+// Charger les annonces du localStorage ET Firebase
+async function chargerAnnonces() {
+    // D'abord charger depuis Firebase
+    const annoncesFirebase = await chargerAnnoncesFirebase();
     
-    const annoncesSauvegardees = JSON.parse(localStorage.getItem('annonces')) || [];
-    console.log('Annonces sauvegardées:', annoncesSauvegardees.length);
+    // Ensuite les annonces locales (pour transition)
+    const annoncesLocales = JSON.parse(localStorage.getItem('annonces')) || [];
     
-    // LIMITER à 10 annonces maximum
-    const annoncesLimitees = annoncesSauvegardees.slice(0, 10);
+    // Combiner et éliminer les doublons
+    const toutesAnnonces = [...annoncesFirebase, ...annoncesLocales];
+    const annoncesUniques = toutesAnnonces.filter((annonce, index, self) => 
+        index === self.findIndex(a => a.id === annonce.id)
+    );
     
-    const toutesAnnonces = [...annoncesLimitees, ...annoncesParDefaut];
-    
-    // Garantir que chaque annonce a des photos
-    toutesAnnonces.forEach(annonce => {
+    // Traitement des dates et photos
+    annoncesUniques.forEach(annonce => {
         if (!annonce.date) {
             annonce.date = new Date().toLocaleDateString('fr-FR');
         }
@@ -739,11 +743,14 @@ function chargerAnnonces() {
         annonce.isNew = differenceJours < 7;
     });
     
-    return toutesAnnonces.sort((a, b) => {
+    // Trier par date (récentes en premier)
+    return annoncesUniques.sort((a, b) => {
         return new Date(b.date.split('/').reverse().join('-')) - new Date(a.date.split('/').reverse().join('-'));
     });
 }
 
+
+        
 // RESTE DU CODE (pagination, filtres, etc.) - GARDER TOUT LE RESTE INCHANGÉ
 function afficherPagination(totalAnnonces) {
     const pagination = document.getElementById('pagination');
@@ -905,6 +912,7 @@ document.addEventListener('DOMContentLoaded', function() {
     </script>
 </body>
 </html>
+
 
 
 
