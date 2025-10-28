@@ -658,121 +658,140 @@ async function sauvegarderAnnonceFirebase(annonce) {
     </div>
 
     <script>
-        let imagesBase64 = [];
+       let imagesBase64 = [];
 
-        function previewImages() {
-            const input = document.getElementById('file-input');
-            const previewContainer = document.getElementById('preview-container');
-            const imagePreview = document.getElementById('image-preview');
-            const photoCount = document.getElementById('photo-count');
-            
-            if (input.files.length > 0) {
-                imagePreview.style.display = 'block';
-                
-                const nouvellesPhotos = Array.from(input.files);
-                const totalPhotos = imagesBase64.length + nouvellesPhotos.length;
-                
-                if (totalPhotos > 10) {
-                    alert(`Maximum 10 photos. Vous avez ${imagesBase64.length} photo(s).`);
-                    return;
-                }
-                
-                nouvellesPhotos.forEach((file, index) => {
-                    if (file.size > 5 * 1024 * 1024) {
-                        alert(`La photo "${file.name}" est trop volumineuse (max 5MB)`);
-                        return;
-                    }
-                    
-                    const reader = new FileReader();
-                    
-                    reader.onload = function(e) {
-                        imagesBase64.push(e.target.result);
-                        
-                        const imgDiv = document.createElement('div');
-                        imgDiv.className = 'preview-image';
-                        
-                        const img = document.createElement('img');
-                        img.src = e.target.result;
-                        img.alt = `Photo ${imagesBase64.length}`;
-                        
-                        const removeBtn = document.createElement('button');
-                        removeBtn.className = 'remove-btn';
-                        removeBtn.textContent = '×';
-                        removeBtn.onclick = function() {
-                            const photoIndex = imagesBase64.indexOf(e.target.result);
-                            if (photoIndex > -1) {
-                                imagesBase64.splice(photoIndex, 1);
-                            }
-                            imgDiv.remove();
-                            
-                            const newCount = imagesBase64.length;
-                            photoCount.textContent = `${newCount} photo(s) sélectionnée(s)`;
-                            
-                            if (newCount === 0) {
-                                imagePreview.style.display = 'none';
-                            }
-                        };
-                        
-                        imgDiv.appendChild(img);
-                        imgDiv.appendChild(removeBtn);
-                        previewContainer.appendChild(imgDiv);
-                        
-                        photoCount.textContent = `${imagesBase64.length} photo(s) sélectionnée(s)`;
-                    };
-                    
-                    reader.readAsDataURL(file);
-                });
-                
-                input.value = '';
-            }
+// Fonction pour prévisualiser les images
+function previewImages() {
+    const input = document.getElementById('file-input');
+    const previewContainer = document.getElementById('preview-container');
+    const imagePreview = document.getElementById('image-preview');
+    const photoCount = document.getElementById('photo-count');
+    
+    console.log("📸 previewImages appelée, fichiers:", input.files.length);
+    
+    if (input.files.length > 0) {
+        imagePreview.style.display = 'block';
+        
+        const nouvellesPhotos = Array.from(input.files);
+        const totalPhotos = imagesBase64.length + nouvellesPhotos.length;
+        
+        if (totalPhotos > 10) {
+            alert(`Maximum 10 photos. Vous avez déjà ${imagesBase64.length} photo(s).`);
+            return;
         }
-
-        function supprimerToutesPhotos() {
-            if (imagesBase64.length === 0) {
-                alert("Aucune photo à supprimer");
+        
+        nouvellesPhotos.forEach((file, index) => {
+            if (file.size > 5 * 1024 * 1024) {
+                alert(`La photo "${file.name}" est trop volumineuse (max 5MB)`);
                 return;
             }
             
-            if (confirm(`Supprimer toutes les ${imagesBase64.length} photo(s) ?`)) {
-                imagesBase64 = [];
-                document.getElementById('preview-container').innerHTML = '';
-                document.getElementById('image-preview').style.display = 'none';
-                document.getElementById('photo-count').textContent = '0 photo(s) sélectionnée(s)';
-            }
-        }
-
-        // Upload vers ImgBB
-        async function uploaderPhotosVersImgBB() {
-            const uploadedUrls = [];
+            const reader = new FileReader();
             
-            for (const base64Image of imagesBase64) {
-                // Convertir base64 en blob
-                const response = await fetch(base64Image);
-                const blob = await response.blob();
+            reader.onload = function(e) {
+                imagesBase64.push(e.target.result);
                 
-                const formData = new FormData();
-                formData.append('image', blob);
+                const imgDiv = document.createElement('div');
+                imgDiv.className = 'preview-image';
                 
-                try {
-                    const uploadResponse = await fetch('https://api.imgbb.com/1/upload?key=9afc48d54c47fa99b29cf435e762a81c', {
-                        method: 'POST',
-                        body: formData
-                    });
-                    
-                    const data = await uploadResponse.json();
-                    
-                    if (data.success) {
-                        uploadedUrls.push(data.data.url);
-                    } else {
-                        console.error('Erreur upload ImgBB:', data);
+                const img = document.createElement('img');
+                img.src = e.target.result;
+                img.alt = `Photo ${imagesBase64.length}`;
+                
+                const removeBtn = document.createElement('button');
+                removeBtn.className = 'remove-btn';
+                removeBtn.textContent = '×';
+                removeBtn.onclick = function() {
+                    const photoIndex = imagesBase64.indexOf(e.target.result);
+                    if (photoIndex > -1) {
+                        imagesBase64.splice(photoIndex, 1);
                     }
-                } catch (error) {
-                    console.error('Erreur:', error);
-                }
+                    imgDiv.remove();
+                    
+                    const newCount = imagesBase64.length;
+                    photoCount.textContent = `${newCount} photo(s) sélectionnée(s)`;
+                    
+                    if (newCount === 0) {
+                        imagePreview.style.display = 'none';
+                    }
+                };
+                
+                imgDiv.appendChild(img);
+                imgDiv.appendChild(removeBtn);
+                previewContainer.appendChild(imgDiv);
+                
+                photoCount.textContent = `${imagesBase64.length} photo(s) sélectionnée(s)`;
+                console.log("✅ Photo ajoutée, total:", imagesBase64.length);
+            };
+            
+            reader.readAsDataURL(file);
+        });
+        
+        input.value = '';
+    }
+}
+
+// Fonction pour supprimer toutes les photos
+function supprimerToutesPhotos() {
+    if (imagesBase64.length === 0) {
+        alert("Aucune photo à supprimer");
+        return;
+    }
+    
+    if (confirm(`Supprimer toutes les ${imagesBase64.length} photo(s) ?`)) {
+        imagesBase64 = [];
+        document.getElementById('preview-container').innerHTML = '';
+        document.getElementById('image-preview').style.display = 'none';
+        document.getElementById('photo-count').textContent = '0 photo(s) sélectionnée(s)';
+        console.log("🗑️ Toutes les photos supprimées");
+    }
+}
+
+// Upload vers ImgBB
+async function uploaderPhotosVersImgBB() {
+    console.log("🔥 Début upload vers ImgBB, photos:", imagesBase64.length);
+    
+    const uploadedUrls = [];
+    
+    for (const base64Image of imagesBase64) {
+        try {
+            // Convertir base64 en blob
+            const response = await fetch(base64Image);
+            const blob = await response.blob();
+            
+            const formData = new FormData();
+            formData.append('image', blob);
+            
+            console.log("📤 Upload photo vers ImgBB...");
+            
+            const uploadResponse = await fetch('https://api.imgbb.com/1/upload?key=9afc48d54c47fa99b29cf435e762a81c', {
+                method: 'POST',
+                body: formData
+            });
+            
+            const data = await uploadResponse.json();
+            
+            if (data.success) {
+                uploadedUrls.push(data.data.url);
+                console.log("✅ Photo uploadée:", data.data.url);
+            } else {
+                console.error('❌ Erreur upload ImgBB:', data);
+                throw new Error('Échec upload photo');
             }
-                     
-            return uploadedUrls;
-      async function publierAnnonce() {
+        } catch (error) {
+            console.error('❌ Erreur upload:', error);
+            throw error;
+        }
+    }
+    
+    console.log("🎯 Toutes les photos uploadées:", uploadedUrls);
+    return uploadedUrls;
+}
+
+// Fonction principale pour publier l'annonce
+async function publierAnnonce() {
+    console.log("🎯 BOUTON CLIQUE - DÉBUT PUBLICATION");
+    
     const marque = document.getElementById('marque').value;
     const modele = document.getElementById('modele').value;
     const prix = document.getElementById('prix').value;
@@ -786,10 +805,16 @@ async function sauvegarderAnnonceFirebase(annonce) {
     const nom = document.getElementById('nom').value;
     const email = document.getElementById('email').value;
     
+    console.log("📋 Données récupérées:", { marque, modele, prix });
+    
+    // Validation
     if (!marque || !modele || !prix || !annee || !kilometrage || !carburant || !transmission || !ville || !description || !telephone || !nom) {
         alert('Veuillez remplir tous les champs obligatoires (*)');
+        console.log("❌ Validation échouée");
         return;
     }
+    
+    console.log("✅ Validation réussie");
     
     // Afficher loading
     const submitBtn = document.querySelector('.btn-orange');
@@ -800,7 +825,11 @@ async function sauvegarderAnnonceFirebase(annonce) {
         // Uploader les photos vers ImgBB
         let photoUrls = [];
         if (imagesBase64.length > 0) {
+            console.log(`📸 Upload de ${imagesBase64.length} photo(s)...`);
             photoUrls = await uploaderPhotosVersImgBB();
+            console.log("✅ Photos uploadées:", photoUrls.length);
+        } else {
+            console.log("ℹ️ Aucune photo à uploader");
         }
         
         // Créer l'objet annonce
@@ -823,13 +852,19 @@ async function sauvegarderAnnonceFirebase(annonce) {
             date: new Date().toLocaleDateString('fr-FR')
         };
         
+        console.log("📦 Annonce créée:", nouvelleAnnonce);
+        console.log("🔥 Sauvegarde Firebase...");
+        
         // SAUVEGARDER DANS FIREBASE
         const annonceId = await sauvegarderAnnonceFirebase(nouvelleAnnonce);
         
+        console.log("✅ ID Annonce Firebase:", annonceId);
+        
         if (annonceId) {
-            // Succès - Firebase
+            // Succès
             submitBtn.textContent = '✅ Annonce publiée !';
             document.getElementById('confirmation').style.display = 'block';
+            console.log("🎉 ANNONCE PUBLIÉE AVEC SUCCÈS !");
             
             setTimeout(() => {
                 window.location.href = 'annonces.html';
@@ -839,14 +874,17 @@ async function sauvegarderAnnonceFirebase(annonce) {
         }
         
     } catch (error) {
-        console.error('Erreur:', error);
+        console.error('❌ ERREUR:', error);
         submitBtn.disabled = false;
         submitBtn.textContent = '✅ Publier mon annonce';
-        alert('Erreur lors de la publication. Réessayez.');
+        alert('Erreur lors de la publication: ' + error.message);
     }
 }
-// FIN de la fonction - PAS D'ACCOLADES SUPPLEMENTAIRES
-                
+
+// Vérification que tout est chargé
+console.log("✅ Script deposer-annonce chargé !");
+console.log("📸 previewImages:", typeof previewImages);
+console.log("🚀 publierAnnonce:", typeof publierAnnonce);                
     </script>
 </body>
 </html>
@@ -854,6 +892,7 @@ async function sauvegarderAnnonceFirebase(annonce) {
            
 
         
+
 
 
 
