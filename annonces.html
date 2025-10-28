@@ -498,6 +498,58 @@
             <button class="page-btn" id="next-btn" onclick="changerPage(pageActuelle + 1)">Suivant →</button>
         </div>
     </div>
+
+   <!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
+
+<script>
+// Configuration Firebase
+const firebaseConfig = {
+    apiKey: "AIzaSyCPay-0BB2o9Cefuj4w5k0b70mBG2kwR4E",
+    authDomain: "autoboom-tn.firebaseapp.com",
+    databaseURL: "https://autoboom-tn-default-rtdb.europe-west1.firebasedatabase.app",
+    projectId: "autoboom-tn",
+    storageBucket: "autoboom-tn.firebasestorage.app",
+    messagingSenderId: "291199404228",
+    appId: "1:291199404228:web:b07c622a5f7b8bc9a4e191"
+};
+
+// Initialiser Firebase
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
+
+// Fonction pour charger les annonces depuis Firebase
+async function chargerAnnoncesFirebase() {
+    try {
+        const snapshot = await database.ref('annonces').once('value');
+        const annoncesFirebase = snapshot.val() || {};
+        
+        // Convertir l'objet en tableau
+        return Object.values(annoncesFirebase);
+    } catch (error) {
+        console.error('Erreur Firebase:', error);
+        return [];
+    }
+}
+
+// Fonction pour sauvegarder une annonce dans Firebase
+async function sauvegarderAnnonceFirebase(annonce) {
+    try {
+        const newAnnonceRef = database.ref('annonces').push();
+        annonce.id = newAnnonceRef.key; // Utiliser la clé Firebase comme ID
+        await newAnnonceRef.set(annonce);
+        return annonce.id;
+    } catch (error) {
+        console.error('Erreur sauvegarde Firebase:', error);
+        return null;
+    }
+}
+</script> 
+    
+    
+    
+    
     <script>
 
     // Variables de pagination
@@ -853,6 +905,7 @@ document.addEventListener('DOMContentLoaded', function() {
     </script>
 </body>
 </html>
+
 
 
 
