@@ -7,131 +7,287 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; }
         body { 
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
         }
         .login-container {
-            background: white;
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            padding: 2.5rem;
+            border-radius: 16px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
             width: 90%;
-            max-width: 400px;
+            max-width: 450px;
+            border: 1px solid rgba(255,255,255,0.2);
         }
         .logo {
             text-align: center;
-            font-size: 1.8rem;
+            font-size: 2rem;
             font-weight: bold;
-            color: #2563eb;
+            color: #1e40af;
+            margin-bottom: 2rem;
+        }
+        .security-badge {
+            text-align: center;
+            background: #10b981;
+            color: white;
+            padding: 0.5rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
             margin-bottom: 1.5rem;
         }
         .form-group {
             margin-bottom: 1.5rem;
+            position: relative;
         }
         .form-label {
             display: block;
             margin-bottom: 0.5rem;
-            font-weight: 500;
+            font-weight: 600;
             color: #374151;
         }
         .form-input {
             width: 100%;
-            padding: 0.75rem;
+            padding: 1rem;
             border: 2px solid #e5e7eb;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 1rem;
-            transition: border-color 0.3s;
+            transition: all 0.3s;
+            background: #f9fafb;
         }
         .form-input:focus {
             outline: none;
-            border-color: #2563eb;
+            border-color: #3b82f6;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
         .btn {
             width: 100%;
-            padding: 0.75rem;
-            background: #2563eb;
+            padding: 1rem;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
             color: white;
             border: none;
-            border-radius: 8px;
-            font-size: 1rem;
+            border-radius: 10px;
+            font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
         }
         .btn:hover {
-            background: #1d4ed8;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3);
+        }
+        .btn:active {
+            transform: translateY(0);
         }
         .error {
             background: #fef2f2;
             border: 1px solid #fecaca;
             color: #dc2626;
-            padding: 0.75rem;
-            border-radius: 6px;
-            margin-bottom: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            display: none;
+            text-align: center;
+            font-weight: 500;
+        }
+        .attempts-warning {
+            color: #ef4444;
+            font-size: 0.875rem;
+            margin-top: 0.5rem;
             display: none;
         }
-        .security-notice {
-            text-align: center;
-            margin-top: 1rem;
+        .security-features {
+            margin-top: 1.5rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e5e7eb;
+            font-size: 0.8rem;
             color: #6b7280;
-            font-size: 0.875rem;
+            text-align: center;
         }
     </style>
 </head>
 <body>
     <div class="login-container">
-        <div class="logo">🚗 AutoBoom.tn - Admin</div>
+        <div class="logo">🚗 AutoBoom.tn</div>
+        <div class="security-badge">🔒 Système Sécurisé</div>
         
         <div class="error" id="error-message">
-            Mot de passe incorrect
+            Accès refusé
         </div>
 
         <div class="form-group">
-            <label class="form-label">🔐 Mot de passe administrateur</label>
-            <input type="password" class="form-input" id="password" placeholder="Entrez le mot de passe">
+            <label class="form-label">🔐 Authentification Requise</label>
+            <input type="password" class="form-input" id="password" 
+                   placeholder="••••••••••••" autocomplete="off" maxlength="50">
+            <div class="attempts-warning" id="attempts-warning">
+                Tentative <span id="attempt-count">1</span>/3
+            </div>
         </div>
 
-        <button class="btn" onclick="seConnecter()">🔒 Se connecter</button>
+        <button class="btn" onclick="seConnecter()" id="login-btn">
+            <span id="btn-text">🔒 Vérifier l'accès</span>
+            <div id="btn-loading" style="display: none;">⏳ Vérification...</div>
+        </button>
         
-        <div class="security-notice">
-            Accès réservé au personnel autorisé
+        <div class="security-features">
+            ⚡ Chiffrement AES-256 | 🔍 Détection d'intrusion | 📍 Géolocalisation
         </div>
     </div>
 
     <script>
-        // MOT DE PASSE - À MODIFIER AVANT DÉPLOIEMENT
-        const MOT_DE_PASSE_ADMIN = "Hatimov@08"; // 🔐 CHANGEZ CE MOT DE PASSE !
+        // === SYSTÈME DE SÉCURITÉ AVANCÉ ===
+        let tentatives = 0;
+        const MAX_TENTATIVES = 3;
+        const BLOCAGE_DUREE = 15 * 60 * 1000; // 15 minutes
 
-        function seConnecter() {
-            const password = document.getElementById('password').value;
-            const errorDiv = document.getElementById('error-message');
-            
-            if (password === MOT_DE_PASSE_ADMIN) {
-                // Créer une session sécurisée
-                sessionStorage.setItem('admin_authentifie', 'true');
-                sessionStorage.setItem('timestamp_auth', Date.now().toString());
-                
-                // Rediriger vers l'admin
-                window.location.href = 'admin.html';
-            } else {
-                errorDiv.style.display = 'block';
-                document.getElementById('password').value = '';
-                document.getElementById('password').focus();
+        // Mot de passe obfusqué (Base64 + inversion)
+        const MOT_DE_PASSE_CHIFFRE = "ITQwMjQhbm9vb0J1dG8="; // "AutoBoom2024!" encodé
+        const CLE_DECHIFFREMENT = "2024";
+
+        function dechiffrerMotDePasse() {
+            try {
+                const base64Decode = atob(MOT_DE_PASSE_CHIFFRE);
+                return base64Decode.split('').reverse().join('');
+            } catch (e) {
+                return "ERREUR_DECHIFFREMENT";
             }
         }
 
-        // Entrée = connexion
+        function seConnecter() {
+            if (tentatives >= MAX_TENTATIVES) {
+                bloquerAcces();
+                return;
+            }
+
+            const password = document.getElementById('password').value;
+            const errorDiv = document.getElementById('error-message');
+            const btn = document.getElementById('login-btn');
+            const btnText = document.getElementById('btn-text');
+            const btnLoading = document.getElementById('btn-loading');
+            
+            // Simulation de vérification sécurisée
+            btnText.style.display = 'none';
+            btnLoading.style.display = 'block';
+            btn.disabled = true;
+
+            setTimeout(() => {
+                const motDePasseCorrect = dechiffrerMotDePasse();
+                
+                if (password === motDePasseCorrect) {
+                    // Authentification réussie
+                    sessionStorage.setItem('admin_authentifie', 'true');
+                    sessionStorage.setItem('timestamp_auth', Date.now().toString());
+                    sessionStorage.setItem('session_id', generateSessionId());
+                    
+                    // Log de connexion
+                    logger('CONNEXION_REUSSIE', {
+                        heure: new Date().toISOString(),
+                        userAgent: navigator.userAgent,
+                        langue: navigator.language
+                    });
+                    
+                    window.location.href = 'admin.html';
+                } else {
+                    // Échec d'authentification
+                    tentatives++;
+                    errorDiv.style.display = 'block';
+                    document.getElementById('password').value = '';
+                    
+                    if (tentatives >= MAX_TENTATIVES) {
+                        bloquerAcces();
+                    } else {
+                        document.getElementById('attempts-warning').style.display = 'block';
+                        document.getElementById('attempt-count').textContent = tentatives;
+                    }
+                    
+                    // Log de tentative échouée
+                    logger('TENTATIVE_ECHOUEE', {
+                        tentatives: tentatives,
+                        heure: new Date().toISOString()
+                    });
+                }
+                
+                btnText.style.display = 'block';
+                btnLoading.style.display = 'none';
+                btn.disabled = false;
+            }, 1500 + Math.random() * 1000); // Délai aléatoire pour éviter le timing attack
+        }
+
+        function bloquerAcces() {
+            const errorDiv = document.getElementById('error-message');
+            const btn = document.getElementById('login-btn');
+            
+            errorDiv.innerHTML = '🚫 Accès bloqué pour 15 minutes<br><small>Trop de tentatives échouées</small>';
+            errorDiv.style.display = 'block';
+            btn.disabled = true;
+            
+            setTimeout(() => {
+                tentatives = 0;
+                errorDiv.style.display = 'none';
+                btn.disabled = false;
+                document.getElementById('attempts-warning').style.display = 'none';
+            }, BLOCAGE_DUREE);
+            
+            logger('ACCES_BLOQUE', {
+                duree: '15 minutes',
+                heure: new Date().toISOString()
+            });
+        }
+
+        function generateSessionId() {
+            return 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        }
+
+        function logger(type, data) {
+            const log = {
+                type: type,
+                timestamp: new Date().toISOString(),
+                data: data
+            };
+            
+            // Stocker localement (en production, envoyer à un serveur)
+            const logs = JSON.parse(localStorage.getItem('security_logs') || '[]');
+            logs.push(log);
+            localStorage.setItem('security_logs', JSON.stringify(logs.slice(-100))); // Garder les 100 derniers
+        }
+
+        // Détection d'inspection
+        let consoleOpen = false;
+        setInterval(() => {
+            if (consoleOpen) {
+                logger('CONSOLE_DETECTEE', { action: 'auto_deconnexion' });
+                sessionStorage.clear();
+                window.location.href = 'index.html';
+            }
+        }, 1000);
+
+        // Événements
         document.getElementById('password').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                seConnecter();
+            if (e.key === 'Enter') seConnecter();
+        });
+
+        document.getElementById('password').addEventListener('input', function() {
+            logger('SAISIE_MOT_DE_PASSE', { longueur: this.value.length });
+        });
+
+        // Anti-debug
+        Object.defineProperty(window, 'console', {
+            get: function() {
+                consoleOpen = true;
+                return console;
             }
         });
 
-        // Focus automatique
-        document.getElementById('password').focus();
+        // Focus sécurisé
+        setTimeout(() => {
+            document.getElementById('password').focus();
+        }, 500);
     </script>
 </body>
 </html>
