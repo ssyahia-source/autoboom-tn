@@ -215,6 +215,27 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
     
     <script>
+// === VÉRIFICATION DE SÉCURITÉ ===
+function verifierAuthentification() {
+    const authentifie = sessionStorage.getItem('admin_authentifie');
+    const timestamp = sessionStorage.getItem('timestamp_auth');
+    
+    // Vérifier si authentifié et session de moins de 8 heures
+    if (!authentifie || !timestamp || (Date.now() - parseInt(timestamp)) > 8 * 60 * 60 * 1000) {
+        sessionStorage.removeItem('admin_authentifie');
+        sessionStorage.removeItem('timestamp_auth');
+        window.location.href = 'login.html';
+        return false;
+    }
+    
+    return true;
+}
+
+// Vérifier au chargement
+if (!verifierAuthentification()) {
+    // La redirection se fait automatiquement
+    throw new Error('Redirection vers login');
+}
         // Configuration Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyCPay-0BB2o9Cefuj4w5k0b70mBG2kwR4E",
