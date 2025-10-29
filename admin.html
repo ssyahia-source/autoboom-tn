@@ -413,24 +413,20 @@
         </div>
 
         <!-- Actions de Sécurité -->
-        <div class="security-actions">
-            <div class="security-card" onclick="exporterLogsSecurite()">
-                <h3>📋 Logs de Sécurité</h3>
-                <p>Voir les tentatives d'accès</p>
-            </div>
-            <div class="security-card" onclick="purgerDonnees()">
-                <h3>🗑️ Purge Sécurisée</h3>
-                <p>Nettoyer les données</p>
-            </div>
-            <div class="security-card" onclick="verifierIntegrite()">
-                <h3>🔍 Vérification</h3>
-                <p>Contrôle d'intégrité</p>
-            </div>
-            <div class="security-card" onclick="sauvegarderSecurise()">
-                <h3>💾 Backup</h3>
-                <p>Sauvegarde chiffrée</p>
-            </div>
-        </div>
+       <div class="security-actions">
+    <div class="security-card" onclick="voirRapportSecurite()">
+        <h3>📊 Rapport Sécurité</h3>
+        <p>Voir le monitoring</p>
+    </div>
+    <div class="security-card" onclick="purgerLogsSecurite()">
+        <h3>🗑️ Purger Logs</h3>
+        <p>Nettoyer les logs</p>
+    </div>
+    <div class="security-card" onclick="exporterDonnees()">
+        <h3>💾 Export</h3>
+        <p>Sauvegarder données</p>
+    </div>
+</div>
 
         <!-- Statistiques -->
         <div class="stats-grid">
@@ -897,4 +893,5 @@ document.head.appendChild(style);
     </script>
 </body>
 </html>
+
 
