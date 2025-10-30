@@ -1,34 +1,136 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Admin Simple</title>
+    <title>Admin AutoBoom - Accès Simple</title>
     <style>
         body { font-family: Arial; padding: 20px; background: #1e293b; color: white; }
-        button { padding: 15px; margin: 10px; background: #2563eb; color: white; border: none; border-radius: 8px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header { background: #2563eb; padding: 20px; border-radius: 10px; margin-bottom: 20px; }
+        button { padding: 15px; margin: 10px; background: #2563eb; color: white; border: none; border-radius: 8px; cursor: pointer; }
+        button:hover { background: #1d4ed8; }
+        .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin: 20px 0; }
+        .stat-card { background: #374151; padding: 20px; border-radius: 8px; text-align: center; }
     </style>
 </head>
 <body>
-    <h1>🚗 Admin AutoBoom - Accès Simple</h1>
-    
-    <button onclick="gererAnnonces()">📋 Gérer Annonces</button>
-    <button onclick="voirStats()">📊 Voir Statistiques</button>
-    <button onclick="retourSite()">🏠 Retour au Site</button>
+    <div class="container">
+        <div class="header">
+            <h1>🚗 Admin AutoBoom - Accès Simplifié</h1>
+            <p>Version sécurisée sans blocages</p>
+        </div>
+
+        <div class="stats">
+            <div class="stat-card">
+                <h3 id="total-annonces">0</h3>
+                <p>Annonces Total</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="annonces-actives">0</h3>
+                <p>Annonces Actives</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="utilisateurs">0</h3>
+                <p>Utilisateurs</p>
+            </div>
+            <div class="stat-card">
+                <h3 id="revenus">0 TND</h3>
+                <p>Revenus</p>
+            </div>
+        </div>
+
+        <div>
+            <button onclick="gererAnnonces()">📋 Gérer les Annonces</button>
+            <button onclick="voirUtilisateurs()">👥 Voir les Utilisateurs</button>
+            <button onclick="parametres()">⚙️ Paramètres</button>
+            <button onclick="deconnexion()" style="background: #dc2626;">🚪 Déconnexion</button>
+        </div>
+
+        <div id="content" style="margin-top: 30px;"></div>
+    </div>
 
     <script>
+        // Configuration Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyCPay-0BB2o9Cefuj4w5k0b70mBG2kwR4E",
+            authDomain: "autoboom-tn.firebaseapp.com",
+            databaseURL: "https://autoboom-tn-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "autoboom-tn",
+            storageBucket: "autoboom-tn.firebasestorage.app",
+            messagingSenderId: "291199404228",
+            appId: "1:291199404228:web:b07c622a5f7b8bc9a4e191"
+        };
+
+        // Initialiser Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
         function gererAnnonces() {
-            alert("Gestion des annonces - Connectez à Firebase ici");
-            // Votre code Firebase ici
+            document.getElementById('content').innerHTML = `
+                <h2>📋 Gestion des Annonces</h2>
+                <div id="liste-annonces">Chargement...</div>
+            `;
+            chargerAnnonces();
         }
 
-        function voirStats() {
-            alert("Statistiques - À implémenter");
+        function chargerAnnonces() {
+            database.ref('annonces').once('value')
+                .then(snapshot => {
+                    let html = '<div style="display: grid; gap: 15px;">';
+                    snapshot.forEach(child => {
+                        const annonce = child.val();
+                        html += `
+                            <div style="background: #4b5563; padding: 15px; border-radius: 8px;">
+                                <strong>${annonce.marque} ${annonce.modele}</strong> - ${annonce.prix} TND
+                                <br><small>${annonce.ville} • ${annonce.telephone}</small>
+                                <button onclick="supprimerAnnonce('${child.key}')" style="background: #dc2626; margin-left: 10px;">Supprimer</button>
+                            </div>
+                        `;
+                    });
+                    html += '</div>';
+                    document.getElementById('liste-annonces').innerHTML = html;
+                    
+                    // Mettre à jour les stats
+                    document.getElementById('total-annonces').textContent = snapshot.numChildren();
+                })
+                .catch(error => {
+                    document.getElementById('liste-annonces').innerHTML = 'Erreur de chargement';
+                });
         }
 
-        function retourSite() {
-            window.location.href = 'index.html';
+        function supprimerAnnonce(id) {
+            if (confirm('Supprimer cette annonce ?')) {
+                database.ref('annonces/' + id).remove()
+                    .then(() => {
+                        alert('Annonce supprimée');
+                        chargerAnnonces();
+                    });
+            }
         }
+
+        function voirUtilisateurs() {
+            document.getElementById('content').innerHTML = `
+                <h2>👥 Utilisateurs</h2>
+                <p>Fonctionnalité à venir...</p>
+            `;
+        }
+
+        function parametres() {
+            document.getElementById('content').innerHTML = `
+                <h2>⚙️ Paramètres</h2>
+                <p>Configuration du site en développement...</p>
+            `;
+        }
+
+        function deconnexion() {
+            if (confirm('Se déconnecter ?')) {
+                window.location.href = 'index.html';
+            }
+        }
+
+        // Charger les stats au démarrage
+        gererAnnonces();
         
-        console.log("✅ Admin simple chargé");
+        console.log("✅ Admin simple chargé avec succès");
     </script>
 </body>
 </html>
