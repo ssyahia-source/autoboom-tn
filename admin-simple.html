@@ -1,151 +1,66 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Admin AutoBoom - Accès Simple</title>
+    <title>Admin AutoBoom - Sécurisé</title>
     <style>
+        /* Votre CSS existant de admin-simple */
         body { font-family: Arial; padding: 20px; background: #1e293b; color: white; }
         .container { max-width: 1200px; margin: 0 auto; }
-        .header { background: #2563eb; padding: 20px; border-radius: 10px; margin-bottom: 20px; }
-        button { padding: 15px; margin: 10px; background: #2563eb; color: white; border: none; border-radius: 8px; cursor: pointer; }
-        button:hover { background: #1d4ed8; }
-        .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin: 20px 0; }
-        .stat-card { background: #374151; padding: 20px; border-radius: 8px; text-align: center; }
+        /* ... reste du CSS ... */
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>🚗 Admin AutoBoom - Accès Simplifié</h1>
-            <p>Version sécurisée sans blocages</p>
+    <div id="login-container" style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+        <div style="background: white; padding: 40px; border-radius: 10px; text-align: center; color: black;">
+            <h2>🔐 Connexion Admin</h2>
+            <input type="password" id="admin-password" placeholder="Mot de passe" style="padding: 15px; margin: 10px; width: 250px;">
+            <br>
+            <button onclick="verifierMotDePasse()" style="padding: 15px 30px; background: #2563eb; color: white; border: none; border-radius: 5px;">
+                Se connecter
+            </button>
+            <p style="color: #666; margin-top: 15px;">Mot de passe: <strong>admin2008</strong></p>
         </div>
+    </div>
 
-        <div class="stats">
-            <div class="stat-card">
-                <h3 id="total-annonces">0</h3>
-                <p>Annonces Total</p>
+    <div id="admin-content" style="display: none;">
+        <!-- VOTRE CONTENU ADMIN EXISTANT ICI -->
+        <div class="container">
+            <div class="header">
+                <h1>🚗 Admin AutoBoom - Sécurisé</h1>
+                <button onclick="deconnexion()" style="background: #dc2626;">🚪 Déconnexion</button>
             </div>
-            <div class="stat-card">
-                <h3 id="annonces-actives">0</h3>
-                <p>Annonces Actives</p>
-            </div>
-            <div class="stat-card">
-                <h3 id="utilisateurs">0</h3>
-                <p>Utilisateurs</p>
-            </div>
-            <div class="stat-card">
-                <h3 id="revenus">0 TND</h3>
-                <p>Revenus</p>
-            </div>
+            <!-- ... reste de votre interface admin ... -->
         </div>
-
-        <div>
-            <button onclick="gererAnnonces()">📋 Gérer les Annonces</button>
-            <button onclick="voirUtilisateurs()">👥 Voir les Utilisateurs</button>
-            <button onclick="parametres()">⚙️ Paramètres</button>
-            <button onclick="deconnexion()" style="background: #dc2626;">🚪 Déconnexion</button>
-        </div>
-
-        <div id="content" style="margin-top: 30px;"></div>
     </div>
 
     <script>
-// === VÉRIFICATION D'AUTHENTIFICATION SIMPLE ===
-const motDePasseAdmin = "admin2008";
+        const MOT_DE_PASSE = "admin2008";
 
-// Demander le mot de passe si non authentifié
-if (!sessionStorage.getItem('admin_authentifie')) {
-    const password = prompt("🔐 Mot de passe admin requis:");
-    if (password === motDePasseAdmin) {
-        sessionStorage.setItem('admin_authentifie', 'true');
-    } else {
-        alert("Accès refusé");
-        window.location.href = 'index.html';
-        throw new Error("Accès non autorisé");
-    }
-}
-
-        // Configuration Firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyCPay-0BB2o9Cefuj4w5k0b70mBG2kwR4E",
-            authDomain: "autoboom-tn.firebaseapp.com",
-            databaseURL: "https://autoboom-tn-default-rtdb.europe-west1.firebasedatabase.app",
-            projectId: "autoboom-tn",
-            storageBucket: "autoboom-tn.firebasestorage.app",
-            messagingSenderId: "291199404228",
-            appId: "1:291199404228:web:b07c622a5f7b8bc9a4e191"
-        };
-
-        // Initialiser Firebase
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-
-        function gererAnnonces() {
-            document.getElementById('content').innerHTML = `
-                <h2>📋 Gestion des Annonces</h2>
-                <div id="liste-annonces">Chargement...</div>
-            `;
-            chargerAnnonces();
-        }
-
-        function chargerAnnonces() {
-            database.ref('annonces').once('value')
-                .then(snapshot => {
-                    let html = '<div style="display: grid; gap: 15px;">';
-                    snapshot.forEach(child => {
-                        const annonce = child.val();
-                        html += `
-                            <div style="background: #4b5563; padding: 15px; border-radius: 8px;">
-                                <strong>${annonce.marque} ${annonce.modele}</strong> - ${annonce.prix} TND
-                                <br><small>${annonce.ville} • ${annonce.telephone}</small>
-                                <button onclick="supprimerAnnonce('${child.key}')" style="background: #dc2626; margin-left: 10px;">Supprimer</button>
-                            </div>
-                        `;
-                    });
-                    html += '</div>';
-                    document.getElementById('liste-annonces').innerHTML = html;
-                    
-                    // Mettre à jour les stats
-                    document.getElementById('total-annonces').textContent = snapshot.numChildren();
-                })
-                .catch(error => {
-                    document.getElementById('liste-annonces').innerHTML = 'Erreur de chargement';
-                });
-        }
-
-        function supprimerAnnonce(id) {
-            if (confirm('Supprimer cette annonce ?')) {
-                database.ref('annonces/' + id).remove()
-                    .then(() => {
-                        alert('Annonce supprimée');
-                        chargerAnnonces();
-                    });
+        function verifierMotDePasse() {
+            const password = document.getElementById('admin-password').value;
+            
+            if (password === MOT_DE_PASSE) {
+                document.getElementById('login-container').style.display = 'none';
+                document.getElementById('admin-content').style.display = 'block';
+                sessionStorage.setItem('admin_auth', 'true');
+            } else {
+                alert("❌ Mot de passe incorrect");
+                document.getElementById('admin-password').value = '';
             }
-        }
-
-        function voirUtilisateurs() {
-            document.getElementById('content').innerHTML = `
-                <h2>👥 Utilisateurs</h2>
-                <p>Fonctionnalité à venir...</p>
-            `;
-        }
-
-        function parametres() {
-            document.getElementById('content').innerHTML = `
-                <h2>⚙️ Paramètres</h2>
-                <p>Configuration du site en développement...</p>
-            `;
         }
 
         function deconnexion() {
-            if (confirm('Se déconnecter ?')) {
-                window.location.href = 'index.html';
-            }
+            sessionStorage.removeItem('admin_auth');
+            location.reload();
         }
 
-        // Charger les stats au démarrage
-        gererAnnonces();
-        
-        console.log("✅ Admin simple chargé avec succès");
+        // Vérifier si déjà authentifié
+        if (sessionStorage.getItem('admin_auth')) {
+            document.getElementById('login-container').style.display = 'none';
+            document.getElementById('admin-content').style.display = 'block';
+        }
+
+        // VOTRE CODE FIREBASE ET FONCTIONS ADMIN EXISTANTES...
     </script>
 </body>
 </html>
