@@ -858,28 +858,29 @@ function retourAnalytics() {
     }
 }
 
-        function voirDetails(id) {
-            const annonce = toutesAnnonces.find(a => a.id === id);
-            if (annonce) {
-                alert(`Détails:\n${annonce.marque} ${annonce.modele}\nPrix: ${annonce.prix}TND\nVille: ${annonce.ville}\nTéléphone: ${annonce.telephone}`);
-            }
-        }
+        function voirDetailsComplets(id) {
+    const annonce = toutesAnnonces.find(a => a.id === id);
+    if (!annonce) return;
+    
+    const details = Object.entries(annonce)
+        .map(([key, value]) => `${key}: ${value}`)
+        .join('\n');
+    
+    alert(`📋 Détails complets:\n\n${details}`);
+}
 
-        function afficherLoading() {
-            document.getElementById('dernieres-annonces').innerHTML = `
-                <div class="loading">
-                    🔄 Chargement des données analytics...
-                </div>
-            `;
-        }
-
-        function afficherErreur(message) {
-            document.getElementById('dernieres-annonces').innerHTML = `
-                <div class="error">
-                    ❌ ${message}
-                </div>
-            `;
-        }
+function supprimerAnnonce(id) {
+    if (confirm('Êtes-vous sûr de vouloir supprimer cette annonce ? Cette action est irréversible.')) {
+        database.ref('annonces/' + id).remove()
+            .then(() => {
+                alert('✅ Annonce supprimée avec succès');
+                chargerDonnees(); // Recharger les données
+            })
+            .catch(error => {
+                alert('❌ Erreur lors de la suppression: ' + error.message);
+            });
+    }
+}
 
         // Entrée directe sur le champ mot de passe
         document.getElementById('admin-password')?.addEventListener('keypress', function(e) {
@@ -889,3 +890,4 @@ function retourAnalytics() {
 </body>
 
 </html>
+
