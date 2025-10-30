@@ -278,14 +278,13 @@
                 <p style="color: #9ca3af; margin-top: 0.5rem;">Tableau de bord en temps réel avec analyses avancées</p>
             </div>
             <div style="display: flex; gap: 1rem; align-items: center;">
-                <span id="last-update" style="color: #9ca3af; font-size: 0.9rem;"></span>
+                <span id="last-update" style="color: #9ca3af; font-size: 0.9rem;">Dernière MAJ: --:--:--</span>
                 <button class="btn btn-danger" onclick="deconnexion()">🚪 Déconnexion</button>
             </div>
         </div>
 
         <!-- Zone de contenu dynamique -->
         <div id="dynamic-content">
-            <!-- Le contenu des analytics sera chargé ici -->
             <div class="loading">
                 🔄 Chargement des analytics...
             </div>
@@ -320,7 +319,7 @@
         let donneesFiltrees = [];
         let charts = {};
         let periodeJours = 30;
-        let currentView = 'analytics'; // 'analytics' ou 'liste-complete'
+        let currentView = 'analytics';
 
         // === AUTHENTIFICATION ===
         function verifierMotDePasse() {
@@ -361,7 +360,7 @@
 
         function chargerDonnees() {
             afficherLoading();
-            periodeJours = parseInt(document.getElementById('time-range')?.value || 30);
+            periodeJours = 30; // Valeur par défaut
             
             database.ref('annonces').once('value')
                 .then(snapshot => {
@@ -370,7 +369,7 @@
                         const annonce = childSnapshot.val();
                         annonce.id = childSnapshot.key;
                         
-                        // Générer une date si manquante (basée sur l'ID Firebase)
+                        // Générer une date si manquante
                         if (!annonce.timestamp) {
                             annonce.timestamp = extraireTimestampDeId(annonce.id);
                         }
@@ -406,17 +405,9 @@
         }
 
         function filtrerDonnees() {
-            const villeFilter = document.getElementById('ville-filter')?.value || '';
-            const marqueFilter = document.getElementById('marque-filter')?.value || '';
-            
-            donneesFiltrees = toutesAnnonces.filter(annonce => {
-                const matchVille = !villeFilter || annonce.ville === villeFilter;
-                const matchMarque = !marqueFilter || annonce.marque === marqueFilter;
-                return matchVille && matchMarque;
-            });
-
+            // Pour l'instant, pas de filtres actifs
+            donneesFiltrees = toutesAnnonces;
             calculerAnalytics();
-            mettreAJourFiltres();
         }
 
         function calculerAnalytics() {
@@ -432,27 +423,26 @@
             const totalPrecedent = Math.max(1, donneesFiltrees.length - annoncesMois.length);
             const tendanceTotal = ((donneesFiltrees.length - totalPrecedent) / totalPrecedent * 100).toFixed(1);
             
-            // Mise à jour des KPIs
-            document.getElementById('kpi-total').textContent = donneesFiltrees.length;
-            document.getElementById('kpi-mois').textContent = annoncesMois.length;
-            document.getElementById('kpi-semaine').textContent = annoncesSemaine.length;
-            
             // Prix moyen
             const prixValides = donneesFiltrees.map(a => parseInt(a.prix)).filter(p => !isNaN(p) && p > 0);
             const prixMoyen = prixValides.length > 0 ? 
                 Math.round(prixValides.reduce((s, p) => s + p, 0) / prixValides.length) : 0;
-            document.getElementById('kpi-prix-moyen').textContent = prixMoyen + ' TND';
             
-            // Tendance
-            document.getElementById('kpi-total-trend').textContent = 
-                `${tendanceTotal >= 0 ? '+' : ''}${tendanceTotal}% vs période précédente`;
-            document.getElementById('kpi-total-trend').className = 
-                `kpi-trend ${tendanceTotal >= 0 ? 'trend-up' : 'trend-down'}`;
+            // Stocker les stats pour utilisation ultérieure
+            window.statsAnalytics = {
+                total: donneesFiltrees.length,
+                mois: annoncesMois.length,
+                semaine: annoncesSemaine.length,
+                prixMoyen: prixMoyen,
+                tendanceTotal: tendanceTotal
+            };
         }
 
         // === VUES ===
         function afficherVueAnalytics() {
             currentView = 'analytics';
+            const stats = window.statsAnalytics || { total: 0, mois: 0, semaine: 0, prixMoyen: 0, tendanceTotal: 0 };
+            
             const html = `
                 <!-- Filtres -->
                 <div class="filters">
@@ -478,24 +468,26 @@
                 <!-- KPI Cards -->
                 <div class="kpi-grid">
                     <div class="kpi-card">
-                        <div class="kpi-number" id="kpi-total">0</div>
+                        <div class="kpi-number">${stats.total}</div>
                         <div>Annonces Total</div>
-                        <div class="kpi-trend trend-up" id="kpi-total-trend">+0% vs période précédente</div>
+                        <div class="kpi-trend ${stats.tendanceTotal >= 0 ? 'trend-up' : 'trend-down'}">
+                            ${stats.tendanceTotal >= 0 ? '+' : ''}${stats.tendanceTotal}% vs période précédente
+                        </div>
                     </div>
                     <div class="kpi-card">
-                        <div class="kpi-number" id="kpi-mois">0</div>
+                        <div class="kpi-number">${stats.mois}</div>
                         <div>Ce Mois</div>
-                        <div class="kpi-trend trend-up" id="kpi-mois-trend">+0% vs mois dernier</div>
+                        <div class="kpi-trend trend-up">+0% vs mois dernier</div>
                     </div>
                     <div class="kpi-card">
-                        <div class="kpi-number" id="kpi-semaine">0</div>
+                        <div class="kpi-number">${stats.semaine}</div>
                         <div>Cette Semaine</div>
-                        <div class="kpi-trend trend-up" id="kpi-semaine-trend">+0% vs semaine dernière</div>
+                        <div class="kpi-trend trend-up">+0% vs semaine dernière</div>
                     </div>
                     <div class="kpi-card">
-                        <div class="kpi-number" id="kpi-prix-moyen">0 TND</div>
+                        <div class="kpi-number">${stats.prixMoyen} TND</div>
                         <div>Prix Moyen</div>
-                        <div class="kpi-trend" id="kpi-prix-trend">Stable</div>
+                        <div class="kpi-trend">Stable</div>
                     </div>
                 </div>
 
@@ -548,10 +540,12 @@
             `;
             
             document.getElementById('dynamic-content').innerHTML = html;
-            document.getElementById('time-range').value = periodeJours;
             
-            genererGraphiques();
-            mettreAJourFiltres();
+            // Mettre à jour les filtres après le rendu
+            setTimeout(() => {
+                mettreAJourFiltres();
+                genererGraphiques();
+            }, 100);
         }
 
         function afficherListeComplete() {
@@ -584,13 +578,13 @@
 
                     <!-- Liste complète -->
                     <div>
-                        ${donneesFiltrees.map((annonce, index) => `
+                        ${donneesFiltrees.length > 0 ? donneesFiltrees.map((annonce, index) => `
                             <div class="annonce-complete-item">
                                 <div>
                                     <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
                                         <strong style="font-size: 1.2rem;">#${index + 1} - ${annonce.marque || 'Marque'} ${annonce.modele || ''}</strong>
                                         <span style="background: #374151; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.8rem;">
-                                            🆔 ${annonce.id.substring(0, 8)}...
+                                            🆔 ${annonce.id ? annonce.id.substring(0, 8) + '...' : 'N/A'}
                                         </span>
                                     </div>
                                     
@@ -613,7 +607,7 @@
                                         
                                         <div>
                                             <div style="color: #60a5fa; font-weight: 600;">📅 Date</div>
-                                            <div>${annonce.date.toLocaleDateString('fr-FR')}</div>
+                                            <div>${annonce.date ? annonce.date.toLocaleDateString('fr-FR') : 'N/A'}</div>
                                         </div>
                                     </div>
 
@@ -637,29 +631,33 @@
                                 
                                 <div style="display: flex; gap: 0.5rem; flex-direction: column;">
                                     <button class="btn btn-primary btn-small" onclick="voirDetailsComplets('${annonce.id}')">
-                                        👁️ Détails Complets
+                                        👁️ Détails
                                     </button>
                                     <button class="btn btn-danger btn-small" onclick="supprimerAnnonce('${annonce.id}')">
                                         🗑️ Supprimer
                                     </button>
                                 </div>
                             </div>
-                        `).join('')}
+                        `).join('') : `
+                            <div class="error">
+                                ❌ Aucune annonce trouvée
+                            </div>
+                        `}
                     </div>
-
-                    ${donneesFiltrees.length === 0 ? `
-                        <div class="error">
-                            ❌ Aucune annonce trouvée avec les filtres actuels
-                        </div>
-                    ` : ''}
                 </div>
             `;
             
             document.getElementById('dynamic-content').innerHTML = html;
-            mettreAJourFiltresListe();
+            
+            // Mettre à jour les filtres après le rendu
+            setTimeout(mettreAJourFiltresListe, 100);
         }
 
         function genererListeAnnonces(annonces) {
+            if (!annonces || annonces.length === 0) {
+                return '<div class="table-row"><div colspan="7" style="text-align: center; padding: 2rem; color: #9ca3af;">Aucune annonce trouvée</div></div>';
+            }
+            
             return annonces.map((annonce, index) => `
                 <div class="table-row">
                     <div>${index + 1}</div>
@@ -669,7 +667,7 @@
                     </div>
                     <div><strong>${annonce.prix || 'N/A'} TND</strong></div>
                     <div>${annonce.ville || 'N/A'}</div>
-                    <div>${annonce.date.toLocaleDateString('fr-FR')}</div>
+                    <div>${annonce.date ? annonce.date.toLocaleDateString('fr-FR') : 'N/A'}</div>
                     <div>${annonce.nom || 'Anonyme'}</div>
                     <div>
                         <button class="btn btn-primary btn-small" onclick="voirDetailsComplets('${annonce.id}')">
@@ -682,6 +680,8 @@
 
         // === GRAPHIQUES ===
         function genererGraphiques() {
+            if (donneesFiltrees.length === 0) return;
+            
             // Données pour les N derniers jours
             const dates = [];
             const compteurs = [];
@@ -717,12 +717,12 @@
         }
 
         function creerGraphiqueEvolution(labels, data) {
-            const ctx = document.getElementById('evolutionChart')?.getContext('2d');
+            const ctx = document.getElementById('evolutionChart');
             if (!ctx) return;
             
             if (charts.evolution) charts.evolution.destroy();
             
-            charts.evolution = new Chart(ctx, {
+            charts.evolution = new Chart(ctx.getContext('2d'), {
                 type: 'line',
                 data: {
                     labels: labels,
@@ -763,12 +763,12 @@
                 return acc;
             }, {});
             
-            const ctx = document.getElementById('villesChart')?.getContext('2d');
+            const ctx = document.getElementById('villesChart');
             if (!ctx) return;
             
             if (charts.villes) charts.villes.destroy();
             
-            charts.villes = new Chart(ctx, {
+            charts.villes = new Chart(ctx.getContext('2d'), {
                 type: 'doughnut',
                 data: {
                     labels: Object.keys(villesData),
@@ -804,12 +804,12 @@
                 .sort((a, b) => b[1] - a[1])
                 .slice(0, 10);
             
-            const ctx = document.getElementById('marquesChart')?.getContext('2d');
+            const ctx = document.getElementById('marquesChart');
             if (!ctx) return;
             
             if (charts.marques) charts.marques.destroy();
             
-            charts.marques = new Chart(ctx, {
+            charts.marques = new Chart(ctx.getContext('2d'), {
                 type: 'bar',
                 data: {
                     labels: topMarques.map(m => m[0]),
@@ -851,7 +851,7 @@
             
             if (prix.length === 0) return;
             
-            const ctx = document.getElementById('prixChart')?.getContext('2d');
+            const ctx = document.getElementById('prixChart');
             if (!ctx) return;
             
             const maxPrix = Math.max(...prix);
@@ -868,7 +868,7 @@
             
             if (charts.prix) charts.prix.destroy();
             
-            charts.prix = new Chart(ctx, {
+            charts.prix = new Chart(ctx.getContext('2d'), {
                 type: 'pie',
                 data: {
                     labels: labels,
@@ -891,6 +891,7 @@
             });
         }
 
+             
         // === FONCTIONS UTILITAIRES ===
         function mettreAJourFiltres() {
             // Villes uniques
@@ -1037,3 +1038,4 @@
     </script>
 </body>
 </html>
+
