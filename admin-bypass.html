@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Accès Admin</title>
+    <script>
+        // Contourner toutes les sécurités
+        sessionStorage.setItem('admin_authentifie', 'true');
+        sessionStorage.setItem('timestamp_auth', '9999999999999');
+        sessionStorage.setItem('session_id', 'bypass_permanent');
+        
+        // Rediriger vers admin
+        setTimeout(() => {
+            window.location.href = 'admin.html';
+        }, 100);
+    </script>
+</head>
+<body>
+    <h1>Redirection vers Admin...</h1>
+</body>
+</html>
