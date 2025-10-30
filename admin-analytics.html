@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics AutoBoom - Tableau de Bord Avancé</title>
+    <!-- Chart.js pour les graphiques -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --danger: #dc2626;
+            --success: #059669;
+            --warning: #d97706;
+            --info: #0ea5e9;
+            --dark: #1f2937;
+        }
+        
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            font-family: 'Segoe UI', system-ui, sans-serif; 
+        }
+        
+        body { 
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #f8fafc;
+            min-height: 100vh;
+        }
+        
+        /* Écran de connexion */
+        #login-container { 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+        }
+        
+        .login-box { 
+            background: rgba(255, 255, 255, 0.95); 
+            padding: 3rem; 
+            border-radius: 16px; 
+            text-align: center; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+            color: #1f2937;
+        }
+        
+        .login-input { 
+            padding: 1rem; 
+            margin: 1rem 0; 
+            width: 300px; 
+            border: 2px solid #e5e7eb; 
+            border-radius: 8px; 
+            font-size: 16px; 
+        }
+        
+        .login-btn { 
+            padding: 1rem 2rem; 
+            background: var(--primary); 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-size: 16px; 
+            font-weight: 600;
+        }
+        
+        /* Interface Admin */
+        #admin-content { 
+            display: none; 
+            padding: 20px; 
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .admin-header { 
+            background: rgba(30, 41, 59, 0.8); 
+            padding: 1.5rem; 
+            border-radius: 12px; 
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        /* KPI Cards */
+        .kpi-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); 
+            gap: 1.5rem; 
+            margin-bottom: 2rem; 
+        }
+        
+        .kpi-card { 
+            background: rgba(30, 41, 59, 0.8); 
+            padding: 1.5rem; 
+            border-radius: 12px; 
+            border: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        
+        .kpi-card:hover {
+            transform: translateY(-5px);
+            border-color: #60a5fa;
+        }
+        
+        .kpi-number { 
+            font-size: 2.5rem; 
+            font-weight: 800; 
+            margin-bottom: 0.5rem;
+        }
+        
+        .kpi-trend {
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+        
+        .trend-up { color: #10b981; }
+        .trend-down { color: #ef4444; }
+        
+        /* Charts Grid */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .chart-container {
+            background: rgba(30, 41, 59, 0.8);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .chart-title {
+            color: #60a5fa;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+        
+        /* Table */
+        .data-table {
+            background: rgba(30, 41, 59, 0.8);
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,0.1);
+            overflow: hidden;
+        }
+        
+        .table-header {
+            background: #374151;
+            padding: 1rem;
+            font-weight: 600;
+            color: #60a5fa;
+        }
+        
+        .table-row {
+            display: grid;
+            grid-template-columns: 50px 1fr 100px 120px 120px 120px 100px;
+            padding: 1rem;
+            border-bottom: 1px solid #374151;
+            align-items: center;
+        }
+        
+        .table-row:hover {
+            background: rgba(255,255,255,0.05);
+        }
+        
+        /* Buttons */
+        .btn { 
+            padding: 0.75rem 1.5rem; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+        }
+        
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-success { background: var(--success); color: white; }
+        .btn-warning { background: var(--warning); color: white; }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+        
+        /* Filters */
+        .filters {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .filter-select {
+            background: #374151;
+            color: white;
+            border: 1px solid #4b5563;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+        }
+        
+        .loading { 
+            text-align: center; 
+            padding: 3rem; 
+            color: #9ca3af; 
+        }
+        
+        .error { 
+            background: rgba(220, 38, 38, 0.1); 
+            border: 1px solid rgba(220, 38, 38, 0.3); 
+            color: #fca5a5; 
+            padding: 1rem; 
+            border-radius: 8px; 
+            margin: 1rem 0; 
+        }
+    </style>
+</head>
+<body>
+    <!-- Écran de connexion -->
+    <div id="login-container">
+        <div class="login-box">
+            <h2>📊 Analytics AutoBoom</h2>
+            <p style="color: #6b7280; margin-bottom: 2rem;">Tableau de Bord Avancé avec Analytics</p>
+            
+            <input type="password" id="admin-password" class="login-input" placeholder="Mot de passe administrateur">
+            <br>
+            <button class="login-btn" onclick="verifierMotDePasse()">Se connecter</button>
+            
+            <p style="color: #9ca3af; margin-top: 1.5rem; font-size: 0.9rem;">
+                Mot de passe: <strong>admin2008</strong>
+            </p>
+        </div>
+    </div>
+
+    <!-- Interface Admin -->
+    <div id="admin-content">
+        <div class="admin-header">
+            <div>
+                <h1>📈 Analytics AutoBoom</h1>
+                <p style="color: #9ca3af; margin-top: 0.5rem;">Tableau de bord en temps réel avec analyses avancées</p>
+            </div>
+            <div style="display: flex; gap: 1rem; align-items: center;">
+                <span id="last-update" style="color: #9ca3af; font-size: 0.9rem;"></span>
+                <button class="btn btn-danger" onclick="deconnexion()">🚪 Déconnexion</button>
+            </div>
+        </div>
+
+        <!-- Filtres -->
+        <div class="filters">
+            <select id="time-range" class="filter-select" onchange="chargerDonnees()">
+                <option value="7">7 derniers jours</option>
+                <option value="30" selected>30 derniers jours</option>
+                <option value="90">3 derniers mois</option>
+                <option value="365">1 an</option>
+            </select>
+            
+            <select id="ville-filter" class="filter-select" onchange="filtrerDonnees()">
+                <option value="">Toutes les villes</option>
+            </select>
+            
+            <select id="marque-filter" class="filter-select" onchange="filtrerDonnees()">
+                <option value="">Toutes les marques</option>
+            </select>
+            
+            <button class="btn btn-primary" onclick="actualiserDonnees()">🔄 Actualiser</button>
+            <button class="btn btn-success" onclick="exporterRapport()">📊 Exporter Rapport</button>
+        </div>
+
+        <!-- KPI Cards -->
+        <div class="kpi-grid">
+            <div class="kpi-card">
+                <div class="kpi-number" id="kpi-total">0</div>
+                <div>Annonces Total</div>
+                <div class="kpi-trend trend-up" id="kpi-total-trend">+0% vs période précédente</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-number" id="kpi-mois">0</div>
+                <div>Ce Mois</div>
+                <div class="kpi-trend trend-up" id="kpi-mois-trend">+0% vs mois dernier</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-number" id="kpi-semaine">0</div>
+                <div>Cette Semaine</div>
+                <div class="kpi-trend trend-up" id="kpi-semaine-trend">+0% vs semaine dernière</div>
+            </div>
+            <div class="kpi-card">
+                <div class="kpi-number" id="kpi-prix-moyen">0 TND</div>
+                <div>Prix Moyen</div>
+                <div class="kpi-trend" id="kpi-prix-trend">Stable</div>
+            </div>
+        </div>
+
+        <!-- Graphiques -->
+        <div class="charts-grid">
+            <div class="chart-container">
+                <div class="chart-title">📈 Évolution des Annonces (30 jours)</div>
+                <canvas id="evolutionChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <div class="chart-title">🏙️ Répartition par Ville</div>
+                <canvas id="villesChart"></canvas>
+            </div>
+        </div>
+
+        <div class="charts-grid">
+            <div class="chart-container">
+                <div class="chart-title">🏷️ Top Marques</div>
+                <canvas id="marquesChart"></canvas>
+            </div>
+            <div class="chart-container">
+                <div class="chart-title">💰 Répartition des Prix</div>
+                <canvas id="prixChart"></canvas>
+            </div>
+        </div>
+
+        <!-- Dernières Annonces -->
+        <div class="chart-container">
+            <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 1rem;">
+                <div class="chart-title">🆕 Dernières Annonces</div>
+                <button class="btn btn-primary" onclick="afficherToutesAnnonces()">Voir Tout</button>
+            </div>
+            <div class="data-table">
+                <div class="table-header">
+                    <div class="table-row">
+                        <div>#</div>
+                        <div>Annonce</div>
+                        <div>Prix</div>
+                        <div>Ville</div>
+                        <div>Date</div>
+                        <div>Contact</div>
+                        <div>Actions</div>
+                    </div>
+                </div>
+                <div id="dernieres-annonces"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
+    
+    <script>
+        // === CONFIGURATION ===
+        const MOT_DE_PASSE = "admin2008";
+        
+        // Configuration Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyCPay-0BB2o9Cefuj4w5k0b70mBG2kwR4E",
+            authDomain: "autoboom-tn.firebaseapp.com",
+            databaseURL: "https://autoboom-tn-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "autoboom-tn",
+            storageBucket: "autoboom-tn.firebasestorage.app",
+            messagingSenderId: "291199404228",
+            appId: "1:291199404228:web:b07c622a5f7b8bc9a4e191"
+        };
+
+        // Initialiser Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // Variables globales
+        let toutesAnnonces = [];
+        let donneesFiltrees = [];
+        let charts = {};
+        let periodeJours = 30;
+
+        // === AUTHENTIFICATION ===
+        function verifierMotDePasse() {
+            const password = document.getElementById('admin-password').value;
+            
+            if (password === MOT_DE_PASSE) {
+                document.getElementById('login-container').style.display = 'none';
+                document.getElementById('admin-content').style.display = 'block';
+                sessionStorage.setItem('admin_auth', 'true');
+                initialiserAnalytics();
+            } else {
+                alert("❌ Mot de passe incorrect. Utilisez: admin2008");
+                document.getElementById('admin-password').value = '';
+                document.getElementById('admin-password').focus();
+            }
+        }
+
+        function deconnexion() {
+            if (confirm('Se déconnecter du tableau de bord ?')) {
+                sessionStorage.removeItem('admin_auth');
+                location.reload();
+            }
+        }
+
+        // Vérifier si déjà authentifié
+        if (sessionStorage.getItem('admin_auth')) {
+            document.getElementById('login-container').style.display = 'none';
+            document.getElementById('admin-content').style.display = 'block';
+            setTimeout(initialiserAnalytics, 100);
+        }
+
+        // === INITIALISATION ANALYTICS ===
+        function initialiserAnalytics() {
+            chargerDonnees();
+            // Actualiser toutes les 2 minutes
+            setInterval(chargerDonnees, 120000);
+        }
+
+        function chargerDonnees() {
+            afficherLoading();
+            periodeJours = parseInt(document.getElementById('time-range').value);
+            
+            database.ref('annonces').once('value')
+                .then(snapshot => {
+                    toutesAnnonces = [];
+                    snapshot.forEach(childSnapshot => {
+                        const annonce = childSnapshot.val();
+                        annonce.id = childSnapshot.key;
+                        
+                        // Générer une date si manquante (basée sur l'ID Firebase)
+                        if (!annonce.timestamp) {
+                            // Les IDs Firebase contiennent un timestamp
+                            annonce.timestamp = extraireTimestampDeId(annonce.id);
+                        }
+                        
+                        annonce.date = new Date(annonce.timestamp);
+                        toutesAnnonces.push(annonce);
+                    });
+
+                    console.log(`✅ ${toutesAnnonces.length} annonces chargées`);
+                    filtrerDonnees();
+                    mettreAJourDerniereMAJ();
+                })
+                .catch(error => {
+                    console.error('Erreur Firebase:', error);
+                    afficherErreur('Erreur de connexion à la base de données: ' + error.message);
+                });
+        }
+
+        function extraireTimestampDeId(id) {
+            // Les IDs Firebase contiennent un timestamp dans les premiers caractères
+            try {
+                const timestamp = parseInt(id.substring(0, 8), 36);
+                return isNaN(timestamp) ? Date.now() - Math.random() * 100000000 : timestamp;
+            } catch {
+                return Date.now() - Math.random() * 100000000;
+            }
+        }
+
+        function filtrerDonnees() {
+            const villeFilter = document.getElementById('ville-filter').value;
+            const marqueFilter = document.getElementById('marque-filter').value;
+            
+            donneesFiltrees = toutesAnnonces.filter(annonce => {
+                const matchVille = !villeFilter || annonce.ville === villeFilter;
+                const matchMarque = !marqueFilter || annonce.marque === marqueFilter;
+                return matchVille && matchMarque;
+            });
+
+            calculerAnalytics();
+            mettreAJourFiltres();
+        }
+
+        function calculerAnalytics() {
+            const maintenant = new Date();
+            const debutMois = new Date(maintenant.getFullYear(), maintenant.getMonth(), 1);
+            const debutSemaine = new Date(maintenant);
+            debutSemaine.setDate(maintenant.getDate() - maintenant.getDay());
+            
+            const annoncesMois = donneesFiltrees.filter(a => a.date >= debutMois);
+            const annoncesSemaine = donneesFiltrees.filter(a => a.date >= debutSemaine);
+            
+            // Calcul des tendances (simplifié)
+            const totalPrecedent = Math.max(1, donneesFiltrees.length - annoncesMois.length);
+            const tendanceTotal = ((donneesFiltrees.length - totalPrecedent) / totalPrecedent * 100).toFixed(1);
+            
+            // Mise à jour des KPIs
+            document.getElementById('kpi-total').textContent = donneesFiltrees.length;
+            document.getElementById('kpi-mois').textContent = annoncesMois.length;
+            document.getElementById('kpi-semaine').textContent = annoncesSemaine.length;
+            
+            // Prix moyen
+            const prixValides = donneesFiltrees.map(a => parseInt(a.prix)).filter(p => !isNaN(p) && p > 0);
+            const prixMoyen = prixValides.length > 0 ? 
+                Math.round(prixValides.reduce((s, p) => s + p, 0) / prixValides.length) : 0;
+            document.getElementById('kpi-prix-moyen').textContent = prixMoyen + ' TND';
+            
+            // Tendance
+            document.getElementById('kpi-total-trend').textContent = 
+                `${tendanceTotal >= 0 ? '+' : ''}${tendanceTotal}% vs période précédente`;
+            document.getElementById('kpi-total-trend').className = 
+                `kpi-trend ${tendanceTotal >= 0 ? 'trend-up' : 'trend-down'}`;
+            
+            genererGraphiques();
+            afficherDernieresAnnonces();
+        }
+
+        function genererGraphiques() {
+            // Données pour les 30 derniers jours
+            const dates = [];
+            const compteurs = [];
+            const maintenant = new Date();
+            
+            for (let i = periodeJours - 1; i >= 0; i--) {
+                const date = new Date(maintenant);
+                date.setDate(maintenant.getDate() - i);
+                dates.push(date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' }));
+                
+                const debutJour = new Date(date);
+                debutJour.setHours(0, 0, 0, 0);
+                const finJour = new Date(date);
+                finJour.setHours(23, 59, 59, 999);
+                
+                const count = donneesFiltrees.filter(a => 
+                    a.date >= debutJour && a.date <= finJour
+                ).length;
+                compteurs.push(count);
+            }
+            
+            // Graphique d'évolution
+            creerGraphiqueEvolution(dates, compteurs);
+            
+            // Graphique des villes
+            creerGraphiqueVilles();
+            
+            // Graphique des marques
+            creerGraphiqueMarques();
+            
+            // Graphique des prix
+            creerGraphiquePrix();
+        }
+
+        function creerGraphiqueEvolution(labels, data) {
+            const ctx = document.getElementById('evolutionChart').getContext('2d');
+            
+            if (charts.evolution) charts.evolution.destroy();
+            
+            charts.evolution = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Annonces par jour',
+                        data: data,
+                        borderColor: '#60a5fa',
+                        backgroundColor: 'rgba(96, 165, 250, 0.1)',
+                        borderWidth: 2,
+                        fill: true,
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(255,255,255,0.1)' },
+                            ticks: { color: '#9ca3af' }
+                        },
+                        x: {
+                            grid: { color: 'rgba(255,255,255,0.1)' },
+                            ticks: { color: '#9ca3af' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function creerGraphiqueVilles() {
+            const villesData = donneesFiltrees.reduce((acc, annonce) => {
+                const ville = annonce.ville || 'Non spécifié';
+                acc[ville] = (acc[ville] || 0) + 1;
+                return acc;
+            }, {});
+            
+            const ctx = document.getElementById('villesChart').getContext('2d');
+            if (charts.villes) charts.villes.destroy();
+            
+            charts.villes = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: Object.keys(villesData),
+                    datasets: [{
+                        data: Object.values(villesData),
+                        backgroundColor: [
+                            '#60a5fa', '#8b5cf6', '#10b981', '#f59e0b', '#ef4444',
+                            '#06b6d4', '#84cc16', '#f97316', '#6366f1', '#ec4899'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { 
+                            position: 'bottom',
+                            labels: { color: '#9ca3af' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function creerGraphiqueMarques() {
+            const marquesData = donneesFiltrees.reduce((acc, annonce) => {
+                const marque = annonce.marque || 'Autre';
+                acc[marque] = (acc[marque] || 0) + 1;
+                return acc;
+            }, {});
+            
+            // Prendre les top 10 marques
+            const topMarques = Object.entries(marquesData)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 10);
+            
+            const ctx = document.getElementById('marquesChart').getContext('2d');
+            if (charts.marques) charts.marques.destroy();
+            
+            charts.marques = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: topMarques.map(m => m[0]),
+                    datasets: [{
+                        label: 'Nombre d\'annonces',
+                        data: topMarques.map(m => m[1]),
+                        backgroundColor: '#60a5fa',
+                        borderColor: '#2563eb',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: { color: 'rgba(255,255,255,0.1)' },
+                            ticks: { color: '#9ca3af' }
+                        },
+                        x: {
+                            grid: { color: 'rgba(255,255,255,0.1)' },
+                            ticks: { 
+                                color: '#9ca3af',
+                                maxRotation: 45
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function creerGraphiquePrix() {
+            const prix = donneesFiltrees
+                .map(a => parseInt(a.prix))
+                .filter(p => !isNaN(p) && p > 0);
+            
+            if (prix.length === 0) return;
+            
+            const maxPrix = Math.max(...prix);
+            const segments = [5000, 10000, 20000, 30000, 50000, maxPrix];
+            const segmentsData = segments.map((max, i) => {
+                const min = i === 0 ? 0 : segments[i-1];
+                return prix.filter(p => p > min && p <= max).length;
+            });
+            
+            const labels = segments.map((max, i) => {
+                const min = i === 0 ? 0 : segments[i-1];
+                return `${min}-${max}TND`;
+            });
+            
+            const ctx = document.getElementById('prixChart').getContext('2d');
+            if (charts.prix) charts.prix.destroy();
+            
+            charts.prix = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: segmentsData,
+                        backgroundColor: [
+                            '#10b981', '#84cc16', '#f59e0b', '#f97316', '#ef4444', '#8b5cf6'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { 
+                            position: 'bottom',
+                            labels: { color: '#9ca3af' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function afficherDernieresAnnonces() {
+            const dernieres = donneesFiltrees
+                .sort((a, b) => b.timestamp - a.timestamp)
+                .slice(0, 10);
+            
+            const html = dernieres.map((annonce, index) => `
+                <div class="table-row">
+                    <div>${index + 1}</div>
+                    <div>
+                        <strong>${annonce.marque || 'N/A'} ${annonce.modele || ''}</strong>
+                        ${annonce.annee ? `<br><small>${annonce.annee}</small>` : ''}
+                    </div>
+                    <div><strong>${annonce.prix || 'N/A'} TND</strong></div>
+                    <div>${annonce.ville || 'N/A'}</div>
+                    <div>${annonce.date.toLocaleDateString('fr-FR')}</div>
+                    <div>${annonce.telephone || 'N/A'}</div>
+                    <div>
+                        <button class="btn btn-primary" onclick="voirDetails('${annonce.id}')" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">
+                            👁️
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+            
+            document.getElementById('dernieres-annonces').innerHTML = html;
+        }
+
+        function mettreAJourFiltres() {
+            // Villes uniques
+            const villes = [...new Set(toutesAnnonces.map(a => a.ville).filter(Boolean))];
+            const villeSelect = document.getElementById('ville-filter');
+            villeSelect.innerHTML = '<option value="">Toutes les villes</option>' +
+                villes.map(v => `<option value="${v}">${v}</option>`).join('');
+            
+            // Marques uniques
+            const marques = [...new Set(toutesAnnonces.map(a => a.marque).filter(Boolean))];
+            const marqueSelect = document.getElementById('marque-filter');
+            marqueSelect.innerHTML = '<option value="">Toutes les marques</option>' +
+                marques.map(m => `<option value="${m}">${m}</option>`).join('');
+        }
+
+        function mettreAJourDerniereMAJ() {
+            const now = new Date();
+            document.getElementById('last-update').textContent = 
+                `Dernière MAJ: ${now.toLocaleTimeString('fr-FR')}`;
+        }
+
+        function actualiserDonnees() {
+            chargerDonnees();
+        }
+
+        function exporterRapport() {
+            const csv = [
+                ['Rapport AutoBoom - ' + new Date().toLocaleDateString('fr-FR')],
+                [''],
+                ['Statistiques Générales'],
+                ['Total annonces', donneesFiltrees.length],
+                ['Annonces ce mois', document.getElementById('kpi-mois').textContent],
+                ['Annonces cette semaine', document.getElementById('kpi-semaine').textContent],
+                ['Prix moyen', document.getElementById('kpi-prix-moyen').textContent],
+                [''],
+                ['Dernières annonces'],
+                ['#', 'Marque', 'Modèle', 'Prix', 'Ville', 'Date', 'Téléphone']
+            ].concat(
+                donneesFiltrees.slice(0, 20).map((a, i) => [
+                    i + 1,
+                    a.marque || '',
+                    a.modele || '',
+                    a.prix || '',
+                    a.ville || '',
+                    a.date.toLocaleDateString('fr-FR'),
+                    a.telephone || ''
+                ])
+            ).map(row => row.join(',')).join('\n');
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `rapport_autoboom_${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            
+            alert('📊 Rapport exporté avec succès !');
+        }
+
+        function afficherToutesAnnonces() {
+            // Rediriger vers l'admin classique ou ouvrir dans un nouvel onglet
+            window.open('admin-secure.html', '_blank');
+        }
+
+        function voirDetails(id) {
+            const annonce = toutesAnnonces.find(a => a.id === id);
+            if (annonce) {
+                alert(`Détails:\n${annonce.marque} ${annonce.modele}\nPrix: ${annonce.prix}TND\nVille: ${annonce.ville}\nTéléphone: ${annonce.telephone}`);
+            }
+        }
+
+        function afficherLoading() {
+            document.getElementById('dernieres-annonces').innerHTML = `
+                <div class="loading">
+                    🔄 Chargement des données analytics...
+                </div>
+            `;
+        }
+
+        function afficherErreur(message) {
+            document.getElementById('dernieres-annonces').innerHTML = `
+                <div class="error">
+                    ❌ ${message}
+                </div>
+            `;
+        }
+
+        // Entrée directe sur le champ mot de passe
+        document.getElementById('admin-password')?.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') verifierMotDePasse();
+        });
+    </script>
+</body>
+</html>
