@@ -413,20 +413,24 @@
         </div>
 
         <!-- Actions de Sécurité -->
-       <div class="security-actions">
-    <div class="security-card" onclick="voirRapportSecurite()">
-        <h3>📊 Rapport Sécurité</h3>
-        <p>Voir le monitoring</p>
-    </div>
-    <div class="security-card" onclick="purgerLogsSecurite()">
-        <h3>🗑️ Purger Logs</h3>
-        <p>Nettoyer les logs</p>
-    </div>
-    <div class="security-card" onclick="exporterDonnees()">
-        <h3>💾 Export</h3>
-        <p>Sauvegarder données</p>
-    </div>
-</div>
+        <div class="security-actions">
+            <div class="security-card" onclick="exporterLogsSecurite()">
+                <h3>📋 Logs de Sécurité</h3>
+                <p>Voir les tentatives d'accès</p>
+            </div>
+            <div class="security-card" onclick="purgerDonnees()">
+                <h3>🗑️ Purge Sécurisée</h3>
+                <p>Nettoyer les données</p>
+            </div>
+            <div class="security-card" onclick="verifierIntegrite()">
+                <h3>🔍 Vérification</h3>
+                <p>Contrôle d'intégrité</p>
+            </div>
+            <div class="security-card" onclick="sauvegarderSecurise()">
+                <h3>💾 Backup</h3>
+                <p>Sauvegarde chiffrée</p>
+            </div>
+        </div>
 
         <!-- Statistiques -->
         <div class="stats-grid">
@@ -515,7 +519,7 @@
                                 sessionId && 
                                 (Date.now() - parseInt(timestamp)) < 2 * 60 * 60 * 1000; // 2 heures
                 
-                if (!estValide) {
+              //  if (!estValide) {
                     // Log de tentative d'accès non autorisé
                     const log = {
                         type: 'ACCES_NON_AUTORISE',
@@ -523,7 +527,7 @@
                         ip: 'N/A', // En frontend seulement
                         userAgent: navigator.userAgent,
                         url: window.location.href
-                    };
+                   // };
                     
                     const logs = JSON.parse(localStorage.getItem('security_logs') || '[]');
                     logs.push(log);
@@ -666,232 +670,7 @@
         });
 
         // [Insérez ici toutes vos fonctions existantes de admin.html, mais ajoutez du logging de sécurité]
-        // === SYSTÈME DE MONITORING ET ALERTES ===
-class SecurityMonitor {
-    constructor() {
-        this.alertes = [];
-        this.initialiserMonitoring();
-    }
-
-    initialiserMonitoring() {
-        console.log("🔍 Monitoring de sécurité activé");
         
-        // Surveillance des erreurs JavaScript
-        window.addEventListener('error', (e) => {
-            this.loguer('ERREUR_JS', {
-                message: e.message,
-                fichier: e.filename,
-                ligne: e.lineno
-            });
-        });
-
-        // Surveillance de l'inactivité
-        let tempsInactivite = 0;
-        setInterval(() => {
-            tempsInactivite++;
-            if (tempsInactivite > 300) { // 5 minutes
-                this.loguer('INACTIVITE_PROLONGEE', { duree: '5 minutes' });
-            }
-            if (tempsInactivite > 600) { // 10 minutes
-                this.autoDeconnexion();
-            }
-        }, 1000);
-
-        // Réinitialiser l'inactivité sur interaction
-        document.addEventListener('mousemove keydown click scroll', () => {
-            tempsInactivite = 0;
-        });
-
-        // Surveillance périodique
-        setInterval(() => this.verifierIntegrite(), 30000); // Toutes les 30 secondes
-    }
-
-    loguer(type, details = {}) {
-        const alerte = {
-            id: Date.now() + Math.random(),
-            type: type,
-            timestamp: new Date().toLocaleString('fr-FR'),
-            details: details,
-            severite: this.getSeverite(type)
-        };
-
-        this.alertes.push(alerte);
-        
-        // Stocker localement (limité aux 50 derniers)
-        const alertesStockees = JSON.parse(localStorage.getItem('alertes_securite') || '[]');
-        alertesStockees.push(alerte);
-        localStorage.setItem('alertes_securite', JSON.stringify(alertesStockees.slice(-50)));
-
-        console.log(`🔔 [${alerte.severite}] ${type}`, details);
-
-        // Alerte visuelle pour les événements critiques
-        if (alerte.severite === 'CRITIQUE') {
-            this.afficherAlerteCritique(alerte);
-        }
-    }
-
-    getSeverite(type) {
-        const severites = {
-            'TENTATIVE_INTRUSION': 'CRITIQUE',
-            'ACCES_NON_AUTORISE': 'CRITIQUE', 
-            'ERREUR_JS': 'MOYENNE',
-            'INACTIVITE_PROLONGEE': 'MOYENNE'
-        };
-        return severites[type] || 'FAIBLE';
-    }
-
-    afficherAlerteCritique(alerte) {
-        // Créer une notification visuelle
-        const notification = document.createElement('div');
-        notification.style.cssText = `
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #dc2626;
-            color: white;
-            padding: 1rem;
-            border-radius: 8px;
-            z-index: 10000;
-            max-width: 300px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            border-left: 4px solid #fca5a5;
-            animation: slideIn 0.3s ease-out;
-        `;
-        
-        notification.innerHTML = `
-            <strong>🚨 Alerte Sécurité</strong>
-            <div style="font-size: 0.8rem; margin-top: 0.5rem;">
-                ${alerte.type}
-            </div>
-            <button onclick="this.parentElement.remove()" 
-                    style="position: absolute; top: 5px; right: 5px; background: none; border: none; color: white; cursor: pointer; font-size: 1.2rem;">
-                ×
-            </button>
-        `;
-
-        document.body.appendChild(notification);
-
-        // Auto-suppression après 8 secondes
-        setTimeout(() => {
-            if (notification.parentElement) {
-                notification.remove();
-            }
-        }, 8000);
-    }
-
-    verifierIntegrite() {
-        // Vérifications basiques
-        const tests = {
-            sessionValide: !!sessionStorage.getItem('admin_authentifie'),
-            timestampValide: () => {
-                const timestamp = sessionStorage.getItem('timestamp_auth');
-                return timestamp && (Date.now() - parseInt(timestamp)) < 2 * 60 * 60 * 1000;
-            }
-        };
-
-        Object.entries(tests).forEach(([test, verif]) => {
-            const resultat = typeof verif === 'function' ? verif() : verif;
-            if (!resultat) {
-                this.loguer('ERREUR_INTEGRITE', { test: test, resultat: resultat });
-            }
-        });
-    }
-
-    autoDeconnexion() {
-        this.loguer('DECONNEXION_AUTO', { raison: 'Inactivité prolongée' });
-        sessionStorage.clear();
-        window.location.href = 'login.html';
-    }
-
-    genererRapportSecurite() {
-        const alertes = JSON.parse(localStorage.getItem('alertes_securite') || '[]');
-        
-        return {
-            generated: new Date().toLocaleString('fr-FR'),
-            periode: {
-                debut: alertes[0]?.timestamp,
-                fin: alertes[alertes.length - 1]?.timestamp
-            },
-            statistiques: {
-                totalAlertes: alertes.length,
-                alertesCritiques: alertes.filter(a => a.severite === 'CRITIQUE').length
-            },
-            alertesRecentes: alertes.slice(-5).map(a => ({
-                type: a.type,
-                timestamp: a.timestamp,
-                severite: a.severite
-            }))
-        };
-    }
-}
-
-// Initialiser le monitoring
-const moniteurSecurite = new SecurityMonitor();
-
-// === FONCTIONS UTILITAIRES POUR L'ADMIN ===
-
-function voirRapportSecurite() {
-    const rapport = moniteurSecurite.genererRapportSecurite();
-    
-    const modal = document.createElement('div');
-    modal.style.cssText = `
-        position: fixed;
-        top: 0; left: 0;
-        width: 100%; height: 100%;
-        background: rgba(0,0,0,0.8);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 10000;
-    `;
-    
-    modal.innerHTML = `
-        <div style="background: #1f2937; padding: 2rem; border-radius: 12px; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto; color: white;">
-            <h3 style="color: #60a5fa; margin-bottom: 1rem;">📊 Rapport de Sécurité</h3>
-            
-            <div style="background: #374151; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
-                <strong>📈 Statistiques:</strong><br>
-                • Alertes totales: ${rapport.statistiques.totalAlertes}<br>
-                • Alertes critiques: ${rapport.statistiques.alertesCritiques}<br>
-                • Période: ${rapport.periode.debut || 'N/A'} à ${rapport.periode.fin || 'N/A'}
-            </div>
-            
-            <div style="background: #374151; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
-                <strong>🔍 Alertes Récentes:</strong><br>
-                ${rapport.alertesRecentes.map(a => 
-                    `• [${a.severite}] ${a.type} - ${a.timestamp}`
-                ).join('<br>') || 'Aucune alerte récente'}
-            </div>
-            
-            <button onclick="this.closest('div').parentElement.remove()" 
-                    style="background: #2563eb; color: white; border: none; padding: 0.75rem 1.5rem; border-radius: 6px; cursor: pointer; width: 100%;">
-                Fermer le Rapport
-            </button>
-        </div>
-    `;
-    
-    document.body.appendChild(modal);
-}
-
-function purgerLogsSecurite() {
-    if (confirm('Vider tous les logs de sécurité ?')) {
-        localStorage.removeItem('alertes_securite');
-        moniteurSecurite.loguer('LOGS_VIDES', { action: 'manuel' });
-        alert('Logs de sécurité purgés');
-    }
-}
-
-// Ajouter le CSS pour l'animation
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideIn {
-        from { transform: translateX(100%); opacity: 0; }
-        to { transform: translateX(0); opacity: 1; }
-    }
-`;
-document.head.appendChild(style);
     </script>
 </body>
 </html>
-
-
