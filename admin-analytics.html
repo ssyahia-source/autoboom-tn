@@ -170,6 +170,23 @@
         .table-row:hover {
             background: rgba(255,255,255,0.05);
         }
+
+        /* Liste complète des annonces */
+        .annonces-complete-view {
+            margin-top: 2rem;
+        }
+
+        .annonce-complete-item {
+            background: rgba(30, 41, 59, 0.6);
+            padding: 1.5rem;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.1);
+            margin-bottom: 1rem;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 1.5rem;
+            align-items: start;
+        }
         
         /* Buttons */
         .btn { 
@@ -192,6 +209,11 @@
         .btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+        }
+
+        .btn-small {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
         }
         
         /* Filters */
@@ -223,6 +245,11 @@
             padding: 1rem; 
             border-radius: 8px; 
             margin: 1rem 0; 
+        }
+
+        /* Dynamic Content Area */
+        #dynamic-content {
+            min-height: 400px;
         }
     </style>
 </head>
@@ -256,93 +283,11 @@
             </div>
         </div>
 
-        <!-- Filtres -->
-        <div class="filters">
-            <select id="time-range" class="filter-select" onchange="chargerDonnees()">
-                <option value="7">7 derniers jours</option>
-                <option value="30" selected>30 derniers jours</option>
-                <option value="90">3 derniers mois</option>
-                <option value="365">1 an</option>
-            </select>
-            
-            <select id="ville-filter" class="filter-select" onchange="filtrerDonnees()">
-                <option value="">Toutes les villes</option>
-            </select>
-            
-            <select id="marque-filter" class="filter-select" onchange="filtrerDonnees()">
-                <option value="">Toutes les marques</option>
-            </select>
-            
-            <button class="btn btn-primary" onclick="actualiserDonnees()">🔄 Actualiser</button>
-            <button class="btn btn-success" onclick="exporterRapport()">📊 Exporter Rapport</button>
-        </div>
-
-        <!-- KPI Cards -->
-        <div class="kpi-grid">
-            <div class="kpi-card">
-                <div class="kpi-number" id="kpi-total">0</div>
-                <div>Annonces Total</div>
-                <div class="kpi-trend trend-up" id="kpi-total-trend">+0% vs période précédente</div>
-            </div>
-            <div class="kpi-card">
-                <div class="kpi-number" id="kpi-mois">0</div>
-                <div>Ce Mois</div>
-                <div class="kpi-trend trend-up" id="kpi-mois-trend">+0% vs mois dernier</div>
-            </div>
-            <div class="kpi-card">
-                <div class="kpi-number" id="kpi-semaine">0</div>
-                <div>Cette Semaine</div>
-                <div class="kpi-trend trend-up" id="kpi-semaine-trend">+0% vs semaine dernière</div>
-            </div>
-            <div class="kpi-card">
-                <div class="kpi-number" id="kpi-prix-moyen">0 TND</div>
-                <div>Prix Moyen</div>
-                <div class="kpi-trend" id="kpi-prix-trend">Stable</div>
-            </div>
-        </div>
-
-        <!-- Graphiques -->
-        <div class="charts-grid">
-            <div class="chart-container">
-                <div class="chart-title">📈 Évolution des Annonces (30 jours)</div>
-                <canvas id="evolutionChart"></canvas>
-            </div>
-            <div class="chart-container">
-                <div class="chart-title">🏙️ Répartition par Ville</div>
-                <canvas id="villesChart"></canvas>
-            </div>
-        </div>
-
-        <div class="charts-grid">
-            <div class="chart-container">
-                <div class="chart-title">🏷️ Top Marques</div>
-                <canvas id="marquesChart"></canvas>
-            </div>
-            <div class="chart-container">
-                <div class="chart-title">💰 Répartition des Prix</div>
-                <canvas id="prixChart"></canvas>
-            </div>
-        </div>
-
-        <!-- Dernières Annonces -->
-        <div class="chart-container">
-            <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 1rem;">
-                <div class="chart-title">🆕 Dernières Annonces</div>
-                <button class="btn btn-primary" onclick="afficherToutesAnnonces()">Voir Tout</button>
-            </div>
-            <div class="data-table">
-                <div class="table-header">
-                    <div class="table-row">
-                        <div>#</div>
-                        <div>Annonce</div>
-                        <div>Prix</div>
-                        <div>Ville</div>
-                        <div>Date</div>
-                        <div>Contact</div>
-                        <div>Actions</div>
-                    </div>
-                </div>
-                <div id="dernieres-annonces"></div>
+        <!-- Zone de contenu dynamique -->
+        <div id="dynamic-content">
+            <!-- Le contenu des analytics sera chargé ici -->
+            <div class="loading">
+                🔄 Chargement des analytics...
             </div>
         </div>
     </div>
@@ -375,6 +320,7 @@
         let donneesFiltrees = [];
         let charts = {};
         let periodeJours = 30;
+        let currentView = 'analytics'; // 'analytics' ou 'liste-complete'
 
         // === AUTHENTIFICATION ===
         function verifierMotDePasse() {
@@ -415,7 +361,7 @@
 
         function chargerDonnees() {
             afficherLoading();
-            periodeJours = parseInt(document.getElementById('time-range').value);
+            periodeJours = parseInt(document.getElementById('time-range')?.value || 30);
             
             database.ref('annonces').once('value')
                 .then(snapshot => {
@@ -426,7 +372,6 @@
                         
                         // Générer une date si manquante (basée sur l'ID Firebase)
                         if (!annonce.timestamp) {
-                            // Les IDs Firebase contiennent un timestamp
                             annonce.timestamp = extraireTimestampDeId(annonce.id);
                         }
                         
@@ -437,6 +382,13 @@
                     console.log(`✅ ${toutesAnnonces.length} annonces chargées`);
                     filtrerDonnees();
                     mettreAJourDerniereMAJ();
+                    
+                    // Afficher la vue actuelle
+                    if (currentView === 'analytics') {
+                        afficherVueAnalytics();
+                    } else {
+                        afficherListeComplete();
+                    }
                 })
                 .catch(error => {
                     console.error('Erreur Firebase:', error);
@@ -445,7 +397,6 @@
         }
 
         function extraireTimestampDeId(id) {
-            // Les IDs Firebase contiennent un timestamp dans les premiers caractères
             try {
                 const timestamp = parseInt(id.substring(0, 8), 36);
                 return isNaN(timestamp) ? Date.now() - Math.random() * 100000000 : timestamp;
@@ -455,8 +406,8 @@
         }
 
         function filtrerDonnees() {
-            const villeFilter = document.getElementById('ville-filter').value;
-            const marqueFilter = document.getElementById('marque-filter').value;
+            const villeFilter = document.getElementById('ville-filter')?.value || '';
+            const marqueFilter = document.getElementById('marque-filter')?.value || '';
             
             donneesFiltrees = toutesAnnonces.filter(annonce => {
                 const matchVille = !villeFilter || annonce.ville === villeFilter;
@@ -497,13 +448,241 @@
                 `${tendanceTotal >= 0 ? '+' : ''}${tendanceTotal}% vs période précédente`;
             document.getElementById('kpi-total-trend').className = 
                 `kpi-trend ${tendanceTotal >= 0 ? 'trend-up' : 'trend-down'}`;
-            
-            genererGraphiques();
-            afficherDernieresAnnonces();
         }
 
+        // === VUES ===
+        function afficherVueAnalytics() {
+            currentView = 'analytics';
+            const html = `
+                <!-- Filtres -->
+                <div class="filters">
+                    <select id="time-range" class="filter-select" onchange="changerPeriode()">
+                        <option value="7">7 derniers jours</option>
+                        <option value="30" selected>30 derniers jours</option>
+                        <option value="90">3 derniers mois</option>
+                        <option value="365">1 an</option>
+                    </select>
+                    
+                    <select id="ville-filter" class="filter-select" onchange="filtrerDonnees()">
+                        <option value="">Toutes les villes</option>
+                    </select>
+                    
+                    <select id="marque-filter" class="filter-select" onchange="filtrerDonnees()">
+                        <option value="">Toutes les marques</option>
+                    </select>
+                    
+                    <button class="btn btn-primary" onclick="actualiserDonnees()">🔄 Actualiser</button>
+                    <button class="btn btn-success" onclick="exporterRapport()">📊 Exporter Rapport</button>
+                </div>
+
+                <!-- KPI Cards -->
+                <div class="kpi-grid">
+                    <div class="kpi-card">
+                        <div class="kpi-number" id="kpi-total">0</div>
+                        <div>Annonces Total</div>
+                        <div class="kpi-trend trend-up" id="kpi-total-trend">+0% vs période précédente</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-number" id="kpi-mois">0</div>
+                        <div>Ce Mois</div>
+                        <div class="kpi-trend trend-up" id="kpi-mois-trend">+0% vs mois dernier</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-number" id="kpi-semaine">0</div>
+                        <div>Cette Semaine</div>
+                        <div class="kpi-trend trend-up" id="kpi-semaine-trend">+0% vs semaine dernière</div>
+                    </div>
+                    <div class="kpi-card">
+                        <div class="kpi-number" id="kpi-prix-moyen">0 TND</div>
+                        <div>Prix Moyen</div>
+                        <div class="kpi-trend" id="kpi-prix-trend">Stable</div>
+                    </div>
+                </div>
+
+                <!-- Graphiques -->
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <div class="chart-title">📈 Évolution des Annonces (${periodeJours} jours)</div>
+                        <canvas id="evolutionChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <div class="chart-title">🏙️ Répartition par Ville</div>
+                        <canvas id="villesChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <div class="chart-title">🏷️ Top Marques</div>
+                        <canvas id="marquesChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <div class="chart-title">💰 Répartition des Prix</div>
+                        <canvas id="prixChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Dernières Annonces -->
+                <div class="chart-container">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <div class="chart-title">🆕 Dernières Annonces</div>
+                        <button class="btn btn-primary" onclick="afficherListeComplete()">📋 Voir Toutes les Annonces</button>
+                    </div>
+                    <div class="data-table">
+                        <div class="table-header">
+                            <div class="table-row">
+                                <div>#</div>
+                                <div>Annonce</div>
+                                <div>Prix</div>
+                                <div>Ville</div>
+                                <div>Date</div>
+                                <div>Contact</div>
+                                <div>Actions</div>
+                            </div>
+                        </div>
+                        <div id="dernieres-annonces">
+                            ${genererListeAnnonces(donneesFiltrees.slice(0, 10))}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('dynamic-content').innerHTML = html;
+            document.getElementById('time-range').value = periodeJours;
+            
+            genererGraphiques();
+            mettreAJourFiltres();
+        }
+
+        function afficherListeComplete() {
+            currentView = 'liste-complete';
+            const html = `
+                <div class="annonces-complete-view">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem;">
+                        <div>
+                            <h2 class="chart-title">📋 Toutes les Annonces (${donneesFiltrees.length})</h2>
+                            <p style="color: #9ca3af; margin-top: 0.5rem;">Gestion complète de toutes les annonces</p>
+                        </div>
+                        <div style="display: flex; gap: 1rem;">
+                            <button class="btn btn-primary" onclick="exporterRapport()">💾 Exporter</button>
+                            <button class="btn btn-success" onclick="afficherVueAnalytics()">📊 Retour aux Analytics</button>
+                        </div>
+                    </div>
+
+                    <!-- Filtres -->
+                    <div class="filters">
+                        <select id="ville-filter-liste" class="filter-select" onchange="filtrerListe()">
+                            <option value="">Toutes les villes</option>
+                        </select>
+                        
+                        <select id="marque-filter-liste" class="filter-select" onchange="filtrerListe()">
+                            <option value="">Toutes les marques</option>
+                        </select>
+                        
+                        <button class="btn btn-primary" onclick="actualiserDonnees()">🔄 Actualiser</button>
+                    </div>
+
+                    <!-- Liste complète -->
+                    <div>
+                        ${donneesFiltrees.map((annonce, index) => `
+                            <div class="annonce-complete-item">
+                                <div>
+                                    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+                                        <strong style="font-size: 1.2rem;">#${index + 1} - ${annonce.marque || 'Marque'} ${annonce.modele || ''}</strong>
+                                        <span style="background: #374151; padding: 0.25rem 0.75rem; border-radius: 12px; font-size: 0.8rem;">
+                                            🆔 ${annonce.id.substring(0, 8)}...
+                                        </span>
+                                    </div>
+                                    
+                                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                                        <div>
+                                            <div style="color: #60a5fa; font-weight: 600;">💰 Prix</div>
+                                            <div style="font-size: 1.3rem; font-weight: bold;">${annonce.prix || 'N/A'} TND</div>
+                                        </div>
+                                        
+                                        <div>
+                                            <div style="color: #60a5fa; font-weight: 600;">📍 Ville</div>
+                                            <div>${annonce.ville || 'Non spécifiée'}</div>
+                                        </div>
+                                        
+                                        <div>
+                                            <div style="color: #60a5fa; font-weight: 600;">📞 Contact</div>
+                                            <div>${annonce.telephone || 'Non renseigné'}</div>
+                                            <div style="font-size: 0.9rem; color: #9ca3af;">${annonce.nom || 'Anonyme'}</div>
+                                        </div>
+                                        
+                                        <div>
+                                            <div style="color: #60a5fa; font-weight: 600;">📅 Date</div>
+                                            <div>${annonce.date.toLocaleDateString('fr-FR')}</div>
+                                        </div>
+                                    </div>
+
+                                    ${annonce.annee || annonce.carburant || annonce.kilometrage ? `
+                                        <div style="display: flex; gap: 2rem; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid #374151;">
+                                            ${annonce.annee ? `<div><strong>Année:</strong> ${annonce.annee}</div>` : ''}
+                                            ${annonce.carburant ? `<div><strong>⛽ Carburant:</strong> ${annonce.carburant}</div>` : ''}
+                                            ${annonce.kilometrage ? `<div><strong>🛣️ Km:</strong> ${annonce.kilometrage}</div>` : ''}
+                                        </div>
+                                    ` : ''}
+
+                                    ${annonce.description ? `
+                                        <div style="margin-top: 1rem;">
+                                            <div style="color: #60a5fa; font-weight: 600;">📝 Description</div>
+                                            <div style="background: rgba(255,255,255,0.05); padding: 1rem; border-radius: 6px; margin-top: 0.5rem;">
+                                                ${annonce.description}
+                                            </div>
+                                        </div>
+                                    ` : ''}
+                                </div>
+                                
+                                <div style="display: flex; gap: 0.5rem; flex-direction: column;">
+                                    <button class="btn btn-primary btn-small" onclick="voirDetailsComplets('${annonce.id}')">
+                                        👁️ Détails Complets
+                                    </button>
+                                    <button class="btn btn-danger btn-small" onclick="supprimerAnnonce('${annonce.id}')">
+                                        🗑️ Supprimer
+                                    </button>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>
+
+                    ${donneesFiltrees.length === 0 ? `
+                        <div class="error">
+                            ❌ Aucune annonce trouvée avec les filtres actuels
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+            
+            document.getElementById('dynamic-content').innerHTML = html;
+            mettreAJourFiltresListe();
+        }
+
+        function genererListeAnnonces(annonces) {
+            return annonces.map((annonce, index) => `
+                <div class="table-row">
+                    <div>${index + 1}</div>
+                    <div>
+                        <strong>${annonce.marque || 'N/A'} ${annonce.modele || ''}</strong>
+                        ${annonce.annee ? `<br><small>${annonce.annee}</small>` : ''}
+                    </div>
+                    <div><strong>${annonce.prix || 'N/A'} TND</strong></div>
+                    <div>${annonce.ville || 'N/A'}</div>
+                    <div>${annonce.date.toLocaleDateString('fr-FR')}</div>
+                    <div>${annonce.nom || 'Anonyme'}</div>
+                    <div>
+                        <button class="btn btn-primary btn-small" onclick="voirDetailsComplets('${annonce.id}')">
+                            👁️
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // === GRAPHIQUES ===
         function genererGraphiques() {
-            // Données pour les 30 derniers jours
+            // Données pour les N derniers jours
             const dates = [];
             const compteurs = [];
             const maintenant = new Date();
@@ -538,7 +717,8 @@
         }
 
         function creerGraphiqueEvolution(labels, data) {
-            const ctx = document.getElementById('evolutionChart').getContext('2d');
+            const ctx = document.getElementById('evolutionChart')?.getContext('2d');
+            if (!ctx) return;
             
             if (charts.evolution) charts.evolution.destroy();
             
@@ -583,7 +763,9 @@
                 return acc;
             }, {});
             
-            const ctx = document.getElementById('villesChart').getContext('2d');
+            const ctx = document.getElementById('villesChart')?.getContext('2d');
+            if (!ctx) return;
+            
             if (charts.villes) charts.villes.destroy();
             
             charts.villes = new Chart(ctx, {
@@ -622,7 +804,9 @@
                 .sort((a, b) => b[1] - a[1])
                 .slice(0, 10);
             
-            const ctx = document.getElementById('marquesChart').getContext('2d');
+            const ctx = document.getElementById('marquesChart')?.getContext('2d');
+            if (!ctx) return;
+            
             if (charts.marques) charts.marques.destroy();
             
             charts.marques = new Chart(ctx, {
@@ -667,6 +851,9 @@
             
             if (prix.length === 0) return;
             
+            const ctx = document.getElementById('prixChart')?.getContext('2d');
+            if (!ctx) return;
+            
             const maxPrix = Math.max(...prix);
             const segments = [5000, 10000, 20000, 30000, 50000, maxPrix];
             const segmentsData = segments.map((max, i) => {
@@ -679,7 +866,6 @@
                 return `${min}-${max}TND`;
             });
             
-            const ctx = document.getElementById('prixChart').getContext('2d');
             if (charts.prix) charts.prix.destroy();
             
             charts.prix = new Chart(ctx, {
@@ -705,51 +891,65 @@
             });
         }
 
-        function afficherDernieresAnnonces() {
-            const dernieres = donneesFiltrees
-                .sort((a, b) => b.timestamp - a.timestamp)
-                .slice(0, 10);
-            
-            const html = dernieres.map((annonce, index) => `
-                <div class="table-row">
-                    <div>${index + 1}</div>
-                    <div>
-                        <strong>${annonce.marque || 'N/A'} ${annonce.modele || ''}</strong>
-                        ${annonce.annee ? `<br><small>${annonce.annee}</small>` : ''}
-                    </div>
-                    <div><strong>${annonce.prix || 'N/A'} TND</strong></div>
-                    <div>${annonce.ville || 'N/A'}</div>
-                    <div>${annonce.date.toLocaleDateString('fr-FR')}</div>
-                    <div>${annonce.telephone || 'N/A'}</div>
-                    <div>
-                        <button class="btn btn-primary" onclick="voirDetails('${annonce.id}')" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">
-                            👁️
-                        </button>
-                    </div>
-                </div>
-            `).join('');
-            
-            document.getElementById('dernieres-annonces').innerHTML = html;
-        }
-
+        // === FONCTIONS UTILITAIRES ===
         function mettreAJourFiltres() {
             // Villes uniques
             const villes = [...new Set(toutesAnnonces.map(a => a.ville).filter(Boolean))];
             const villeSelect = document.getElementById('ville-filter');
-            villeSelect.innerHTML = '<option value="">Toutes les villes</option>' +
-                villes.map(v => `<option value="${v}">${v}</option>`).join('');
+            if (villeSelect) {
+                villeSelect.innerHTML = '<option value="">Toutes les villes</option>' +
+                    villes.map(v => `<option value="${v}">${v}</option>`).join('');
+            }
             
             // Marques uniques
             const marques = [...new Set(toutesAnnonces.map(a => a.marque).filter(Boolean))];
             const marqueSelect = document.getElementById('marque-filter');
-            marqueSelect.innerHTML = '<option value="">Toutes les marques</option>' +
-                marques.map(m => `<option value="${m}">${m}</option>`).join('');
+            if (marqueSelect) {
+                marqueSelect.innerHTML = '<option value="">Toutes les marques</option>' +
+                    marques.map(m => `<option value="${m}">${m}</option>`).join('');
+            }
+        }
+
+        function mettreAJourFiltresListe() {
+            // Villes uniques
+            const villes = [...new Set(toutesAnnonces.map(a => a.ville).filter(Boolean))];
+            const villeSelect = document.getElementById('ville-filter-liste');
+            if (villeSelect) {
+                villeSelect.innerHTML = '<option value="">Toutes les villes</option>' +
+                    villes.map(v => `<option value="${v}">${v}</option>`).join('');
+            }
+            
+            // Marques uniques
+            const marques = [...new Set(toutesAnnonces.map(a => a.marque).filter(Boolean))];
+            const marqueSelect = document.getElementById('marque-filter-liste');
+            if (marqueSelect) {
+                marqueSelect.innerHTML = '<option value="">Toutes les marques</option>' +
+                    marques.map(m => `<option value="${m}">${m}</option>`).join('');
+            }
+        }
+
+        function filtrerListe() {
+            const villeFilter = document.getElementById('ville-filter-liste')?.value || '';
+            const marqueFilter = document.getElementById('marque-filter-liste')?.value || '';
+            
+            donneesFiltrees = toutesAnnonces.filter(annonce => {
+                const matchVille = !villeFilter || annonce.ville === villeFilter;
+                const matchMarque = !marqueFilter || annonce.marque === marqueFilter;
+                return matchVille && matchMarque;
+            });
+
+            afficherListeComplete();
         }
 
         function mettreAJourDerniereMAJ() {
             const now = new Date();
             document.getElementById('last-update').textContent = 
                 `Dernière MAJ: ${now.toLocaleTimeString('fr-FR')}`;
+        }
+
+        function changerPeriode() {
+            periodeJours = parseInt(document.getElementById('time-range').value);
+            genererGraphiques();
         }
 
         function actualiserDonnees() {
@@ -762,14 +962,14 @@
                 [''],
                 ['Statistiques Générales'],
                 ['Total annonces', donneesFiltrees.length],
-                ['Annonces ce mois', document.getElementById('kpi-mois').textContent],
-                ['Annonces cette semaine', document.getElementById('kpi-semaine').textContent],
-                ['Prix moyen', document.getElementById('kpi-prix-moyen').textContent],
+                ['Annonces ce mois', document.getElementById('kpi-mois')?.textContent || '0'],
+                ['Annonces cette semaine', document.getElementById('kpi-semaine')?.textContent || '0'],
+                ['Prix moyen', document.getElementById('kpi-prix-moyen')?.textContent || '0 TND'],
                 [''],
                 ['Dernières annonces'],
                 ['#', 'Marque', 'Modèle', 'Prix', 'Ville', 'Date', 'Téléphone']
             ].concat(
-                donneesFiltrees.slice(0, 20).map((a, i) => [
+                donneesFiltrees.slice(0, 50).map((a, i) => [
                     i + 1,
                     a.marque || '',
                     a.modele || '',
@@ -790,97 +990,45 @@
             alert('📊 Rapport exporté avec succès !');
         }
 
-        function afficherToutesAnnonces() {
-    // Au lieu d'ouvrir admin-secure.html, afficher directement dans la page actuelle
-    const html = `
-        <div style="margin-top: 2rem;">
-            <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 1rem;">
-                <h2 class="chart-title">📋 Toutes les Annonces (${donneesFiltrees.length})</h2>
-                <button class="btn btn-primary" onclick="retourAnalytics()">⬅️ Retour aux Analytics</button>
-            </div>
-            
-            <div class="data-table">
-                <div class="table-header">
-                    <div class="table-row" style="grid-template-columns: 50px 1fr 100px 120px 120px 120px 100px 100px;">
-                        <div>#</div>
-                        <div>Annonce</div>
-                        <div>Prix</div>
-                        <div>Ville</div>
-                        <div>Date</div>
-                        <div>Contact</div>
-                        <div>Téléphone</div>
-                        <div>Actions</div>
-                    </div>
-                </div>
-                <div>
-                    ${donneesFiltrees.map((annonce, index) => `
-                        <div class="table-row" style="grid-template-columns: 50px 1fr 100px 120px 120px 120px 100px 100px;">
-                            <div>${index + 1}</div>
-                            <div>
-                                <strong>${annonce.marque || 'N/A'} ${annonce.modele || ''}</strong>
-                                ${annonce.annee ? `<br><small>Année: ${annonce.annee}</small>` : ''}
-                                ${annonce.carburant ? `<br><small>⛽ ${annonce.carburant}</small>` : ''}
-                                ${annonce.kilometrage ? `<br><small>🛣️ ${annonce.kilometrage} km</small>` : ''}
-                            </div>
-                            <div><strong>${annonce.prix || 'N/A'} TND</strong></div>
-                            <div>${annonce.ville || 'N/A'}</div>
-                            <div>${annonce.date.toLocaleDateString('fr-FR')}</div>
-                            <div>${annonce.nom || 'Anonyme'}</div>
-                            <div>${annonce.telephone || 'N/A'}</div>
-                            <div>
-                                <button class="btn btn-primary" onclick="voirDetailsComplets('${annonce.id}')" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">
-                                    👁️
-                                </button>
-                                <button class="btn btn-danger" onclick="supprimerAnnonce('${annonce.id}')" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">
-                                    🗑️
-                                </button>
-                            </div>
-                        </div>
-                    `).join('')}
-                </div>
-            </div>
-        </div>
-    `;
-    
-    // Sauvegarder l'état actuel et afficher la liste
-    sessionStorage.setItem('analyticsState', document.getElementById('dynamic-content').innerHTML);
-    document.getElementById('dynamic-content').innerHTML = html;
-}
-
-function retourAnalytics() {
-    // Restaurer l'état précédent
-    const previousState = sessionStorage.getItem('analyticsState');
-    if (previousState) {
-        document.getElementById('dynamic-content').innerHTML = previousState;
-    } else {
-        // Recharger les analytics
-        calculerAnalytics();
-    }
-}
-
         function voirDetailsComplets(id) {
-    const annonce = toutesAnnonces.find(a => a.id === id);
-    if (!annonce) return;
-    
-    const details = Object.entries(annonce)
-        .map(([key, value]) => `${key}: ${value}`)
-        .join('\n');
-    
-    alert(`📋 Détails complets:\n\n${details}`);
-}
+            const annonce = toutesAnnonces.find(a => a.id === id);
+            if (!annonce) return;
+            
+            const details = Object.entries(annonce)
+                .map(([key, value]) => `**${key}:** ${value}`)
+                .join('\n');
+            
+            alert(`📋 Détails complets de l'annonce:\n\n${details}`);
+        }
 
-function supprimerAnnonce(id) {
-    if (confirm('Êtes-vous sûr de vouloir supprimer cette annonce ? Cette action est irréversible.')) {
-        database.ref('annonces/' + id).remove()
-            .then(() => {
-                alert('✅ Annonce supprimée avec succès');
-                chargerDonnees(); // Recharger les données
-            })
-            .catch(error => {
-                alert('❌ Erreur lors de la suppression: ' + error.message);
-            });
-    }
-}
+        function supprimerAnnonce(id) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer cette annonce ? Cette action est irréversible.')) {
+                database.ref('annonces/' + id).remove()
+                    .then(() => {
+                        alert('✅ Annonce supprimée avec succès');
+                        chargerDonnees(); // Recharger les données
+                    })
+                    .catch(error => {
+                        alert('❌ Erreur lors de la suppression: ' + error.message);
+                    });
+            }
+        }
+
+        function afficherLoading() {
+            document.getElementById('dynamic-content').innerHTML = `
+                <div class="loading">
+                    🔄 Chargement des données analytics...
+                </div>
+            `;
+        }
+
+        function afficherErreur(message) {
+            document.getElementById('dynamic-content').innerHTML = `
+                <div class="error">
+                    ❌ ${message}
+                </div>
+            `;
+        }
 
         // Entrée directe sur le champ mot de passe
         document.getElementById('admin-password')?.addEventListener('keypress', function(e) {
@@ -888,6 +1036,4 @@ function supprimerAnnonce(id) {
         });
     </script>
 </body>
-
 </html>
-
