@@ -49,6 +49,21 @@
     </div>
 
     <script>
+// === VÉRIFICATION D'AUTHENTIFICATION SIMPLE ===
+const motDePasseAdmin = "admin2008";
+
+// Demander le mot de passe si non authentifié
+if (!sessionStorage.getItem('admin_authentifie')) {
+    const password = prompt("🔐 Mot de passe admin requis:");
+    if (password === motDePasseAdmin) {
+        sessionStorage.setItem('admin_authentifie', 'true');
+    } else {
+        alert("Accès refusé");
+        window.location.href = 'index.html';
+        throw new Error("Accès non autorisé");
+    }
+}
+
         // Configuration Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyCPay-0BB2o9Cefuj4w5k0b70mBG2kwR4E",
