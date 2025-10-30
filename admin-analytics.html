@@ -791,9 +791,72 @@
         }
 
         function afficherToutesAnnonces() {
-            // Rediriger vers l'admin classique ou ouvrir dans un nouvel onglet
-            window.open('admin-secure.html', '_blank');
-        }
+    // Au lieu d'ouvrir admin-secure.html, afficher directement dans la page actuelle
+    const html = `
+        <div style="margin-top: 2rem;">
+            <div style="display: flex; justify-content: between; align-items: center; margin-bottom: 1rem;">
+                <h2 class="chart-title">📋 Toutes les Annonces (${donneesFiltrees.length})</h2>
+                <button class="btn btn-primary" onclick="retourAnalytics()">⬅️ Retour aux Analytics</button>
+            </div>
+            
+            <div class="data-table">
+                <div class="table-header">
+                    <div class="table-row" style="grid-template-columns: 50px 1fr 100px 120px 120px 120px 100px 100px;">
+                        <div>#</div>
+                        <div>Annonce</div>
+                        <div>Prix</div>
+                        <div>Ville</div>
+                        <div>Date</div>
+                        <div>Contact</div>
+                        <div>Téléphone</div>
+                        <div>Actions</div>
+                    </div>
+                </div>
+                <div>
+                    ${donneesFiltrees.map((annonce, index) => `
+                        <div class="table-row" style="grid-template-columns: 50px 1fr 100px 120px 120px 120px 100px 100px;">
+                            <div>${index + 1}</div>
+                            <div>
+                                <strong>${annonce.marque || 'N/A'} ${annonce.modele || ''}</strong>
+                                ${annonce.annee ? `<br><small>Année: ${annonce.annee}</small>` : ''}
+                                ${annonce.carburant ? `<br><small>⛽ ${annonce.carburant}</small>` : ''}
+                                ${annonce.kilometrage ? `<br><small>🛣️ ${annonce.kilometrage} km</small>` : ''}
+                            </div>
+                            <div><strong>${annonce.prix || 'N/A'} TND</strong></div>
+                            <div>${annonce.ville || 'N/A'}</div>
+                            <div>${annonce.date.toLocaleDateString('fr-FR')}</div>
+                            <div>${annonce.nom || 'Anonyme'}</div>
+                            <div>${annonce.telephone || 'N/A'}</div>
+                            <div>
+                                <button class="btn btn-primary" onclick="voirDetailsComplets('${annonce.id}')" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">
+                                    👁️
+                                </button>
+                                <button class="btn btn-danger" onclick="supprimerAnnonce('${annonce.id}')" style="padding: 0.25rem 0.5rem; font-size: 0.8rem;">
+                                    🗑️
+                                </button>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        </div>
+    `;
+    
+    // Sauvegarder l'état actuel et afficher la liste
+    sessionStorage.setItem('analyticsState', document.getElementById('dynamic-content').innerHTML);
+    document.getElementById('dynamic-content').innerHTML = html;
+}
+
+function retourAnalytics() {
+    // Restaurer l'état précédent
+    const previousState = sessionStorage.getItem('analyticsState');
+    if (previousState) {
+        document.getElementById('dynamic-content').innerHTML = previousState;
+    } else {
+        // Recharger les analytics
+        calculerAnalytics();
+    }
+}
 
         function voirDetails(id) {
             const annonce = toutesAnnonces.find(a => a.id === id);
@@ -824,4 +887,5 @@
         });
     </script>
 </body>
+
 </html>
