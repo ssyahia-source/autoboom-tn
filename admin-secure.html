@@ -443,55 +443,76 @@
             
             document.getElementById('dynamic-content').innerHTML = html;
         }
-
-function afficherAnnoncesTableau() {
+function afficherAnnonces() {
     const html = `
         <h2>📋 Toutes les Annonces (${toutesAnnonces.length})</h2>
         <div style="margin: 1rem 0; display: flex; gap: 1rem; flex-wrap: wrap;">
             <button class="btn btn-primary" onclick="actualiserDonnees()">🔄 Actualiser</button>
             <button class="btn btn-success" onclick="exporterDonnees()">💾 Exporter CSV</button>
-            <button class="btn btn-primary" onclick="afficherAnnonces()">📄 Vue Cartes</button>
         </div>
-        
-        <div style="overflow-x: auto;">
-            <table style="width: 100%; border-collapse: collapse; background: rgba(30, 41, 59, 0.6); border-radius: 8px; overflow: hidden;">
-                <thead>
-                    <tr style="background: #374151;">
-                        <th style="padding: 1rem; text-align: left;">#</th>
-                        <th style="padding: 1rem; text-align: left;">Marque/Modèle</th>
-                        <th style="padding: 1rem; text-align: left;">Prix</th>
-                        <th style="padding: 1rem; text-align: left;">Ville</th>
-                        <th style="padding: 1rem; text-align: left;">Téléphone</th>
-                        <th style="padding: 1rem; text-align: left;">Contact</th>
-                        <th style="padding: 1rem; text-align: left;">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    ${toutesAnnonces.map((annonce, index) => `
-                        <tr style="border-bottom: 1px solid #374151;">
-                            <td style="padding: 1rem;">${index + 1}</td>
-                            <td style="padding: 1rem;">
-                                <strong>${annonce.marque || 'N/A'} ${annonce.modele || ''}</strong>
-                                ${annonce.annee ? `<br><small>${annonce.annee}</small>` : ''}
-                            </td>
-                            <td style="padding: 1rem;"><strong>${annonce.prix || 'N/A'} TND</strong></td>
-                            <td style="padding: 1rem;">${annonce.ville || 'N/A'}</td>
-                            <td style="padding: 1rem;">${annonce.telephone || 'N/A'}</td>
-                            <td style="padding: 1rem;">${annonce.nom || 'Anonyme'}</td>
-                            <td style="padding: 1rem;">
-                                <div style="display: flex; gap: 0.5rem;">
-                                    <button class="btn btn-primary" onclick="voirDetailsComplets('${annonce.id}')" style="padding: 0.5rem; font-size: 0.8rem;">
-                                        👁️
-                                    </button>
-                                    <button class="btn btn-danger" onclick="supprimerAnnonce('${annonce.id}')" style="padding: 0.5rem; font-size: 0.8rem;">
-                                        🗑️
-                                    </button>
+        <div class="annonces-list">
+            ${toutesAnnonces.map((annonce, index) => `
+                <div class="annonce-item">
+                    <div style="flex: 1; min-width: 0;"> <!-- Ajout de min-width: 0 pour le truncate -->
+                        <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.5rem;">
+                            <strong>#${index + 1}</strong>
+                            <span style="background: #374151; padding: 0.25rem 0.5rem; border-radius: 4px; font-size: 0.8rem;">
+                                ${annonce.id ? annonce.id.substring(0, 8) + '...' : 'N/A'}
+                            </span>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: auto 1fr; gap: 0.5rem; font-size: 0.9rem;">
+                            <div style="color: #60a5fa;">🏷️ Marque:</div>
+                            <div><strong>${annonce.marque || 'Non spécifié'} ${annonce.modele || ''}</strong></div>
+                            
+                            <div style="color: #60a5fa;">💰 Prix:</div>
+                            <div><strong>${annonce.prix || 'N/A'} TND</strong></div>
+                            
+                            <div style="color: #60a5fa;">📍 Ville:</div>
+                            <div>${annonce.ville || 'Non spécifié'}</div>
+                            
+                            <div style="color: #60a5fa;">📞 Téléphone:</div>
+                            <div>${annonce.telephone || 'Non renseigné'}</div>
+                            
+                            <div style="color: #60a5fa;">👤 Contact:</div>
+                            <div>${annonce.nom || 'Anonyme'}</div>
+                            
+                            ${annonce.annee ? `
+                                <div style="color: #60a5fa;">📅 Année:</div>
+                                <div>${annonce.annee}</div>
+                            ` : ''}
+                            
+                            ${annonce.carburant ? `
+                                <div style="color: #60a5fa;">⛽ Carburant:</div>
+                                <div>${annonce.carburant}</div>
+                            ` : ''}
+                            
+                            ${annonce.kilometrage ? `
+                                <div style="color: #60a5fa;">🛣️ Kilométrage:</div>
+                                <div>${annonce.kilometrage} km</div>
+                            ` : ''}
+                        </div>
+                        
+                        ${annonce.description ? `
+                            <div style="margin-top: 0.5rem;">
+                                <div style="color: #60a5fa;">📝 Description:</div>
+                                <div style="font-size: 0.85rem; color: #d1d5db; max-height: 60px; overflow: hidden;">
+                                    ${annonce.description}
                                 </div>
-                            </td>
-                        </tr>
-                    `).join('')}
-                </tbody>
-            </table>
+                            </div>
+                        ` : ''}
+                    </div>
+                    
+                    <div style="display: flex; gap: 0.5rem; flex-direction: column; min-width: 140px;">
+                        <button class="btn btn-primary" onclick="voirDetailsComplets('${annonce.id}')">
+                            👁️ Détails Complets
+                        </button>
+                        <button class="btn btn-danger" onclick="supprimerAnnonce('${annonce.id}')">
+                            🗑️ Supprimer
+                        </button>
+                    </div>
+                </div>
+            `).join('')}
         </div>
         
         ${toutesAnnonces.length === 0 ? `
@@ -499,6 +520,10 @@ function afficherAnnoncesTableau() {
                 Aucune annonce trouvée dans la base de données
             </div>
         ` : ''}
+        
+        <div style="margin-top: 1rem; text-align: center; color: #9ca3af;">
+            🎯 ${toutesAnnonces.length} annonces affichées
+        </div>
     `;
     
     document.getElementById('dynamic-content').innerHTML = html;
