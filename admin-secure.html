@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin AutoBoom - Tableau de Bord</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --danger: #dc2626;
+            --success: #059669;
+            --warning: #d97706;
+            --dark: #1f2937;
+        }
+        
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+            font-family: 'Segoe UI', system-ui, sans-serif; 
+        }
+        
+        body { 
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #f8fafc;
+            min-height: 100vh;
+        }
+        
+        /* Écran de connexion */
+        #login-container { 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            height: 100vh; 
+        }
+        
+        .login-box { 
+            background: rgba(255, 255, 255, 0.95); 
+            padding: 3rem; 
+            border-radius: 16px; 
+            text-align: center; 
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+            backdrop-filter: blur(10px);
+            color: #1f2937;
+        }
+        
+        .login-input { 
+            padding: 1rem; 
+            margin: 1rem 0; 
+            width: 300px; 
+            border: 2px solid #e5e7eb; 
+            border-radius: 8px; 
+            font-size: 16px; 
+        }
+        
+        .login-btn { 
+            padding: 1rem 2rem; 
+            background: var(--primary); 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-size: 16px; 
+            font-weight: 600;
+        }
+        
+        /* Interface Admin */
+        #admin-content { 
+            display: none; 
+            padding: 20px; 
+        }
+        
+        .admin-header { 
+            background: rgba(30, 41, 59, 0.8); 
+            padding: 1.5rem; 
+            border-radius: 12px; 
+            margin-bottom: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+        
+        .stats-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); 
+            gap: 1.5rem; 
+            margin-bottom: 2rem; 
+        }
+        
+        .stat-card { 
+            background: rgba(30, 41, 59, 0.8); 
+            padding: 1.5rem; 
+            border-radius: 12px; 
+            border: 1px solid rgba(255,255,255,0.1);
+            text-align: center; 
+        }
+        
+        .stat-number { 
+            font-size: 2.5rem; 
+            font-weight: 800; 
+            color: #60a5fa;
+            margin-bottom: 0.5rem;
+        }
+        
+        .btn { 
+            padding: 0.75rem 1.5rem; 
+            border: none; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-danger { background: var(--danger); color: white; }
+        .btn-success { background: var(--success); color: white; }
+        
+        .annonces-list { 
+            display: grid; 
+            gap: 1rem; 
+            margin-top: 1rem; 
+        }
+        
+        .annonce-item { 
+            background: rgba(30, 41, 59, 0.6); 
+            padding: 1rem; 
+            border-radius: 8px; 
+            border: 1px solid rgba(255,255,255,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .loading { 
+            text-align: center; 
+            padding: 3rem; 
+            color: #9ca3af; 
+        }
+        
+        .error { 
+            background: rgba(220, 38, 38, 0.1); 
+            border: 1px solid rgba(220, 38, 38, 0.3); 
+            color: #fca5a5; 
+            padding: 1rem; 
+            border-radius: 8px; 
+            margin: 1rem 0; 
+        }
+    </style>
+</head>
+<body>
+    <!-- Écran de connexion -->
+    <div id="login-container">
+        <div class="login-box">
+            <h2>🔐 Connexion Admin</h2>
+            <p style="color: #6b7280; margin-bottom: 2rem;">AutoBoom.tn - Tableau de Bord Sécurisé</p>
+            
+            <input type="password" id="admin-password" class="login-input" placeholder="Mot de passe administrateur">
+            <br>
+            <button class="login-btn" onclick="verifierMotDePasse()">Se connecter</button>
+            
+            <p style="color: #9ca3af; margin-top: 1.5rem; font-size: 0.9rem;">
+                Mot de passe: <strong>admin2008</strong>
+            </p>
+        </div>
+    </div>
+
+    <!-- Interface Admin -->
+    <div id="admin-content">
+        <div class="admin-header">
+            <h1>🚗 Tableau de Bord AutoBoom</h1>
+            <button class="btn btn-danger" onclick="deconnexion()">🚪 Déconnexion</button>
+        </div>
+
+        <!-- Statistiques -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-number" id="total-annonces">0</div>
+                <div>Annonces Total</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="annonces-jour">0</div>
+                <div>Ajoutées Aujourd'hui</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="villes-actives">0</div>
+                <div>Villes Actives</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number" id="prix-moyen">0 TND</div>
+                <div>Prix Moyen</div>
+            </div>
+        </div>
+
+        <!-- Actions Rapides -->
+        <div style="display: flex; gap: 1rem; margin-bottom: 2rem; flex-wrap: wrap;">
+            <button class="btn btn-primary" onclick="afficherAnnonces()">📋 Voir Toutes les Annonces</button>
+            <button class="btn btn-success" onclick="afficherStatistiques()">📊 Statistiques Détaillées</button>
+            <button class="btn btn-primary" onclick="exporterDonnees()">💾 Exporter les Données</button>
+        </div>
+
+        <!-- Contenu Dynamique -->
+        <div id="content-area">
+            <div class="loading" id="loading-message">
+                🔄 Chargement des données...
+            </div>
+            <div id="dynamic-content"></div>
+        </div>
+    </div>
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
+    
+    <script>
+        // === CONFIGURATION ===
+        const MOT_DE_PASSE = "admin2008";
+        
+        // Configuration Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyCPay-0BB2o9Cefuj4w5k0b70mBG2kwR4E",
+            authDomain: "autoboom-tn.firebaseapp.com",
+            databaseURL: "https://autoboom-tn-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "autoboom-tn",
+            storageBucket: "autoboom-tn.firebasestorage.app",
+            messagingSenderId: "291199404228",
+            appId: "1:291199404228:web:b07c622a5f7b8bc9a4e191"
+        };
+
+        // Initialiser Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // Variables globales
+        let toutesAnnonces = [];
+        let stats = {};
+
+        // === AUTHENTIFICATION ===
+        function verifierMotDePasse() {
+            const password = document.getElementById('admin-password').value;
+            
+            if (password === MOT_DE_PASSE) {
+                document.getElementById('login-container').style.display = 'none';
+                document.getElementById('admin-content').style.display = 'block';
+                sessionStorage.setItem('admin_auth', 'true');
+                chargerDonnees();
+            } else {
+                alert("❌ Mot de passe incorrect. Utilisez: admin2008");
+                document.getElementById('admin-password').value = '';
+                document.getElementById('admin-password').focus();
+            }
+        }
+
+        function deconnexion() {
+            if (confirm('Se déconnecter du tableau de bord ?')) {
+                sessionStorage.removeItem('admin_auth');
+                location.reload();
+            }
+        }
+
+        // Vérifier si déjà authentifié
+        if (sessionStorage.getItem('admin_auth')) {
+            document.getElementById('login-container').style.display = 'none';
+            document.getElementById('admin-content').style.display = 'block';
+            setTimeout(chargerDonnees, 100);
+        }
+
+        // Entrée directe sur le champ mot de passe
+        document.getElementById('admin-password')?.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') verifierMotDePasse();
+        });
+
+        // === FONCTIONS PRINCIPALES ===
+        function chargerDonnees() {
+            afficherLoading();
+            
+            // Charger depuis Firebase
+            database.ref('annonces').once('value')
+                .then(snapshot => {
+                    toutesAnnonces = [];
+                    snapshot.forEach(childSnapshot => {
+                        const annonce = childSnapshot.val();
+                        annonce.id = childSnapshot.key;
+                        annonce.source = 'firebase';
+                        annonce.dateAjout = annonce.dateAjout || childSnapshot.key;
+                        toutesAnnonces.push(annonce);
+                    });
+
+                    calculerStatistiques();
+                    afficherTableauDeBord();
+                })
+                .catch(error => {
+                    console.error('Erreur Firebase:', error);
+                    document.getElementById('dynamic-content').innerHTML = `
+                        <div class="error">
+                            ❌ Erreur de connexion à la base de données
+                            <br><small>${error.message}</small>
+                        </div>
+                    `;
+                });
+        }
+
+        function calculerStatistiques() {
+            const aujourdhui = new Date().toDateString();
+            const annoncesAujourdhui = toutesAnnonces.filter(annonce => {
+                const dateAnnonce = new Date(parseInt(annonce.dateAjout)).toDateString();
+                return dateAnnonce === aujourdhui;
+            });
+
+            const villes = [...new Set(toutesAnnonces.map(a => a.ville).filter(Boolean))];
+            const prixMoyen = toutesAnnonces.length > 0 
+                ? Math.round(toutesAnnonces.reduce((sum, a) => sum + (parseInt(a.prix) || 0), 0) / toutesAnnonces.length)
+                : 0;
+
+            stats = {
+                total: toutesAnnonces.length,
+                aujourdhui: annoncesAujourdhui.length,
+                villes: villes.length,
+                prixMoyen: prixMoyen,
+                marques: [...new Set(toutesAnnonces.map(a => a.marque).filter(Boolean))],
+                derniereAnnonce: toutesAnnonces.length > 0 ? toutesAnnonces[toutesAnnonces.length - 1] : null
+            };
+
+            // Mettre à jour l'interface
+            document.getElementById('total-annonces').textContent = stats.total;
+            document.getElementById('annonces-jour').textContent = stats.aujourdhui;
+            document.getElementById('villes-actives').textContent = stats.villes;
+            document.getElementById('prix-moyen').textContent = stats.prixMoyen + ' TND';
+        }
+
+        function afficherTableauDeBord() {
+            const html = `
+                <h2>📊 Aperçu du Site</h2>
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 2rem; margin-top: 1rem;">
+                    <div>
+                        <h3>📈 Activité Récente</h3>
+                        <div class="annonces-list">
+                            ${toutesAnnonces.slice(-5).reverse().map(annonce => `
+                                <div class="annonce-item">
+                                    <div>
+                                        <strong>${annonce.marque || 'Marque'} ${annonce.modele || ''}</strong>
+                                        <br>${annonce.prix} TND • ${annonce.ville || 'Ville'}
+                                        <br><small>${annonce.telephone} • ${new Date(parseInt(annonce.dateAjout)).toLocaleDateString()}</small>
+                                    </div>
+                                    <button class="btn btn-danger" onclick="supprimerAnnonce('${annonce.id}')">🗑️</button>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                    <div>
+                        <h3>🏙️ Répartition par Ville</h3>
+                        <div style="background: rgba(30, 41, 59, 0.6); padding: 1rem; border-radius: 8px;">
+                            ${Object.entries(toutesAnnonces.reduce((acc, annonce) => {
+                                const ville = annonce.ville || 'Non spécifié';
+                                acc[ville] = (acc[ville] || 0) + 1;
+                                return acc;
+                            }, {})).map(([ville, count]) => `
+                                <div style="display: flex; justify-content: space-between; margin: 0.5rem 0;">
+                                    <span>${ville}</span>
+                                    <strong>${count}</strong>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('dynamic-content').innerHTML = html;
+        }
+
+        function afficherAnnonces() {
+            const html = `
+                <h2>📋 Toutes les Annonces (${toutesAnnonces.length})</h2>
+                <div class="annonces-list">
+                    ${toutesAnnonces.map(annonce => `
+                        <div class="annonce-item">
+                            <div style="flex: 1;">
+                                <strong>${annonce.marque || 'Marque'} ${annonce.modele || ''}</strong>
+                                <br>💰 ${annonce.prix} TND • 📍 ${annonce.ville || 'Non spécifié'}
+                                <br>📞 ${annonce.telephone} • 👤 ${annonce.nom || 'Anonyme'}
+                                <br>📅 ${new Date(parseInt(annonce.dateAjout)).toLocaleDateString()}
+                                ${annonce.description ? `<br>📝 ${annonce.description.substring(0, 100)}...` : ''}
+                            </div>
+                            <div style="display: flex; gap: 0.5rem;">
+                                <button class="btn btn-primary" onclick="voirDetails('${annonce.id}')">👁️</button>
+                                <button class="btn btn-danger" onclick="supprimerAnnonce('${annonce.id}')">🗑️</button>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>
+            `;
+            
+            document.getElementById('dynamic-content').innerHTML = html;
+        }
+
+        function afficherStatistiques() {
+            const repartitionMarques = toutesAnnonces.reduce((acc, annonce) => {
+                const marque = annonce.marque || 'Autre';
+                acc[marque] = (acc[marque] || 0) + 1;
+                return acc;
+            }, {});
+
+            const html = `
+                <h2>📊 Statistiques Détaillées</h2>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-top: 1rem;">
+                    <div>
+                        <h3>🏷️ Répartition par Marque</h3>
+                        <div style="background: rgba(30, 41, 59, 0.6); padding: 1rem; border-radius: 8px;">
+                            ${Object.entries(repartitionMarques)
+                                .sort((a, b) => b[1] - a[1])
+                                .map(([marque, count]) => `
+                                    <div style="display: flex; justify-content: space-between; margin: 0.5rem 0;">
+                                        <span>${marque}</span>
+                                        <strong>${count}</strong>
+                                    </div>
+                                `).join('')}
+                        </div>
+                    </div>
+                    <div>
+                        <h3>📈 Métriques</h3>
+                        <div style="background: rgba(30, 41, 59, 0.6); padding: 1rem; border-radius: 8px;">
+                            <div style="margin: 0.5rem 0;">
+                                <strong>Annonces par jour:</strong> ${Math.round(stats.total / 30)}
+                            </div>
+                            <div style="margin: 0.5rem 0;">
+                                <strong>Marques différentes:</strong> ${stats.marques.length}
+                            </div>
+                            <div style="margin: 0.5rem 0;">
+                                <strong>Prix minimum:</strong> ${Math.min(...toutesAnnonces.map(a => parseInt(a.prix) || 0))} TND
+                            </div>
+                            <div style="margin: 0.5rem 0;">
+                                <strong>Prix maximum:</strong> ${Math.max(...toutesAnnonces.map(a => parseInt(a.prix) || 0))} TND
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('dynamic-content').innerHTML = html;
+        }
+
+        function exporterDonnees() {
+            const csv = [
+                ['ID', 'Marque', 'Modèle', 'Prix', 'Ville', 'Téléphone', 'Nom', 'Date'],
+                ...toutesAnnonces.map(annonce => [
+                    annonce.id,
+                    annonce.marque || '',
+                    annonce.modele || '',
+                    annonce.prix || '',
+                    annonce.ville || '',
+                    annonce.telephone || '',
+                    annonce.nom || '',
+                    new Date(parseInt(annonce.dateAjout)).toISOString()
+                ])
+            ].map(row => row.join(',')).join('\n');
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `autoboom_annonces_${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            
+            alert('📊 Données exportées avec succès !');
+        }
+
+        function supprimerAnnonce(id) {
+            if (confirm('Êtes-vous sûr de vouloir supprimer cette annonce ?')) {
+                database.ref('annonces/' + id).remove()
+                    .then(() => {
+                        alert('✅ Annonce supprimée');
+                        chargerDonnees();
+                    })
+                    .catch(error => {
+                        alert('❌ Erreur: ' + error.message);
+                    });
+            }
+        }
+
+        function voirDetails(id) {
+            const annonce = toutesAnnonces.find(a => a.id === id);
+            if (annonce) {
+                alert(`
+Détails de l'annonce:
+🏷️ ${annonce.marque} ${annonce.modele}
+💰 ${annonce.prix} TND
+📍 ${annonce.ville}
+📞 ${annonce.telephone}
+👤 ${annonce.nom}
+📅 ${new Date(parseInt(annonce.dateAjout)).toLocaleString()}
+${annonce.description ? `📝 ${annonce.description}` : ''}
+                `);
+            }
+        }
+
+        function afficherLoading() {
+            document.getElementById('dynamic-content').innerHTML = `
+                <div class="loading">
+                    🔄 Chargement des données en temps réel...
+                </div>
+            `;
+        }
+
+        // Focus automatique sur le champ mot de passe
+        document.getElementById('admin-password')?.focus();
+    </script>
+</body>
+</html>
