@@ -856,27 +856,44 @@ console.log("✅ Firebase initialisé sur annonces.html");
 
         // Charger les annonces du localStorage
         function chargerAnnonces() {
-            const annoncesSauvegardees = JSON.parse(localStorage.getItem('annonces')) || [];
-            const toutesAnnonces = [...annoncesSauvegardees, ...annoncesParDefaut];
-            
-            // Pour les nouvelles annonces, utiliser la date actuelle
-            toutesAnnonces.forEach(annonce => {
-                if (!annonce.date) {
-                    annonce.date = new Date().toLocaleDateString('fr-FR');
-                }
-                
-                // Marquer comme nouvelle si moins de 7 jours
-                const datePublication = new Date(annonce.date.split('/').reverse().join('-'));
-                const maintenant = new Date();
-                const differenceJours = (maintenant - datePublication) / (1000 * 60 * 60 * 24);
-                annonce.isNew = differenceJours < 7;
+    console.log("🔄 Chargement EN TEMPS RÉEL depuis Firebase...");
+    
+    const annoncesRef = database.ref('annonces');
+    
+    // Écouter les changements en temps réel
+    annoncesRef.on('value', (snapshot) => {
+        const data = snapshot.val();
+        let toutesAnnonces = [];
+        
+        // 1. Charger depuis Firebase
+        if (data) {
+            Object.keys(data).forEach(key => {
+                toutesAnnonces.push({
+                    id: key,
+                    ...data[key]
+                });
             });
-            
-            // Trier par date (les plus récentes en premier)
-            return toutesAnnonces.sort((a, b) => {
-                return new Date(b.date.split('/').reverse().join('-')) - new Date(a.date.split('/').reverse().join('-'));
-            });
+            console.log(`✅ ${toutesAnnonces.length} annonces depuis Firebase`);
         }
+        
+        // 2. Ajouter les annonces par défaut si Firebase vide
+        if (toutesAnnonces.length === 0) {
+            toutesAnnonces = [...annoncesParDefaut];
+            console.log("📦 Utilisation des annonces par défaut");
+        }
+        
+        // 3. Trier par date (récentes d'abord)
+        toutesAnnonces.sort((a, b) => {
+            return new Date(b.date || 0) - new Date(a.date || 0);
+        });
+        
+        console.log("🎯 TOTAL annonces à afficher:", toutesAnnonces.length);
+        
+        // 4. AFFICHER
+        pageActuelle = 1;
+        afficherAnnoncesAvecPagination(toutesAnnonces);
+    });
+}
 
         // Pagination functions
         function afficherPagination(totalAnnonces) {
@@ -1105,6 +1122,7 @@ console.log("✅ Firebase chargé sur annonces.html");
 </script>  
 </body>
 </html>
+
 
 
 
