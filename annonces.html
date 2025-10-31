@@ -831,12 +831,20 @@
                         </div>
                         <div class="annonce-location">📍 ${annonce.ville}</div>
                         <div style="font-size: 0.875rem; color: #6b7280; margin-bottom: 1rem;">
-                            📞 ${annonce.nom} • ${annonce.date}
-                            ${annonce.photos && annonce.photos.length > 0 ? ' • 📸 Avec photos' : ''}
-                        </div>
-                        <button class="contact-btn" onclick="contacter('${annonce.contact}', '${annonce.nom}', '${annonce.marque} ${annonce.modele}')">
-                            📞 Contacter
-                        </button>
+    📞 ${annonce.nom} • ${annonce.date}
+    ${annonce.photos && annonce.photos.length > 0 ? ' • 📸 Avec photos' : ''}
+</div>
+<div style="font-size: 0.9rem; color: #4b5563; margin-bottom: 1rem; line-height: 1.4;">
+    ${annonce.description}
+</div>
+<div style="display: flex; gap: 0.5rem;">
+    <button class="contact-btn" onclick="contacter('${annonce.contact}', '${annonce.nom}', '${annonce.marque} ${annonce.modele}')" style="flex: 1;">
+        📞 Contacter
+    </button>
+    <button class="contact-btn" onclick="voirDetails('${annonce.id}')" style="flex: 1; background: #2563eb;">
+        🔍 Détails
+    </button>
+</div>
                     </div>
                 </div>
             `).join('');
@@ -899,7 +907,34 @@
         function contacter(telephone, nom, vehicule) {
             alert(`Contact: ${nom}\nTéléphone: ${telephone}\nVéhicule: ${vehicule}`);
         }
+function voirDetails(annonceId) {
+    // Trouver l'annonce par ID
+    const annonce = toutesLesAnnonces.find(a => a.id == annonceId);
+    
+    if (annonce) {
+        const details = `
+🚗 ${annonce.marque} ${annonce.modele}
+💰 Prix: ${annonce.prix}
+📅 Année: ${annonce.annee}
+🎯 Kilométrage: ${annonce.kilometrage}
+⛽ Carburant: ${annonce.carburant}
+⚙️ Transmission: ${annonce.transmission}
+📍 Ville: ${annonce.ville}
+👤 Vendeur: ${annonce.nom}
+📞 Contact: ${annonce.contact}
+📅 Publié le: ${annonce.date}
 
+📝 Description:
+${annonce.description}
+
+${annonce.photos && annonce.photos.length > 0 ? '📸 Photos disponibles' : '📷 Aucune photo'}
+        `;
+        
+        alert(details);
+    } else {
+        alert("Annonce non trouvée");
+    }
+}
         // Filtres
         function filtrerAnnonces() {
             const marque = document.getElementById('filtre-marque').value;
@@ -948,3 +983,4 @@
     </script>
 </body>
 </html>
+
