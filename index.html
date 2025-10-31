@@ -649,6 +649,120 @@
         </div>
     </section>
 
+/* ============================================================================
+   CORRECTION DÉCALAGE DROITE - TOUT CENTRÉ
+   ============================================================================ */
+
+@media (max-width: 768px) {
+    /* FORCER TOUTE LA LARGEUR À RESTER DANS L'ÉCRAN */
+    body {
+        width: 100% !important;
+        max-width: 100% !important;
+        overflow-x: hidden !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+    
+    /* CORRECTION CONTAINER PRINCIPAL */
+    .container, .search-container, .filter-container {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 15px !important;
+        margin: 0 auto !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* CORRECTION HERO SECTION */
+    .hero-slider {
+        width: 100% !important;
+        padding: 0 !important;
+        margin: 0 !important;
+    }
+    
+    .slide-content {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 15px !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* CORRECTION BARRE DE RECHERCHE */
+    .search-box {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+        padding: 15px !important;
+        box-sizing: border-box !important;
+    }
+    
+    .search-box .flex {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+    
+    .search-input, .search-select, .search-button {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* CORRECTION FILTRES */
+    .filter-grid {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 10px !important;
+        box-sizing: border-box !important;
+    }
+    
+    .filter-select {
+        width: 100% !important;
+        max-width: 100% !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* CORRECTION GRID ANNONCES */
+    .annonces-grid {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 10px !important;
+        box-sizing: border-box !important;
+    }
+    
+    .annonce-card {
+        width: 100% !important;
+        max-width: 100% !important;
+        margin: 10px 0 !important;
+        box-sizing: border-box !important;
+    }
+    
+    /* CORRECTION PAGINATION */
+    .pagination {
+        width: 100% !important;
+        max-width: 100% !important;
+        padding: 0 15px !important;
+        box-sizing: border-box !important;
+        justify-content: center !important;
+    }
+}
+
+/* CORRECTION SPÉCIALE POUR TRÈS PETITS ÉCRANS */
+@media (max-width: 480px) {
+    .container, .search-container, .filter-container {
+        padding: 0 10px !important;
+    }
+    
+    .search-box {
+        padding: 10px !important;
+    }
+    
+    .annonces-grid {
+        padding: 0 5px !important;
+    }
+}
+
+
+
+    
     <script>
         // Bannière glissante
         let currentSlide = 0;
@@ -722,6 +836,7 @@ document.addEventListener('click', function(event) {
 
 </body>
 </html>
+
 
 
 
