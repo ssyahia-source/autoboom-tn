@@ -697,28 +697,83 @@
             <button class="page-btn" id="next-btn" onclick="changerPage(pageActuelle + 1)">Suivant →</button>
         </div>
     </div>
+<script>
+    // Variables de pagination
+    let pageActuelle = 1;
+    const annoncesParPage = 6;
 
-    <script>
-        // Variables de pagination
-        let pageActuelle = 1;
-        const annoncesParPage = 6;
+    // Charger les annonces DEPUIS FIREBASE SEULEMENT
+    async function chargerAnnonces() {
+        console.log("🔥 Chargement depuis Firebase...");
+        
+        try {
+            const annoncesRef = database.ref('annonces');
+            const snapshot = await annoncesRef.once('value');
+            const annoncesFirebase = snapshot.val();
+            
+            let toutesAnnonces = [];
+            
+            // Convertir l'objet Firebase en tableau
+            if (annoncesFirebase) {
+                toutesAnnonces = Object.values(annoncesFirebase);
+                console.log(`✅ ${toutesAnnonces.length} annonces chargées depuis Firebase`);
+            } else {
+                console.log("ℹ️ Aucune annonce dans Firebase");
+            }
+            
+            // Ajouter les annonces par défaut SI Firebase est vide
+            if (toutesAnnonces.length === 0) {
+                console.log("📦 Chargement des annonces par défaut...");
+                toutesAnnonces = [...genererAnnoncesParDefaut()];
+            }
+            
+            // Trier par date (les plus récentes en premier)
+            toutesAnnonces.sort((a, b) => {
+                return new Date(b.date || 0) - new Date(a.date || 0);
+            });
+            
+            // Marquer comme nouvelles si moins de 7 jours
+            toutesAnnonces.forEach(annonce => {
+                if (annonce.date) {
+                    const datePublication = new Date(annonce.date.split('/').reverse().join('-'));
+                    const maintenant = new Date();
+                    const differenceJours = (maintenant - datePublication) / (1000 * 60 * 60 * 24);
+                    annonce.isNew = differenceJours < 7;
+                } else {
+                    annonce.isNew = false;
+                }
+                
+                // S'assurer que hasPhotos est correct
+                annonce.hasPhotos = !!(annonce.photos && annonce.photos.length > 0);
+            });
+            
+            console.log("🎯 Annonces finales:", toutesAnnonces);
+            return toutesAnnonces;
+            
+        } catch (error) {
+            console.error('❌ Erreur chargement Firebase:', error);
+            // Retourner les annonces par défaut en cas d'erreur
+            return genererAnnoncesParDefaut();
+        }
+    }
 
-        // Générer des dates aléatoires réalistes
-        function genererDateAleatoire() {
+    // Générer des annonces par défaut (en cas de problème Firebase)
+    function genererAnnoncesParDefaut() {
+        console.log("🔄 Génération annonces par défaut...");
+        
+        const genererDate = () => {
             const aujourdhui = new Date();
-            const joursAleatoires = Math.floor(Math.random() * 90) + 1; // 1-90 jours dans le passé
+            const joursAleatoires = Math.floor(Math.random() * 90) + 1;
             const date = new Date(aujourdhui);
             date.setDate(aujourdhui.getDate() - joursAleatoires);
-            
             return date.toLocaleDateString('fr-FR', {
                 day: '2-digit',
                 month: '2-digit',
                 year: 'numeric'
             });
-        }
+        };
 
-        // Annonces par défaut avec dates différentes
-        const annoncesParDefaut = [
+        return [
             {
                 id: 1,
                 marque: 'Volkswagen',
@@ -732,8 +787,9 @@
                 description: 'Voiture en excellent état, entretien chez concessionnaire, 1 seul propriétaire',
                 contact: '12 345 678',
                 nom: 'Ahmed',
-                date: genererDateAleatoire(),
-                hasPhotos: false
+                date: genererDate(),
+                hasPhotos: false,
+                photos: []
             },
             {
                 id: 2,
@@ -748,8 +804,9 @@
                 description: 'Presque neuve, garantie constructeur encore valable',
                 contact: '98 765 432',
                 nom: 'Marie',
-                date: genererDateAleatoire(),
-                hasPhotos: false
+                date: genererDate(),
+                hasPhotos: false,
+                photos: []
             },
             {
                 id: 3,
@@ -764,8 +821,9 @@
                 description: 'SUV familial spacieux, tous options, clim automatique',
                 contact: '55 123 456',
                 nom: 'Mohamed',
-                date: genererDateAleatoire(),
-                hasPhotos: false
+                date: genererDate(),
+                hasPhotos: false,
+                photos: []
             },
             {
                 id: 4,
@@ -780,141 +838,55 @@
                 description: 'Parfaite pour ville, consommation réduite, bon état général',
                 contact: '33 987 654',
                 nom: 'Sophie',
-                date: genererDateAleatoire(),
-                hasPhotos: false
-            },
-            {
-                id: 5,
-                marque: 'Kia',
-                modele: 'Sportage',
-                prix: '42,000 TND',
-                annee: '2019',
-                kilometrage: '55,000 km',
-                carburant: 'Diesel',
-                transmission: 'Automatique',
-                ville: 'Tunis',
-                description: 'SUV confortable, entretien régulier, carnet d entretien complet',
-                contact: '77 456 123',
-                nom: 'Karim',
-                date: genererDateAleatoire(),
-                hasPhotos: false
-            },
-            {
-                id: 6,
-                marque: 'Mercedes',
-                modele: 'Classe A',
-                prix: '68,000 TND',
-                annee: '2020',
-                kilometrage: '35,000 km',
-                carburant: 'Essence',
-                transmission: 'Automatique',
-                ville: 'Sfax',
-                description: 'Voiture premium, toutes options, très bon état',
-                contact: '22 333 444',
-                nom: 'Ali',
-                date: genererDateAleatoire(),
-                hasPhotos: false
-            },
-            {
-                id: 7,
-                marque: 'Audi',
-                modele: 'A3',
-                prix: '45,000 TND',
-                annee: '2019',
-                kilometrage: '40,000 km',
-                carburant: 'Essence',
-                transmission: 'Automatique',
-                ville: 'Tunis',
-                description: 'Compacte premium, toutes options, état impeccable',
-                contact: '66 777 888',
-                nom: 'Samir',
-                date: genererDateAleatoire(),
-                hasPhotos: false
-            },
-            {
-                id: 8,
-                marque: 'BMW',
-                modele: 'Série 1',
-                prix: '58,000 TND',
-                annee: '2020',
-                kilometrage: '28,000 km',
-                carburant: 'Essence',
-                transmission: 'Automatique',
-                ville: 'Sousse',
-                description: 'Berline compacte sportive, entretien BMW',
-                contact: '99 888 777',
-                nom: 'Youssef',
-                date: genererDateAleatoire(),
-                hasPhotos: false
+                date: genererDate(),
+                hasPhotos: false,
+                photos: []
             }
         ];
+    }
 
-        // Charger les annonces du localStorage
-        function chargerAnnonces() {
-            const annoncesSauvegardees = JSON.parse(localStorage.getItem('annonces')) || [];
-            const toutesAnnonces = [...annoncesSauvegardees, ...annoncesParDefaut];
-            
-            // Pour les nouvelles annonces, utiliser la date actuelle
-            toutesAnnonces.forEach(annonce => {
-                if (!annonce.date) {
-                    annonce.date = new Date().toLocaleDateString('fr-FR');
-                }
-                
-                // Marquer comme nouvelle si moins de 7 jours
-                const datePublication = new Date(annonce.date.split('/').reverse().join('-'));
-                const maintenant = new Date();
-                const differenceJours = (maintenant - datePublication) / (1000 * 60 * 60 * 24);
-                annonce.isNew = differenceJours < 7;
-            });
-            
-            // Trier par date (les plus récentes en premier)
-            return toutesAnnonces.sort((a, b) => {
-                return new Date(b.date.split('/').reverse().join('-')) - new Date(a.date.split('/').reverse().join('-'));
-            });
+    // Pagination functions
+    function afficherPagination(totalAnnonces) {
+        const pagination = document.getElementById('pagination');
+        const pagesNumbers = document.getElementById('pages-numbers');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        
+        const totalPages = Math.ceil(totalAnnonces / annoncesParPage);
+        
+        if (totalPages <= 1) {
+            pagination.style.display = 'none';
+            return;
         }
-
-        // Pagination functions
-        function afficherPagination(totalAnnonces) {
-            const pagination = document.getElementById('pagination');
-            const pagesNumbers = document.getElementById('pages-numbers');
-            const prevBtn = document.getElementById('prev-btn');
-            const nextBtn = document.getElementById('next-btn');
-            
-            const totalPages = Math.ceil(totalAnnonces / annoncesParPage);
-            
-            if (totalPages <= 1) {
-                pagination.style.display = 'none';
-                return;
-            }
-            
-            pagination.style.display = 'flex';
-            
-            // Bouton précédent
-            prevBtn.disabled = pageActuelle === 1;
-            prevBtn.style.opacity = pageActuelle === 1 ? '0.5' : '1';
-            
-            // Bouton suivant
-            nextBtn.disabled = pageActuelle === totalPages;
-            nextBtn.style.opacity = pageActuelle === totalPages ? '0.5' : '1';
-            
-            // Numéros de page
-            pagesNumbers.innerHTML = '';
-            
-            // Afficher max 5 pages autour de la page actuelle
-            let startPage = Math.max(1, pageActuelle - 2);
-            let endPage = Math.min(totalPages, pageActuelle + 2);
-            
-            for (let i = startPage; i <= endPage; i++) {
-                const pageBtn = document.createElement('button');
-                pageBtn.className = `page-btn ${i === pageActuelle ? 'active' : ''}`;
-                pageBtn.textContent = i;
-                pageBtn.onclick = () => changerPage(i);
-                pagesNumbers.appendChild(pageBtn);
-            }
+        
+        pagination.style.display = 'flex';
+        
+        // Bouton précédent
+        prevBtn.disabled = pageActuelle === 1;
+        prevBtn.style.opacity = pageActuelle === 1 ? '0.5' : '1';
+        
+        // Bouton suivant
+        nextBtn.disabled = pageActuelle === totalPages;
+        nextBtn.style.opacity = pageActuelle === totalPages ? '0.5' : '1';
+        
+        // Numéros de page
+        pagesNumbers.innerHTML = '';
+        
+        // Afficher max 5 pages autour de la page actuelle
+        let startPage = Math.max(1, pageActuelle - 2);
+        let endPage = Math.min(totalPages, pageActuelle + 2);
+        
+        for (let i = startPage; i <= endPage; i++) {
+            const pageBtn = document.createElement('button');
+            pageBtn.className = `page-btn ${i === pageActuelle ? 'active' : ''}`;
+            pageBtn.textContent = i;
+            pageBtn.onclick = () => changerPage(i);
+            pagesNumbers.appendChild(pageBtn);
         }
+    }
 
-        function changerPage(nouvellePage) {
-            const annonces = chargerAnnonces();
+    function changerPage(nouvellePage) {
+        const annonces = chargerAnnonces().then(annonces => {
             const totalPages = Math.ceil(annonces.length / annoncesParPage);
             
             if (nouvellePage < 1 || nouvellePage > totalPages) {
@@ -923,156 +895,161 @@
             
             pageActuelle = nouvellePage;
             afficherAnnoncesAvecPagination(annonces);
-        }
-
-        function afficherAnnoncesAvecPagination(annonces) {
-            const container = document.getElementById('annonces-container');
-            const titre = document.getElementById('titre-compteur');
-            
-            // Calculer les annonces à afficher pour cette page
-            const debut = (pageActuelle - 1) * annoncesParPage;
-            const fin = debut + annoncesParPage;
-            const annoncesPage = annonces.slice(debut, fin);
-            
-            const totalPages = Math.ceil(annonces.length / annoncesParPage);
-            titre.textContent = `🎯 ${annonces.length} voitures disponibles - Page ${pageActuelle}/${totalPages}`;
-            
-            if (annoncesPage.length === 0) {
-                container.innerHTML = `
-                    <div style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
-                        <div style="font-size: 4rem; margin-bottom: 1rem;">🔍</div>
-                        <h3 style="color: #6b7280; margin-bottom: 1rem;">Aucune annonce trouvée</h3>
-                        <p style="color: #9ca3af;">Essayez de modifier vos critères de recherche</p>
-                        <a href="deposer-annonce.html" class="btn-primary" style="display: inline-block; margin-top: 1rem;">➕ Déposer la première annonce</a>
-                    </div>
-                `;
-                document.getElementById('pagination').style.display = 'none';
-                return;
-            }
-            
-            // Afficher les annonces de la page actuelle
-            container.innerHTML = annoncesPage.map(annonce => `
-                <div class="annonce-card">
-                    <div class="annonce-image">
-                        ${annonce.hasPhotos && annonce.photos && annonce.photos.length > 0 ? 
-                            `<img src="${annonce.photos[0]}" alt="${annonce.marque} ${annonce.modele}" style="width: 100%; height: 100%; object-fit: cover;">` : 
-                            '🚗'
-                        }
-                    </div>
-                    <div class="annonce-content">
-                        <h3 class="annonce-title">
-                            ${annonce.marque} ${annonce.modele}
-                            ${annonce.isNew ? '<span class="new-badge">NOUVEAU</span>' : ''}
-                        </h3>
-                        <div class="annonce-price">${annonce.prix}</div>
-                        <div class="annonce-details">
-                            <div class="detail">📅 ${annonce.annee}</div>
-                            <div class="detail">🎯 ${annonce.kilometrage}</div>
-                            <div class="detail">⛽ ${annonce.carburant}</div>
-                            <div class="detail">⚙️ ${annonce.transmission}</div>
-                        </div>
-                        <div class="annonce-location">📍 ${annonce.ville}, Tunisie</div>
-                        <div style="font-size: 0.875rem; color: #6b7280; margin-bottom: 1rem;">
-                            📞 ${annonce.nom} • Publié le ${annonce.date}
-                            ${annonce.hasPhotos ? ' • 📸 Avec photos' : ''}
-                        </div>
-                        <a href="details-annonce.html?id=${annonce.id}" style="text-decoration: none;">
-                            <button class="contact-btn" style="width: 100%;">
-                                🔍 Voir détails
-                            </button>
-                        </a>
-                    </div>
-                </div>
-            `).join('');
-            
-            // Afficher la pagination
-            afficherPagination(annonces.length);
-        }
-
-        function afficherContact(telephone, nom, vehicule) {
-            alert(`📞 Contact de ${nom}\n🚗 ${vehicule}\n📱 Téléphone: ${telephone}\n\nAppelez ce numéro pour plus d'informations sur le véhicule`);
-        }
-
-        function voirDetails(annonceId) {
-            window.location.href = `details-annonce.html?id=${annonceId}`;
-        }
-
-        function filtrerAnnonces() {
-            const marque = document.getElementById('filtre-marque').value;
-            const prixMax = document.getElementById('filtre-prix').value;
-            const ville = document.getElementById('filtre-ville').value;
-            const carburant = document.getElementById('filtre-carburant').value;
-            
-            let annonces = chargerAnnonces();
-            
-            // Appliquer les filtres
-            if (marque) {
-                annonces = annonces.filter(a => a.marque === marque);
-            }
-            
-            if (prixMax) {
-                annonces = annonces.filter(a => {
-                    const prix = parseInt(a.prix.replace(/[^0-9]/g, ''));
-                    return prix <= parseInt(prixMax);
-                });
-            }
-            
-            if (ville) {
-                annonces = annonces.filter(a => a.ville === ville);
-            }
-            
-            if (carburant) {
-                annonces = annonces.filter(a => a.carburant === carburant);
-            }
-            
-            // Réinitialiser à la page 1 quand on filtre
-            pageActuelle = 1;
-            afficherAnnoncesAvecPagination(annonces);
-            
-            // Afficher les filtres actifs
-            afficherFiltresActifs(marque, prixMax, ville, carburant);
-        }
-
-        function afficherFiltresActifs(marque, prixMax, ville, carburant) {
-            const searchInfo = document.getElementById('search-info');
-            const filtresActifs = [];
-            
-            if (marque) filtresActifs.push(`Marque: ${marque}`);
-            if (prixMax) filtresActifs.push(`Prix max: ${prixMax} TND`);
-            if (ville) filtresActifs.push(`Ville: ${ville}`);
-            if (carburant) filtresActifs.push(`Carburant: ${carburant}`);
-            
-            if (filtresActifs.length > 0) {
-                searchInfo.style.display = 'block';
-                searchInfo.innerHTML = `
-                    <strong>🔍 Filtres actifs:</strong> ${filtresActifs.join(' • ')}
-                    <button onclick="reinitialiserFiltres()" style="margin-left: 1rem; background: #6b7280; color: white; border: none; padding: 0.25rem 0.5rem; border-radius: 4px; cursor: pointer;">
-                        ✖️ Tout effacer
-                    </button>
-                `;
-            } else {
-                searchInfo.style.display = 'none';
-            }
-        }
-
-        function reinitialiserFiltres() {
-            document.getElementById('filtre-marque').value = '';
-            document.getElementById('filtre-prix').value = '';
-            document.getElementById('filtre-ville').value = '';
-            document.getElementById('filtre-carburant').value = '';
-            document.getElementById('search-info').style.display = 'none';
-            
-            pageActuelle = 1;
-            const annonces = chargerAnnonces();
-            afficherAnnoncesAvecPagination(annonces);
-        }
-
-        // Charger les annonces au démarrage
-        document.addEventListener('DOMContentLoaded', function() {
-            const annonces = chargerAnnonces();
-            pageActuelle = 1;
-            afficherAnnoncesAvecPagination(annonces);
         });
-    </script>
-</body>
+    }
+
+    async function afficherAnnoncesAvecPagination(annonces) {
+        const container = document.getElementById('annonces-container');
+        const titre = document.getElementById('titre-compteur');
+        
+        // Attendre que les annonces soient chargées
+        const annoncesArray = await annonces;
+        
+        // Calculer les annonces à afficher pour cette page
+        const debut = (pageActuelle - 1) * annoncesParPage;
+        const fin = debut + annoncesParPage;
+        const annoncesPage = annoncesArray.slice(debut, fin);
+        
+        const totalPages = Math.ceil(annoncesArray.length / annoncesParPage);
+        titre.textContent = `🎯 ${annoncesArray.length} voitures disponibles - Page ${pageActuelle}/${totalPages}`;
+        
+        if (annoncesPage.length === 0) {
+            container.innerHTML = `
+                <div style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+                    <div style="font-size: 4rem; margin-bottom: 1rem;">🔍</div>
+                    <h3 style="color: #6b7280; margin-bottom: 1rem;">Aucune annonce trouvée</h3>
+                    <p style="color: #9ca3af;">Essayez de modifier vos critères de recherche</p>
+                    <a href="deposer-annonce.html" class="btn-primary" style="display: inline-block; margin-top: 1rem;">➕ Déposer la première annonce</a>
+                </div>
+            `;
+            document.getElementById('pagination').style.display = 'none';
+            return;
+        }
+        
+        // Afficher les annonces de la page actuelle
+        container.innerHTML = annoncesPage.map(annonce => `
+            <div class="annonce-card">
+                <div class="annonce-image">
+                    ${annonce.hasPhotos && annonce.photos && annonce.photos.length > 0 ? 
+                        `<img src="${annonce.photos[0]}" alt="${annonce.marque} ${annonce.modele}" style="width: 100%; height: 100%; object-fit: cover;" onerror="this.style.display='none'; this.parentNode.innerHTML='🚗';">` : 
+                        '🚗'
+                    }
+                </div>
+                <div class="annonce-content">
+                    <h3 class="annonce-title">
+                        ${annonce.marque} ${annonce.modele}
+                        ${annonce.isNew ? '<span class="new-badge">NOUVEAU</span>' : ''}
+                    </h3>
+                    <div class="annonce-price">${annonce.prix}</div>
+                    <div class="annonce-details">
+                        <div class="detail">📅 ${annonce.annee}</div>
+                        <div class="detail">🎯 ${annonce.kilometrage}</div>
+                        <div class="detail">⛽ ${annonce.carburant}</div>
+                        <div class="detail">⚙️ ${annonce.transmission}</div>
+                    </div>
+                    <div class="annonce-location">📍 ${annonce.ville}, Tunisie</div>
+                    <div style="font-size: 0.875rem; color: #6b7280; margin-bottom: 1rem;">
+                        📞 ${annonce.nom} • Publié le ${annonce.date || 'Date inconnue'}
+                        ${annonce.hasPhotos ? ' • 📸 Avec photos' : ''}
+                    </div>
+                    <button class="contact-btn" onclick="afficherContact('${annonce.contact}', '${annonce.nom}', '${annonce.marque} ${annonce.modele}')">
+                        📞 Contacter
+                    </button>
+                </div>
+            </div>
+        `).join('');
+        
+        // Afficher la pagination
+        afficherPagination(annoncesArray.length);
+    }
+
+    function afficherContact(telephone, nom, vehicule) {
+        alert(`📞 Contact de ${nom}\n🚗 ${vehicule}\n📱 Téléphone: ${telephone}\n\nAppelez ce numéro pour plus d'informations sur le véhicule`);
+    }
+
+    async function filtrerAnnonces() {
+        const marque = document.getElementById('filtre-marque').value;
+        const prixMax = document.getElementById('filtre-prix').value;
+        const ville = document.getElementById('filtre-ville').value;
+        const carburant = document.getElementById('filtre-carburant').value;
+        
+        const annonces = await chargerAnnonces();
+        let annoncesFiltrees = [...annonces];
+        
+        console.log("🔍 Filtrage avec:", { marque, prixMax, ville, carburant });
+        
+        // Appliquer les filtres
+        if (marque) {
+            annoncesFiltrees = annoncesFiltrees.filter(a => a.marque === marque);
+        }
+        
+        if (prixMax) {
+            annoncesFiltrees = annoncesFiltrees.filter(a => {
+                const prix = parseInt(a.prix.replace(/[^0-9]/g, ''));
+                return prix <= parseInt(prixMax);
+            });
+        }
+        
+        if (ville) {
+            annoncesFiltrees = annoncesFiltrees.filter(a => a.ville === ville);
+        }
+        
+        if (carburant) {
+            annoncesFiltrees = annoncesFiltrees.filter(a => a.carburant === carburant);
+        }
+        
+        console.log(`✅ ${annoncesFiltrees.length} annonces après filtrage`);
+        
+        // Réinitialiser à la page 1 quand on filtre
+        pageActuelle = 1;
+        afficherAnnoncesAvecPagination(annoncesFiltrees);
+        
+        // Afficher les filtres actifs
+        afficherFiltresActifs(marque, prixMax, ville, carburant);
+    }
+
+    function afficherFiltresActifs(marque, prixMax, ville, carburant) {
+        const searchInfo = document.getElementById('search-info');
+        const filtresActifs = [];
+        
+        if (marque) filtresActifs.push(`Marque: ${marque}`);
+        if (prixMax) filtresActifs.push(`Prix max: ${prixMax} TND`);
+        if (ville) filtresActifs.push(`Ville: ${ville}`);
+        if (carburant) filtresActifs.push(`Carburant: ${carburant}`);
+        
+        if (filtresActifs.length > 0) {
+            searchInfo.style.display = 'block';
+            searchInfo.innerHTML = `
+                <strong>🔍 Filtres actifs:</strong> ${filtresActifs.join(' • ')}
+                <button onclick="reinitialiserFiltres()" style="margin-left: 1rem; background: #6b7280; color: white; border: none; padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem;">
+                    ✖️ Tout effacer
+                </button>
+            `;
+        } else {
+            searchInfo.style.display = 'none';
+        }
+    }
+
+    async function reinitialiserFiltres() {
+        document.getElementById('filtre-marque').value = '';
+        document.getElementById('filtre-prix').value = '';
+        document.getElementById('filtre-ville').value = '';
+        document.getElementById('filtre-carburant').value = '';
+        document.getElementById('search-info').style.display = 'none';
+        
+        pageActuelle = 1;
+        const annonces = await chargerAnnonces();
+        afficherAnnoncesAvecPagination(annonces);
+    }
+
+    // Charger les annonces au démarrage
+    document.addEventListener('DOMContentLoaded', async function() {
+        console.log("🚀 Démarrage chargement annonces...");
+        const annonces = await chargerAnnonces();
+        pageActuelle = 1;
+        afficherAnnoncesAvecPagination(annonces);
+    });
+</script>
+    </body>
 </html>
+
