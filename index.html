@@ -322,173 +322,124 @@
            CORRECTIONS MOBILE OPTIMISÉES - GARANTI SANS IMPACT PC
            ============================================================================ */
 
-        @media (max-width: 768px) {
-            /* NAVIGATION MOBILE COMPLÈTEMENT REDESIGNÉE */
-            .navbar {
-                padding: 10px 0 !important;
-                position: fixed !important;
-                top: 0 !important;
-                height: auto !important;
-                min-height: 70px !important;
-            }
-            
-            .nav-container {
-                flex-direction: column !important;
-                gap: 12px !important;
-                padding: 0 15px !important;
-                align-items: stretch !important;
-            }
-            
-            .logo {
-                text-align: center !important;
-                font-size: 1.8rem !important;
-                order: 1 !important;
-                padding: 5px 0 !important;
-            }
-            
-            .nav-links {
-                display: flex !important;
-                flex-direction: column !important;
-                gap: 8px !important;
-                width: 100% !important;
-                order: 3 !important;
-                margin-top: 10px !important;
-            }
-            
-            .nav-links a {
-                display: block !important;
-                font-size: 1.1rem !important;
-                padding: 16px 20px !important;
-                background: #f8fafc !important;
-                border-radius: 12px !important;
-                text-align: center !important;
-                border: 2px solid #e5e7eb !important;
-                width: 100% !important;
-                min-height: 54px !important;
-                display: flex !important;
-                align-items: center !important;
-                justify-content: center !important;
-            }
-            
-            .btn-primary {
-                order: 2 !important;
-                padding: 18px 20px !important;
-                font-size: 1.2rem !important;
-                text-align: center !important;
-                min-height: 60px !important;
-                display: flex !important;
-                align-items: center !important;
-                justify-content: center !important;
-                width: 100% !important;
-                margin: 5px 0 !important;
-                border-radius: 12px !important;
-            }
+       /* ============================================================================
+   CORRECTIONS MOBILE OPTIMISÉES - ESPACE RÉDUIT
+   ============================================================================ */
 
-            /* BANNIÈRE MOBILE OPTIMISÉE */
-            .hero-slider {
-                height: 350px !important;
-                margin-top: 150px !important;
-            }
-            
-            .slide-content h1 {
-                font-size: 2rem !important;
-                margin-bottom: 1rem;
-                padding: 0 15px;
-            }
-            
-            .slide-content p {
-                font-size: 1.1rem !important;
-                padding: 0 15px;
-            }
-            
-            .slide-image {
-                font-size: 3.5rem !important;
-                margin-top: 1rem !important;
-            }
-            
-            /* BARRE RECHERCHE MOBILE AMÉLIORÉE */
-            .search-section {
-                padding: 2rem 15px !important;
-            }
-            
-            .search-title {
-                font-size: 1.5rem !important;
-                margin-bottom: 1.5rem !important;
-            }
-            
-            .search-box .flex {
-                flex-direction: column !important;
-                gap: 12px !important;
-            }
-            
-            .search-input, 
-            .search-select {
-                padding: 18px 16px !important;
-                font-size: 1.1rem !important;
-                width: 100% !important;
-                min-height: 60px !important;
-                border-radius: 10px !important;
-                border: 2px solid #e5e7eb !important;
-            }
-            
-            .search-button {
-                padding: 20px 16px !important;
-                font-size: 1.2rem !important;
-                min-height: 64px !important;
-                width: 100% !important;
-                border-radius: 10px !important;
-                font-weight: 700 !important;
-            }
-            
-            /* BOUTONS CTA MOBILE */
-            .cta-buttons {
-                flex-direction: column !important;
-                gap: 12px !important;
-                margin-top: 2rem !important;
-            }
-            
-            .btn-secondary {
-                padding: 18px 20px !important;
-                font-size: 1.2rem !important;
-                text-align: center;
-                min-height: 60px !important;
-                display: flex !important;
-                align-items: center !important;
-                justify-content: center !important;
-                border-radius: 12px !important;
-            }
-            
-            /* FEATURES MOBILE */
-            .features {
-                padding: 40px 15px !important;
-            }
-            
-            .feature-grid {
-                grid-template-columns: 1fr !important;
-                gap: 20px !important;
-            }
-            
-            .feature-card {
-                padding: 30px 20px !important;
-                margin: 0 10px !important;
-            }
-            
-            .feature-icon {
-                font-size: 2.8rem !important;
-                margin-bottom: 15px !important;
-            }
-            
-            .feature-card h3 {
-                font-size: 1.4rem !important;
-                margin-bottom: 10px !important;
-            }
-            
-            /* CONTROLES SLIDER MOBILE */
-            .slider-controls {
-                bottom: 20px !important;
-                gap: 1.5rem !important;
-            }
-            
+@media (max-width: 768px) {
+    /* NAVIGATION MOBILE COMPACTE */
+    .navbar {
+        padding: 8px 0 !important;
+        position: fixed !important;
+        top: 0 !important;
+        width: 100% !important;
+        z-index: 1000 !important;
+        height: auto !important;
+        min-height: 60px !important; /* RÉDUIT de 70px */
+    }
+    
+    .nav-container {
+        flex-direction: column !important;
+        gap: 8px !important; /* RÉDUIT de 12px */
+        padding: 0 10px !important; /* RÉDUIT de 15px */
+        align-items: stretch !important;
+    }
+    
+    .logo {
+        text-align: center !important;
+        font-size: 1.4rem !important; /* RÉDUIT de 1.6rem */
+        order: 1 !important;
+        padding: 3px 0 !important; /* RÉDUIT de 5px */
+    }
+    
+    .nav-links {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 6px !important; /* RÉDUIT de 8px */
+        width: 100% !important;
+        order: 3 !important;
+        margin-top: 8px !important; /* RÉDUIT de 10px */
+    }
+    
+    .nav-links a {
+        display: block !important;
+        font-size: 1rem !important; /* RÉDUIT de 1.1rem */
+        padding: 12px 15px !important; /* RÉDUIT de 16px 20px */
+        background: #f8fafc !important;
+        border-radius: 10px !important; /* RÉDUIT de 12px */
+        text-align: center !important;
+        border: 1px solid #e5e7eb !important; /* RÉDUIT de 2px */
+        width: 100% !important;
+        min-height: 44px !important; /* RÉDUIT de 54px */
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+    
+    .btn-primary {
+        order: 2 !important;
+        padding: 14px 16px !important; /* RÉDUIT de 18px 20px */
+        font-size: 1.1rem !important; /* RÉDUIT de 1.2rem */
+        text-align: center !important;
+        min-height: 50px !important; /* RÉDUIT de 60px */
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 100% !important;
+        margin: 3px 0 !important; /* RÉDUIT de 5px */
+        border-radius: 10px !important; /* RÉDUIT de 12px */
+    }
+
+    /* ESPACEMENT RÉDUIT POUR LA NAV FIXE */
+    body {
+        padding-top: 140px !important; /* RÉDUIT de 180px */
+    }
+
+    /* CONTENU PRINCIPAL PLUS VISIBLE */
+    .hero-slider {
+        margin-top: 120px !important; /* RÉDUIT de 150px */
+        height: 250px !important; /* RÉDUIT de 350px */
+    }
+    
+    .slide-content h1 {
+        font-size: 1.5rem !important; /* RÉDUIT de 2rem */
+        margin-bottom: 0.5rem !important;
+    }
+    
+    .slide-content p {
+        font-size: 1rem !important; /* RÉDUIT de 1.1rem */
+    }
+}
+
+/* CORRECTIONS POUR TRÈS PETITS ÉCRANS */
+@media (max-width: 480px) {
+    .navbar {
+        min-height: 55px !important; /* RÉDUIT de 65px */
+    }
+    
+    .logo {
+        font-size: 1.3rem !important; /* RÉDUIT de 1.5rem */
+    }
+    
+    body {
+        padding-top: 130px !important; /* RÉDUIT de 170px */
+    }
+    
+    .nav-links a,
+    .btn-primary {
+        min-height: 42px !important; /* RÉDUIT de 50px */
+        padding: 10px 12px !important; /* RÉDUIT de 15px */
+    }
+    
+    .hero-slider {
+        height: 200px !important; /* ENCORE PLUS RÉDUIT */
+        margin-top: 110px !important;
+    }
+    
+    .slide-content h1 {
+        font-size: 1.3rem !important;
+    }
+}
             .slider-prev, 
             .slider-next {
                 width: 50px !important;
@@ -716,3 +667,4 @@
     </script>
 </body>
 </html>
+
