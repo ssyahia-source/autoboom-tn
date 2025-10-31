@@ -235,11 +235,198 @@
             display: none;
         }
 
-        .loading {
-            text-align: center;
-            padding: 3rem;
-            font-size: 1.5rem;
-            color: #6b7280;
+        /* ============================================================================
+           CORRECTIONS MOBILE OPTIMISÉES - GARANTI SANS IMPACT PC
+           ============================================================================ */
+
+        @media (max-width: 768px) {
+            /* NAVIGATION MOBILE COMPLÈTEMENT REDESIGNÉE */
+            .navbar {
+                padding: 10px 0 !important;
+                position: fixed !important;
+                top: 0 !important;
+                width: 100% !important;
+                z-index: 1000 !important;
+                height: auto !important;
+                min-height: 70px !important;
+            }
+            
+            .nav-container {
+                flex-direction: column !important;
+                gap: 12px !important;
+                padding: 0 15px !important;
+                align-items: stretch !important;
+            }
+            
+            .logo {
+                text-align: center !important;
+                font-size: 1.6rem !important;
+                order: 1 !important;
+                padding: 5px 0 !important;
+            }
+            
+            .nav-links {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 8px !important;
+                width: 100% !important;
+                order: 3 !important;
+                margin-top: 10px !important;
+            }
+            
+            .nav-links a {
+                display: block !important;
+                font-size: 1.1rem !important;
+                padding: 16px 20px !important;
+                background: #f8fafc !important;
+                border-radius: 12px !important;
+                text-align: center !important;
+                border: 2px solid #e5e7eb !important;
+                width: 100% !important;
+                min-height: 54px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+            
+            .btn-primary {
+                order: 2 !important;
+                padding: 18px 20px !important;
+                font-size: 1.2rem !important;
+                text-align: center !important;
+                min-height: 60px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                width: 100% !important;
+                margin: 5px 0 !important;
+                border-radius: 12px !important;
+            }
+
+            /* ESPACEMENT POUR LA NAV FIXE */
+            body {
+                padding-top: 180px !important;
+            }
+
+            /* FILTRES MOBILE */
+            .filters {
+                padding: 1.5rem 0 !important;
+                margin-bottom: 1rem !important;
+            }
+            
+            .filter-grid {
+                grid-template-columns: 1fr !important;
+                gap: 12px !important;
+            }
+            
+            .filter-select {
+                padding: 16px !important;
+                font-size: 1.1rem !important;
+                min-height: 55px !important;
+            }
+
+            /* ANNONCES MOBILE */
+            .container {
+                padding: 0 15px !important;
+            }
+            
+            .annonces-grid {
+                grid-template-columns: 1fr !important;
+                gap: 1.5rem !important;
+                margin-bottom: 2rem !important;
+            }
+            
+            .annonce-card {
+                margin: 0 5px !important;
+            }
+            
+            .annonce-content {
+                padding: 1.25rem !important;
+            }
+            
+            .annonce-title {
+                font-size: 1.3rem !important;
+            }
+            
+            .annonce-price {
+                font-size: 1.4rem !important;
+            }
+            
+            .contact-btn {
+                padding: 16px !important;
+                font-size: 1.1rem !important;
+                min-height: 55px !important;
+            }
+
+            /* PAGINATION MOBILE */
+            .pagination {
+                flex-direction: column !important;
+                gap: 15px !important;
+            }
+            
+            .page-btn {
+                padding: 12px 20px !important;
+                font-size: 1.1rem !important;
+                min-height: 50px !important;
+            }
+
+            /* RECHERCHE INFO MOBILE */
+            .search-info {
+                padding: 1rem !important;
+                font-size: 1rem !important;
+            }
+        }
+
+        /* CORRECTIONS POUR TRÈS PETITS ÉCRANS */
+        @media (max-width: 480px) {
+            .navbar {
+                min-height: 65px !important;
+            }
+            
+            .logo {
+                font-size: 1.5rem !important;
+            }
+            
+            body {
+                padding-top: 170px !important;
+            }
+            
+            .nav-links a,
+            .btn-primary {
+                min-height: 50px !important;
+                padding: 15px !important;
+            }
+            
+            .filter-select {
+                min-height: 50px !important;
+                padding: 14px !important;
+            }
+        }
+
+        /* OPTIMISATIONS TOUCH - CRITIQUE POUR MOBILE */
+        @media (hover: none) and (pointer: coarse) {
+            .nav-links a, 
+            .btn-primary, 
+            .contact-btn,
+            .page-btn,
+            .filter-select {
+                min-height: 44px !important;
+                cursor: pointer !important;
+            }
+            
+            /* Désactiver les effets hover sur mobile */
+            .nav-links a:hover {
+                color: inherit !important;
+            }
+            
+            .btn-primary:hover, 
+            .contact-btn:hover {
+                transform: none !important;
+            }
+            
+            .annonce-card:hover {
+                transform: none !important;
+            }
         }
     </style>
 </head>
@@ -440,7 +627,7 @@
                 <select class="filter-select" onchange="filtrerAnnonces()" id="filtre-prix">
                     <option value="">Prix max</option>
                     <option value="10000">10 000 TND</option>
-                    <option value="15000">15 000 TND</option>
+                   <option value="15000">15 000 TND</option>
                     <option value="20000">20 000 TND</option>
                     <option value="30000">30 000 TND</option>  
                     <option value="40000">40 000 TND</option>
@@ -493,9 +680,7 @@
 
     <!-- Liste des annonces -->
     <div class="container">
-        <h1 style="margin-bottom: 2rem; color: #1f2937;" id="titre-compteur">
-            <div class="loading">🔄 Chargement des annonces...</div>
-        </h1>
+        <h1 style="margin-bottom: 2rem; color: #1f2937;" id="titre-compteur">🎯 Chargement des annonces...</h1>
         
         <div class="annonces-grid" id="annonces-container">
             <!-- Les annonces seront chargées ici par JavaScript -->
@@ -513,63 +698,29 @@
         </div>
     </div>
 
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
-
     <script>
-        // Configuration Firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyCPay-0BB2o9Cefuj4w5k0b70mBG2kwR4E",
-            authDomain: "autoboom-tn.firebaseapp.com",
-            databaseURL: "https://autoboom-tn-default-rtdb.europe-west1.firebasedatabase.app",
-            projectId: "autoboom-tn",
-            storageBucket: "autoboom-tn.firebasestorage.app",
-            messagingSenderId: "291199404228",
-            appId: "1:291199404228:web:b07c622a5f7b8bc9a4e191"
-        };
-
-        // Initialiser Firebase
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-
         // Variables de pagination
         let pageActuelle = 1;
         const annoncesParPage = 6;
 
-        // Fonction pour charger les annonces depuis Firebase
-        async function chargerAnnoncesFirebase() {
-            try {
-                console.log('Chargement annonces depuis Firebase...');
-                const snapshot = await database.ref('annonces').once('value');
-                const annoncesFirebase = snapshot.val() || {};
-                
-                // Convertir l'objet en tableau
-                const annoncesArray = Object.values(annoncesFirebase);
-                console.log('Annonces chargées Firebase:', annoncesArray.length);
-                return annoncesArray;
-            } catch (error) {
-                console.error('Erreur Firebase:', error);
-                return [];
-            }
+        // Générer des dates aléatoires réalistes
+        function genererDateAleatoire() {
+            const aujourdhui = new Date();
+            const joursAleatoires = Math.floor(Math.random() * 90) + 1; // 1-90 jours dans le passé
+            const date = new Date(aujourdhui);
+            date.setDate(aujourdhui.getDate() - joursAleatoires);
+            
+            return date.toLocaleDateString('fr-FR', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric'
+            });
         }
 
-        // Fonction pour charger depuis localStorage (compatibilité)
-        function chargerAnnoncesLocale() {
-            try {
-                const annonces = JSON.parse(localStorage.getItem('annonces')) || [];
-                console.log('Annonces chargées locale:', annonces.length);
-                return annonces;
-            } catch (error) {
-                console.error('Erreur localStorage:', error);
-                return [];
-            }
-        }
-
-        // Annonces par défaut
+        // Annonces par défaut avec dates différentes
         const annoncesParDefaut = [
             {
-                id: "default-1",
+                id: 1,
                 marque: 'Volkswagen',
                 modele: 'Golf 7',
                 prix: '28,500 TND',
@@ -581,12 +732,11 @@
                 description: 'Voiture en excellent état, entretien chez concessionnaire, 1 seul propriétaire',
                 contact: '12 345 678',
                 nom: 'Ahmed',
-                date: '27/10/2024',
-                photos: ['https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=300&h=200&fit=crop'],
-                isNew: true
+                date: genererDateAleatoire(),
+                hasPhotos: false
             },
             {
-                id: "default-2",
+                id: 2,
                 marque: 'Renault',
                 modele: 'Clio 5',
                 prix: '35,000 TND',
@@ -598,12 +748,11 @@
                 description: 'Presque neuve, garantie constructeur encore valable',
                 contact: '98 765 432',
                 nom: 'Marie',
-                date: '26/10/2024',
-                photos: ['https://images.unsplash.com/photo-1552519507-da3b142c6e3d?w=300&h=200&fit=crop'],
-                isNew: true
+                date: genererDateAleatoire(),
+                hasPhotos: false
             },
             {
-                id: "default-3",
+                id: 3,
                 marque: 'Hyundai',
                 modele: 'Tucson',
                 prix: '52,000 TND',
@@ -615,12 +764,11 @@
                 description: 'SUV familial spacieux, tous options, clim automatique',
                 contact: '55 123 456',
                 nom: 'Mohamed',
-                date: '25/10/2024',
-                photos: ['https://images.unsplash.com/photo-1621007947382-bb3c3994e3fb?w=300&h=200&fit=crop'],
-                isNew: false
+                date: genererDateAleatoire(),
+                hasPhotos: false
             },
             {
-                id: "default-4",
+                id: 4,
                 marque: 'Peugeot',
                 modele: '208',
                 prix: '19,500 TND',
@@ -632,12 +780,11 @@
                 description: 'Parfaite pour ville, consommation réduite, bon état général',
                 contact: '33 987 654',
                 nom: 'Sophie',
-                date: '24/10/2024',
-                photos: ['https://images.unsplash.com/photo-1603584173870-7f23fdae1b7a?w=300&h=200&fit=crop'],
-                isNew: false
+                date: genererDateAleatoire(),
+                hasPhotos: false
             },
             {
-                id: "default-5",
+                id: 5,
                 marque: 'Kia',
                 modele: 'Sportage',
                 prix: '42,000 TND',
@@ -649,12 +796,11 @@
                 description: 'SUV confortable, entretien régulier, carnet d entretien complet',
                 contact: '77 456 123',
                 nom: 'Karim',
-                date: '23/10/2024',
-                photos: ['https://images.unsplash.com/photo-1621135802920-133df287f89c?w=300&h=200&fit=crop'],
-                isNew: true
+                date: genererDateAleatoire(),
+                hasPhotos: false
             },
             {
-                id: "default-6",
+                id: 6,
                 marque: 'Mercedes',
                 modele: 'Classe A',
                 prix: '68,000 TND',
@@ -666,12 +812,11 @@
                 description: 'Voiture premium, toutes options, très bon état',
                 contact: '22 333 444',
                 nom: 'Ali',
-                date: '22/10/2024',
-                photos: ['https://images.unsplash.com/photo-1563720223485-239d6db13e3c?w=300&h=200&fit=crop'],
-                isNew: false
+                date: genererDateAleatoire(),
+                hasPhotos: false
             },
             {
-                id: "default-7",
+                id: 7,
                 marque: 'Audi',
                 modele: 'A3',
                 prix: '45,000 TND',
@@ -683,12 +828,11 @@
                 description: 'Compacte premium, toutes options, état impeccable',
                 contact: '66 777 888',
                 nom: 'Samir',
-                date: '21/10/2024',
-                photos: ['https://images.unsplash.com/photo-1555215695-3004980ad54e?w=300&h=200&fit=crop'],
-                isNew: true
+                date: genererDateAleatoire(),
+                hasPhotos: false
             },
             {
-                id: "default-8",
+                id: 8,
                 marque: 'BMW',
                 modele: 'Série 1',
                 prix: '58,000 TND',
@@ -700,62 +844,32 @@
                 description: 'Berline compacte sportive, entretien BMW',
                 contact: '99 888 777',
                 nom: 'Youssef',
-                date: '20/10/2024',
-                photos: ['https://images.unsplash.com/photo-1555215695-3004980ad54e?w=300&h=200&fit=crop'],
-                isNew: false
+                date: genererDateAleatoire(),
+                hasPhotos: false
             }
         ];
 
-        // Charger les annonces - VERSION STABLE
-        async function chargerAnnonces() {
-            console.log('Début chargement annonces...');
+        // Charger les annonces du localStorage
+        function chargerAnnonces() {
+            const annoncesSauvegardees = JSON.parse(localStorage.getItem('annonces')) || [];
+            const toutesAnnonces = [...annoncesSauvegardees, ...annoncesParDefaut];
             
-            // Charger depuis Firebase
-            const annoncesFirebase = await chargerAnnoncesFirebase();
-            
-            // Charger depuis localStorage
-            const annoncesLocales = chargerAnnoncesLocale();
-            
-            // Combiner toutes les sources
-            const toutesAnnonces = [...annoncesFirebase, ...annoncesLocales, ...annoncesParDefaut];
-            
-            // Éliminer les doublons basés sur l'ID
-            const annoncesUniques = toutesAnnonces.filter((annonce, index, self) => 
-                index === self.findIndex(a => a.id === annonce.id)
-            );
-            
-            console.log('Total annonces uniques:', annoncesUniques.length);
-            
-            // Traitement des annonces
-            annoncesUniques.forEach(annonce => {
-                // Garantir la date
+            // Pour les nouvelles annonces, utiliser la date actuelle
+            toutesAnnonces.forEach(annonce => {
                 if (!annonce.date) {
                     annonce.date = new Date().toLocaleDateString('fr-FR');
                 }
                 
-                // Garantir les photos
-                if (!annonce.photos || !Array.isArray(annonce.photos) || annonce.photos.length === 0) {
-                    annonce.photos = ['https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=300&h=200&fit=crop'];
-                }
-                
-                // Calculer si nouvelle (moins de 7 jours)
-                try {
-                    const datePublication = new Date(annonce.date.split('/').reverse().join('-'));
-                    const maintenant = new Date();
-                    const differenceJours = (maintenant - datePublication) / (1000 * 60 * 60 * 24);
-                    annonce.isNew = differenceJours < 7;
-                } catch (e) {
-                    annonce.isNew = false;
-                }
+                // Marquer comme nouvelle si moins de 7 jours
+                const datePublication = new Date(annonce.date.split('/').reverse().join('-'));
+                const maintenant = new Date();
+                const differenceJours = (maintenant - datePublication) / (1000 * 60 * 60 * 24);
+                annonce.isNew = differenceJours < 7;
             });
             
-            // Trier par date (récentes en premier)
-            return annoncesUniques.sort((a, b) => {
-                try {
-                    return new Date(b.date.split('/').reverse().join('-')) - new Date(a.date.split('/').reverse().join('-'));
-                } catch (e) {
-                    return 0;
-                }
+            // Trier par date (les plus récentes en premier)
+            return toutesAnnonces.sort((a, b) => {
+                return new Date(b.date.split('/').reverse().join('-')) - new Date(a.date.split('/').reverse().join('-'));
             });
         }
 
@@ -803,26 +917,25 @@
             const annonces = chargerAnnonces();
             const totalPages = Math.ceil(annonces.length / annoncesParPage);
             
-            if (nouvellePage < 1 || nouvellePage > totalPages) return;
+            if (nouvellePage < 1 || nouvellePage > totalPages) {
+                return;
+            }
             
             pageActuelle = nouvellePage;
             afficherAnnoncesAvecPagination(annonces);
         }
 
-        async function afficherAnnoncesAvecPagination(annonces) {
+        function afficherAnnoncesAvecPagination(annonces) {
             const container = document.getElementById('annonces-container');
             const titre = document.getElementById('titre-compteur');
-            
-            // Attendre que les annonces soient chargées
-            const annoncesArray = await annonces;
             
             // Calculer les annonces à afficher pour cette page
             const debut = (pageActuelle - 1) * annoncesParPage;
             const fin = debut + annoncesParPage;
-            const annoncesPage = annoncesArray.slice(debut, fin);
+            const annoncesPage = annonces.slice(debut, fin);
             
-            const totalPages = Math.ceil(annoncesArray.length / annoncesParPage);
-            titre.textContent = `🎯 ${annoncesArray.length} voitures disponibles - Page ${pageActuelle}/${totalPages}`;
+            const totalPages = Math.ceil(annonces.length / annoncesParPage);
+            titre.textContent = `🎯 ${annonces.length} voitures disponibles - Page ${pageActuelle}/${totalPages}`;
             
             if (annoncesPage.length === 0) {
                 container.innerHTML = `
@@ -837,11 +950,14 @@
                 return;
             }
             
-            // AFFICHER les annonces de la page actuelle
+            // Afficher les annonces de la page actuelle
             container.innerHTML = annoncesPage.map(annonce => `
                 <div class="annonce-card">
                     <div class="annonce-image">
-                        <img src="${annonce.photos[0]}" alt="${annonce.marque} ${annonce.modele}" style="width: 100%; height: 100%; object-fit: cover;">
+                        ${annonce.hasPhotos && annonce.photos && annonce.photos.length > 0 ? 
+                            `<img src="${annonce.photos[0]}" alt="${annonce.marque} ${annonce.modele}" style="width: 100%; height: 100%; object-fit: cover;">` : 
+                            '🚗'
+                        }
                     </div>
                     <div class="annonce-content">
                         <h3 class="annonce-title">
@@ -858,7 +974,7 @@
                         <div class="annonce-location">📍 ${annonce.ville}, Tunisie</div>
                         <div style="font-size: 0.875rem; color: #6b7280; margin-bottom: 1rem;">
                             📞 ${annonce.nom} • Publié le ${annonce.date}
-                            ${annonce.photos.length > 0 ? ' • 📸 Avec photos' : ''}
+                            ${annonce.hasPhotos ? ' • 📸 Avec photos' : ''}
                         </div>
                         <a href="details-annonce.html?id=${annonce.id}" style="text-decoration: none;">
                             <button class="contact-btn" style="width: 100%;">
@@ -870,7 +986,15 @@
             `).join('');
             
             // Afficher la pagination
-            afficherPagination(annoncesArray.length);
+            afficherPagination(annonces.length);
+        }
+
+        function afficherContact(telephone, nom, vehicule) {
+            alert(`📞 Contact de ${nom}\n🚗 ${vehicule}\n📱 Téléphone: ${telephone}\n\nAppelez ce numéro pour plus d'informations sur le véhicule`);
+        }
+
+        function voirDetails(annonceId) {
+            window.location.href = `details-annonce.html?id=${annonceId}`;
         }
 
         function filtrerAnnonces() {
@@ -879,37 +1003,34 @@
             const ville = document.getElementById('filtre-ville').value;
             const carburant = document.getElementById('filtre-carburant').value;
             
-            // Recharger et filtrer
-            chargerAnnonces().then(annonces => {
-                let annoncesFiltrees = annonces;
-                
-                // Appliquer les filtres
-                if (marque) {
-                    annoncesFiltrees = annoncesFiltrees.filter(a => a.marque === marque);
-                }
-                
-                if (prixMax) {
-                    annoncesFiltrees = annoncesFiltrees.filter(a => {
-                        const prix = parseInt(a.prix.replace(/[^0-9]/g, ''));
-                        return prix <= parseInt(prixMax);
-                    });
-                }
-                
-                if (ville) {
-                    annoncesFiltrees = annoncesFiltrees.filter(a => a.ville === ville);
-                }
-                
-                if (carburant) {
-                    annoncesFiltrees = annoncesFiltrees.filter(a => a.carburant === carburant);
-                }
-                
-                // Réinitialiser à la page 1 quand on filtre
-                pageActuelle = 1;
-                afficherAnnoncesAvecPagination(Promise.resolve(annoncesFiltrees));
-                
-                // Afficher les filtres actifs
-                afficherFiltresActifs(marque, prixMax, ville, carburant);
-            });
+            let annonces = chargerAnnonces();
+            
+            // Appliquer les filtres
+            if (marque) {
+                annonces = annonces.filter(a => a.marque === marque);
+            }
+            
+            if (prixMax) {
+                annonces = annonces.filter(a => {
+                    const prix = parseInt(a.prix.replace(/[^0-9]/g, ''));
+                    return prix <= parseInt(prixMax);
+                });
+            }
+            
+            if (ville) {
+                annonces = annonces.filter(a => a.ville === ville);
+            }
+            
+            if (carburant) {
+                annonces = annonces.filter(a => a.carburant === carburant);
+            }
+            
+            // Réinitialiser à la page 1 quand on filtre
+            pageActuelle = 1;
+            afficherAnnoncesAvecPagination(annonces);
+            
+            // Afficher les filtres actifs
+            afficherFiltresActifs(marque, prixMax, ville, carburant);
         }
 
         function afficherFiltresActifs(marque, prixMax, ville, carburant) {
@@ -942,23 +1063,16 @@
             document.getElementById('search-info').style.display = 'none';
             
             pageActuelle = 1;
-            chargerAnnonces().then(annonces => {
-                afficherAnnoncesAvecPagination(Promise.resolve(annonces));
-            });
+            const annonces = chargerAnnonces();
+            afficherAnnoncesAvecPagination(annonces);
         }
 
         // Charger les annonces au démarrage
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('Démarrage application...');
-            chargerAnnonces().then(annonces => {
-                pageActuelle = 1;
-                afficherAnnoncesAvecPagination(Promise.resolve(annonces));
-            });
+            const annonces = chargerAnnonces();
+            pageActuelle = 1;
+            afficherAnnoncesAvecPagination(annonces);
         });
     </script>
 </body>
 </html>
-
-
-
-
