@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Sauvegarde AutoBoom</title>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
+</head>
+<body>
+    <h1>🔄 Sauvegarde Base AutoBoom</h1>
+    <button onclick="sauvegarderBase()">💾 Télécharger Sauvegarde</button>
+    <button onclick="compterAnnonces()">📊 Vérifier Nombre Annonces</button>
+
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyCPay-0BB2o9Cefuj4w5k0b70mBG2kwR4E",
+            authDomain: "autoboom-tn.firebaseapp.com",
+            databaseURL: "https://autoboom-tn-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "autoboom-tn",
+            storageBucket: "autoboom-tn.firebasestorage.app",
+            messagingSenderId: "291199404228",
+            appId: "1:291199404228:web:b07c622a5f7b8bc9a4e191"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        function sauvegarderBase() {
+            console.log("💾 Début sauvegarde...");
+            
+            database.ref().once('value').then(snapshot => {
+                const data = snapshot.val();
+                const dataStr = JSON.stringify(data, null, 2);
+                const dataBlob = new Blob([dataStr], {type: 'application/json'});
+                
+                // Créer lien de téléchargement
+                const url = URL.createObjectURL(dataBlob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `autoboom-sauvegarde-${new Date().toISOString().split('T')[0]}.json`;
+                a.click();
+                
+                console.log("✅ Sauvegarde téléchargée !");
+                alert(`✅ Sauvegarde complète !\n📊 ${Object.keys(data.annonces || {}).length} annonces sauvegardées`);
+            });
+        }
+
+        function compterAnnonces() {
+            database.ref('annonces').once('value').then(snapshot => {
+                const count = snapshot.numChildren();
+                alert(`📊 Votre base contient actuellement: ${count} annonces`);
+                console.log("Annonces dans Firebase:", snapshot.val());
+            });
+        }
+
+        // Vérification au chargement
+        database.ref('annonces').once('value').then(snapshot => {
+            console.log(`🔍 Base actuelle: ${snapshot.numChildren()} annonces`);
+        });
+    </script>
+</body>
+</html>
