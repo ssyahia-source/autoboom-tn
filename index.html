@@ -326,86 +326,164 @@
    CORRECTIONS MOBILE OPTIMISÉES - ESPACE RÉDUIT
    ============================================================================ */
 
+/* ============================================================================
+   CORRECTIONS MOBILE ULTRA-COMPACT
+   ============================================================================ */
+
 @media (max-width: 768px) {
-    /* NAVIGATION MOBILE COMPACTE */
+    /* RÉINITIALISATION COMPLÈTE */
     .navbar {
-        padding: 8px 0 !important;
+        padding: 5px 0 !important;
         position: fixed !important;
         top: 0 !important;
         width: 100% !important;
         z-index: 1000 !important;
         height: auto !important;
-        min-height: 60px !important; /* RÉDUIT de 70px */
+        min-height: 50px !important;
+        background: white !important;
     }
     
     .nav-container {
         flex-direction: column !important;
-        gap: 8px !important; /* RÉDUIT de 12px */
-        padding: 0 10px !important; /* RÉDUIT de 15px */
+        gap: 5px !important;
+        padding: 0 10px !important;
         align-items: stretch !important;
     }
     
     .logo {
         text-align: center !important;
-        font-size: 1.4rem !important; /* RÉDUIT de 1.6rem */
+        font-size: 1.2rem !important;
         order: 1 !important;
-        padding: 3px 0 !important; /* RÉDUIT de 5px */
+        padding: 2px 0 !important;
+        margin: 0 !important;
     }
     
     .nav-links {
         display: flex !important;
         flex-direction: column !important;
-        gap: 6px !important; /* RÉDUIT de 8px */
+        gap: 4px !important;
         width: 100% !important;
         order: 3 !important;
-        margin-top: 8px !important; /* RÉDUIT de 10px */
+        margin-top: 5px !important;
+        padding: 0 !important;
     }
     
     .nav-links a {
         display: block !important;
-        font-size: 1rem !important; /* RÉDUIT de 1.1rem */
-        padding: 12px 15px !important; /* RÉDUIT de 16px 20px */
+        font-size: 0.9rem !important;
+        padding: 8px 10px !important;
         background: #f8fafc !important;
-        border-radius: 10px !important; /* RÉDUIT de 12px */
+        border-radius: 6px !important;
         text-align: center !important;
-        border: 1px solid #e5e7eb !important; /* RÉDUIT de 2px */
+        border: 1px solid #e5e7eb !important;
         width: 100% !important;
-        min-height: 44px !important; /* RÉDUIT de 54px */
+        min-height: 35px !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
+        margin: 0 !important;
     }
     
     .btn-primary {
         order: 2 !important;
-        padding: 14px 16px !important; /* RÉDUIT de 18px 20px */
-        font-size: 1.1rem !important; /* RÉDUIT de 1.2rem */
+        padding: 10px 12px !important;
+        font-size: 0.9rem !important;
         text-align: center !important;
-        min-height: 50px !important; /* RÉDUIT de 60px */
+        min-height: 40px !important;
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
         width: 100% !important;
-        margin: 3px 0 !important; /* RÉDUIT de 5px */
-        border-radius: 10px !important; /* RÉDUIT de 12px */
+        margin: 2px 0 !important;
+        border-radius: 6px !important;
     }
 
-    /* ESPACEMENT RÉDUIT POUR LA NAV FIXE */
+    /* ESPACEMENT MINIMAL */
     body {
-        padding-top: 140px !important; /* RÉDUIT de 180px */
+        padding-top: 110px !important;
+        margin: 0 !important;
     }
 
-    /* CONTENU PRINCIPAL PLUS VISIBLE */
+    /* CONTENU PRINCIPAL MAXIMUM */
     .hero-slider {
-        margin-top: 120px !important; /* RÉDUIT de 150px */
-        height: 250px !important; /* RÉDUIT de 350px */
+        margin-top: 100px !important;
+        height: 200px !important;
+        padding: 0 !important;
     }
     
     .slide-content h1 {
-        font-size: 1.5rem !important; /* RÉDUIT de 2rem */
-        margin-bottom: 0.5rem !important;
+        font-size: 1.3rem !important;
+        margin-bottom: 0.3rem !important;
+        padding: 0 10px !important;
     }
     
+    .slide-content p {
+        font-size: 0.9rem !important;
+        padding: 0 10px !important;
+    }
+    
+    .slide-image {
+        font-size: 2.5rem !important;
+        margin-top: 0.5rem !important;
+    }
+
+    /* RECHERCHE COMPACTE */
+    .search-section {
+        padding: 1rem 0 !important;
+    }
+    
+    .search-title {
+        font-size: 1.1rem !important;
+        margin-bottom: 1rem !important;
+    }
+    
+    .search-box .flex {
+        flex-direction: column !important;
+        gap: 8px !important;
+    }
+    
+    .search-input, 
+    .search-select, 
+    .search-button {
+        padding: 12px !important;
+        font-size: 1rem !important;
+        min-height: 45px !important;
+    }
+}
+
+/* CORRECTIONS POUR TRÈS PETITS ÉCRANS */
+@media (max-width: 480px) {
+    .navbar {
+        min-height: 45px !important;
+    }
+    
+    .logo {
+        font-size: 1.1rem !important;
+    }
+    
+    body {
+        padding-top: 100px !important;
+    }
+    
+    .nav-links a,
+    .btn-primary {
+        min-height: 32px !important;
+        padding: 6px 8px !important;
+        font-size: 0.85rem !important;
+    }
+    
+    .hero-slider {
+        height: 150px !important;
+        margin-top: 90px !important;
+    }
+    
+    .slide-content h1 {
+        font-size: 1.1rem !important;
+    }
+}
+
+
+        
     .slide-content p {
         font-size: 1rem !important; /* RÉDUIT de 1.1rem */
     }
@@ -667,4 +745,5 @@
     </script>
 </body>
 </html>
+
 
