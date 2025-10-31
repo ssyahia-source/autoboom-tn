@@ -233,8 +233,184 @@
             padding: 1rem;
             margin-bottom: 1rem;
             display: none;
-        }
+                }
+/* ============================================================================
+   CORRECTIONS MOBILE UNIQUEMENT - NE TOUCHE PAS AU FONCTIONNEMENT PC
+   ============================================================================ */
+
+@media (max-width: 768px) {
+    /* NAVIGATION MOBILE */
+    .navbar {
+        padding: 10px 0 !important;
+        position: fixed !important;
+        top: 0 !important;
+        width: 100% !important;
+        z-index: 1000 !important;
+        height: auto !important;
+        min-height: 70px !important;
+    }
+    
+    .nav-container {
+        flex-direction: column !important;
+        gap: 12px !important;
+        padding: 0 15px !important;
+        align-items: stretch !important;
+    }
+    
+    .logo {
+        text-align: center !important;
+        font-size: 1.6rem !important;
+        order: 1 !important;
+        padding: 5px 0 !important;
+    }
+    
+    .nav-links {
+        display: flex !important;
+        flex-direction: column !important;
+        gap: 8px !important;
+        width: 100% !important;
+        order: 3 !important;
+        margin-top: 10px !important;
+    }
+    
+    .nav-links a {
+        display: block !important;
+        font-size: 1.1rem !important;
+        padding: 16px 20px !important;
+        background: #f8fafc !important;
+        border-radius: 12px !important;
+        text-align: center !important;
+        border: 2px solid #e5e7eb !important;
+        width: 100% !important;
+        min-height: 54px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+    }
+    
+    .btn-primary {
+        order: 2 !important;
+        padding: 18px 20px !important;
+        font-size: 1.2rem !important;
+        text-align: center !important;
+        min-height: 60px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 100% !important;
+        margin: 5px 0 !important;
+        border-radius: 12px !important;
+    }
+
+    /* ESPACEMENT POUR LA NAV FIXE */
+    body {
+        padding-top: 180px !important;
+    }
+
+    /* FILTRES MOBILE */
+    .filters {
+        padding: 1.5rem 0 !important;
+        margin-bottom: 1rem !important;
+    }
+    
+    .filter-grid {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+    }
+    
+    .filter-select {
+        padding: 16px !important;
+        font-size: 1.1rem !important;
+        min-height: 55px !important;
+    }
+
+    /* ANNONCES MOBILE */
+    .container {
+        padding: 0 15px !important;
+    }
+    
+    .annonces-grid {
+        grid-template-columns: 1fr !important;
+        gap: 1.5rem !important;
+        margin-bottom: 2rem !important;
+    }
+    
+    .annonce-card {
+        margin: 0 5px !important;
+    }
+    
+    .annonce-content {
+        padding: 1.25rem !important;
+    }
+    
+    .annonce-title {
+        font-size: 1.3rem !important;
+    }
+    
+    .annonce-price {
+        font-size: 1.4rem !important;
+    }
+    
+    .contact-btn {
+        padding: 16px !important;
+        font-size: 1.1rem !important;
+        min-height: 55px !important;
+    }
+
+    /* PAGINATION MOBILE */
+    .pagination {
+        flex-direction: column !important;
+        gap: 15px !important;
+    }
+    
+    .page-btn {
+        padding: 12px 20px !important;
+        font-size: 1.1rem !important;
+        min-height: 50px !important;
+    }
+}
+
+/* CORRECTIONS POUR TRÈS PETITS ÉCRANS */
+@media (max-width: 480px) {
+    .navbar {
+        min-height: 65px !important;
+    }
+    
+    .logo {
+        font-size: 1.5rem !important;
+    }
+    
+    body {
+        padding-top: 170px !important;
+    }
+    
+    .nav-links a,
+    .btn-primary {
+        min-height: 50px !important;
+        padding: 15px !important;
+    }
+    
+    .filter-select {
+        min-height: 50px !important;
+        padding: 14px !important;
+    }
+}
+
+/* OPTIMISATIONS TOUCH MOBILE */
+@media (hover: none) and (pointer: coarse) {
+    .nav-links a, 
+    .btn-primary, 
+    .contact-btn,
+    .page-btn,
+    .filter-select {
+        min-height: 44px !important;
+    }
+}
+        
+    
     </style>
+    
+    
 </head>
 <body>
     <!-- Navigation -->
@@ -882,3 +1058,4 @@
     </script>
 </body>
 </html>
+
