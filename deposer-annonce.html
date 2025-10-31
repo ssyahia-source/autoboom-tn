@@ -33,8 +33,6 @@ async function sauvegarderAnnonceFirebase(annonce) {
 }
 </script>
 
-
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
@@ -110,6 +108,51 @@ async function sauvegarderAnnonceFirebase(annonce) {
 
         .btn-primary:hover {
             background: #1d4ed8;
+        }
+
+        /* Menu Mobile Hamburger */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 8px;
+            color: #2563eb;
+        }
+
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 60px;
+            left: 0;
+            width: 100%;
+            background: white;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            flex-direction: column;
+            z-index: 1001;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        
+        .mobile-menu.active {
+            display: flex;
+        }
+        
+        .mobile-menu a {
+            padding: 14px 20px;
+            text-decoration: none;
+            color: #4b5563;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: background 0.3s;
+        }
+        
+        .mobile-menu a:hover {
+            background: #f8fafc;
         }
 
         /* Formulaire */
@@ -310,76 +353,57 @@ async function sauvegarderAnnonceFirebase(annonce) {
         }
 
         /* ============================================================================
-           CORRECTIONS MOBILE OPTIMISÉES - GARANTI SANS IMPACT PC
+           CORRECTIONS MOBILE OPTIMISÉES - MENU HAMBURGER COMPACT
            ============================================================================ */
 
         @media (max-width: 768px) {
-            /* NAVIGATION MOBILE COMPLÈTEMENT REDESIGNÉE */
+            /* NAVIGATION FIXE COMPACTE */
             .navbar {
-                padding: 10px 0 !important;
+                padding: 8px 0 !important;
                 position: fixed !important;
                 top: 0 !important;
                 width: 100% !important;
                 z-index: 1000 !important;
-                height: auto !important;
-                min-height: 70px !important;
+                height: 60px !important;
+                min-height: 60px !important;
+                background: white !important;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1) !important;
             }
             
             .nav-container {
-                flex-direction: column !important;
-                gap: 12px !important;
                 padding: 0 15px !important;
-                align-items: stretch !important;
+                height: 100% !important;
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
             }
             
             .logo {
-                text-align: center !important;
-                font-size: 1.6rem !important;
-                order: 1 !important;
-                padding: 5px 0 !important;
+                font-size: 1.3rem !important;
+                margin: 0 !important;
             }
             
+            /* CACHER LE MENU DESKTOP */
             .nav-links {
-                display: flex !important;
-                flex-direction: column !important;
-                gap: 8px !important;
-                width: 100% !important;
-                order: 3 !important;
-                margin-top: 10px !important;
-            }
-            
-            .nav-links a {
-                display: block !important;
-                font-size: 1.1rem !important;
-                padding: 16px 20px !important;
-                background: #f8fafc !important;
-                border-radius: 12px !important;
-                text-align: center !important;
-                border: 2px solid #e5e7eb !important;
-                width: 100% !important;
-                min-height: 54px !important;
-                display: flex !important;
-                align-items: center !important;
-                justify-content: center !important;
+                display: none !important;
             }
             
             .btn-primary {
-                order: 2 !important;
-                padding: 18px 20px !important;
-                font-size: 1.2rem !important;
-                text-align: center !important;
-                min-height: 60px !important;
-                display: flex !important;
-                align-items: center !important;
-                justify-content: center !important;
-                width: 100% !important;
-                margin: 5px 0 !important;
-                border-radius: 12px !important;
+                display: none !important;
+            }
+
+            /* AFFICHER BOUTON HAMBURGER */
+            .menu-toggle {
+                display: block !important;
             }
 
             /* ESPACEMENT POUR LA NAV FIXE */
             body {
-                padding-top: 180px !important;
+                padding-top: 60px !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                overflow-x: hidden !important;
+                margin: 0 !important;
             }
 
             /* FORMULAIRE MOBILE */
@@ -390,7 +414,7 @@ async function sauvegarderAnnonceFirebase(annonce) {
             
             .form-card {
                 padding: 1.5rem !important;
-                margin: 0 5px !important;
+                margin: 0 !important;
             }
             
             .form-title {
@@ -404,9 +428,9 @@ async function sauvegarderAnnonceFirebase(annonce) {
             }
             
             .form-input, .form-select, .form-textarea {
-                padding: 16px !important;
-                font-size: 1.1rem !important;
-                min-height: 55px !important;
+                padding: 14px !important;
+                font-size: 1rem !important;
+                min-height: 50px !important;
             }
             
             .form-textarea {
@@ -418,9 +442,9 @@ async function sauvegarderAnnonceFirebase(annonce) {
             }
             
             .btn-orange {
-                padding: 20px !important;
-                font-size: 1.2rem !important;
-                min-height: 65px !important;
+                padding: 16px !important;
+                font-size: 1.1rem !important;
+                min-height: 55px !important;
                 font-weight: 700 !important;
             }
 
@@ -472,21 +496,21 @@ async function sauvegarderAnnonceFirebase(annonce) {
         /* CORRECTIONS POUR TRÈS PETITS ÉCRANS */
         @media (max-width: 480px) {
             .navbar {
-                min-height: 65px !important;
+                height: 55px !important;
+                min-height: 55px !important;
             }
             
             .logo {
-                font-size: 1.5rem !important;
+                font-size: 1.2rem !important;
             }
             
             body {
-                padding-top: 170px !important;
+                padding-top: 55px !important;
             }
             
-            .nav-links a,
-            .btn-primary {
-                min-height: 50px !important;
-                padding: 15px !important;
+            .mobile-menu a {
+                padding: 12px 15px !important;
+                font-size: 0.95rem !important;
             }
             
             .form-card {
@@ -494,20 +518,24 @@ async function sauvegarderAnnonceFirebase(annonce) {
             }
             
             .form-input, .form-select, .form-textarea {
-                min-height: 50px !important;
-                padding: 14px !important;
+                min-height: 48px !important;
+                padding: 12px !important;
             }
             
             .btn-orange {
-                min-height: 60px !important;
-                padding: 18px !important;
+                min-height: 55px !important;
+                padding: 14px !important;
+            }
+            
+            .photo-upload {
+                padding: 1.25rem !important;
+                min-height: 100px !important;
             }
         }
 
-        /* OPTIMISATIONS TOUCH - CRITIQUE POUR MOBILE */
+        /* OPTIMISATIONS TOUCH MOBILE */
         @media (hover: none) and (pointer: coarse) {
-            .nav-links a, 
-            .btn-primary, 
+            .mobile-menu a, 
             .btn-orange,
             .btn-danger,
             .form-input,
@@ -515,23 +543,6 @@ async function sauvegarderAnnonceFirebase(annonce) {
             .form-textarea,
             .photo-upload {
                 min-height: 44px !important;
-                cursor: pointer !important;
-            }
-            
-            /* Désactiver les effets hover sur mobile */
-            .nav-links a:hover {
-                color: inherit !important;
-            }
-            
-            .btn-primary:hover, 
-            .btn-orange:hover,
-            .btn-danger:hover {
-                transform: none !important;
-            }
-            
-            .photo-upload:hover {
-                border-color: #d1d5db !important;
-                background: #f9fafb !important;
             }
         }
     </style>
@@ -549,8 +560,21 @@ async function sauvegarderAnnonceFirebase(annonce) {
                 <a href="assureurs.html">Assureurs</a>
             </div>
             <a href="annonces.html" class="btn-primary">🔍 Voir les annonces</a>
+            
+            <!-- Bouton Hamburger Mobile -->
+            <button class="menu-toggle" onclick="toggleMobileMenu()">☰</button>
         </div>
     </nav>
+
+    <!-- Menu Mobile -->
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="index.html">🏠 Accueil</a>
+        <a href="annonces.html">🚗 Annonces</a>
+        <a href="deposer-annonce.html" style="color: #2563eb; background: #f0f4ff;">➕ Déposer une annonce</a>
+        <a href="concessionnaires.html">🏢 Concessionnaires</a>
+        <a href="assureurs.html">🛡️ Assureurs</a>
+        <a href="annonces.html" style="background: #2563eb; color: white;">🔍 Voir les annonces</a>
+    </div>
 
     <!-- Formulaire de dépôt -->
     <div class="form-container">
@@ -566,172 +590,171 @@ async function sauvegarderAnnonceFirebase(annonce) {
                         <select class="form-select" id="marque" required>
                             <option value="">Choisir une marque</option>
                             <option>Toyota</option>
-<option>Volkswagen</option>
-<option>Mercedes-Benz</option>
-<option>BMW</option>
-<option>Audi</option>
-<option>Ford</option>
-<option>Chevrolet</option>
-<option>Honda</option>
-<option>Hyundai</option>
-<option>Nissan</option>
-<option>Kia</option>
-<option>Peugeot</option>
-<option>Renault</option>
-<option>Citroën</option>
-<option>Fiat</option>
-<option>Jeep</option>
-<option>Volvo</option>
-<option>Tesla</option>
-<option>Land Rover</option>
-<option>Jaguar</option>
-<option>Mazda</option>
-<option>Mitsubishi</option>
-<option>Suzuki</option>
-<option>Subaru</option>
-<option>Skoda</option>
-<option>Seat</option>
-<option>Opel</option>
-<option>GMC</option>
-<option>Cadillac</option>
-<option>Buick</option>
-<option>Dodge</option>
-<option>Chrysler</option>
-<option>Ram</option>
-<option>Infiniti</option>
-<option>Acura</option>
-<option>Lexus</option>
-<option>Porsche</option>
-<option>Ferrari</option>
-<option>Lamborghini</option>
-<option>Maserati</option>
-<option>Alfa Romeo</option>
-<option>Bugatti</option>
-<option>Bentley</option>
-<option>Rolls-Royce</option>
-<option>Aston Martin</option>
-<option>Mini</option>
-<option>Smart</option>
-<option>Tata Motors</option>
-<option>BYD</option>
-<option>Geely</option>
-<option>Chery</option>
-<option>Great Wall</option>
-<option>Dongfeng</option>
-<option>SAIC</option>
-<option>Haval</option>
-<option>Lucid</option>
-<option>Rivian</option>
-<option>NIO</option>
-<option>XPeng</option>
-<option>Polestar</option>
-<option>Dacia</option>
-<option>Mahindra</option>
-<option>Proton</option>
-<option>Perodua</option>
-<option>Genesis</option>
-<option>Isuzu</option>
-<option>Daewoo</option>
-<option>Lancia</option>
-<option>Roewe</option>
-<option>Fisker</option>
-<option>Koenigsegg</option>
-<option>Pagani</option>
-<option>McLaren</option>
-<option>Scania</option>
-<option>MAN</option>
-<option>Peterbilt</option>
-<option>Freightliner</option>
-<option>Mack</option>
-<option>Lincoln</option>
-<option>Holden</option>
-<option>Vauxhall</option>
-<option>Saab</option>
-<option>Maybach</option>
-<option>DS Automobiles</option>
-<option>Faraday Future</option>
-<option>Aptera</option>
-<option>VinFast</option>
-<option>Wuling</option>
-<option>Zotye</option>
-<option>FAW</option>
-<option>BAIC</option>
-<option>JAC Motors</option>
-<option>Hongqi</option>
-<option>Seres</option>
-<option>Aiways</option>
-<option>Leapmotor</option>
-<option>Denza</option>
-<option>Borgward</option>
-<option>Lotus</option>
-<option>TVR</option>
-<option>Caterham</option>
-<option>Ruf</option>
-<option>Brabus</option>
-<option>Vector</option>
-<option>Arrinera</option>
-<option>De Tomaso</option>
-<option>Pininfarina</option>
-<option>Saleen</option>
-<option>SSC North America</option>
-<option>Hummer</option>
-<option>Eagle</option>
-<option>Plymouth</option>
-<option>Saturn</option>
-<option>Oldsmobile</option>
-<option>Mercury</option>
-<option>Hudson</option>
-<option>Packard</option>
-<option>Studebaker</option>
-<option>DeLorean</option>
-<option>Lucra</option>
-<option>Wiesmann</option>
-<option>Marussia</option>
-<option>Spyker</option>
-<option>Rimac</option>
-<option>Zenvo</option>
-<option>Gumpert</option>
-<option>Vanderhall</option>
-<option>Rezvani</option>
-<option>Drako Motors</option>
-<option>Hennessey</option>
-<option>Arash</option>
-<option>Radical</option>
-<option>Noble</option>
-<option>Donkervoort</option>
-<option>Brilliance</option>
-<option>Chang’an</option>
-<option>JMC</option>
-<option>ZAZ</option>
-<option>Lifan</option>
-<option>BAW</option>
-<option>Wey</option>
-<option>Ora</option>
-<option>Hongyan</option>
-<option>Vanderhall</option>
-<option>Maxus</option>
-<option>Soueast</option>
-<option>Everus</option>
-<option>Luxgen</option>
-<option>Haima</option>
-<option>Dongnan</option>
-<option>Yulon</option>
-<option>Kamaz</option>
-<option>UAZ</option>
-<option>GAZ</option>
-<option>Lada</option>
-<option>Zil</option>
-<option>Derways</option>
-<option>TagAZ</option>
-<option>Iran Khodro</option>
-<option>Saipa</option>
-<option>Perana</option>
-<option>BAIC BJEV</option>
-<option>Leapmotor</option>
-<option>Aiways</option>
-<option>Seres</option>
-<option>Hongqi</option>
-
+                            <option>Volkswagen</option>
+                            <option>Mercedes-Benz</option>
+                            <option>BMW</option>
+                            <option>Audi</option>
+                            <option>Ford</option>
+                            <option>Chevrolet</option>
+                            <option>Honda</option>
+                            <option>Hyundai</option>
+                            <option>Nissan</option>
+                            <option>Kia</option>
+                            <option>Peugeot</option>
+                            <option>Renault</option>
+                            <option>Citroën</option>
+                            <option>Fiat</option>
+                            <option>Jeep</option>
+                            <option>Volvo</option>
+                            <option>Tesla</option>
+                            <option>Land Rover</option>
+                            <option>Jaguar</option>
+                            <option>Mazda</option>
+                            <option>Mitsubishi</option>
+                            <option>Suzuki</option>
+                            <option>Subaru</option>
+                            <option>Skoda</option>
+                            <option>Seat</option>
+                            <option>Opel</option>
+                            <option>GMC</option>
+                            <option>Cadillac</option>
+                            <option>Buick</option>
+                            <option>Dodge</option>
+                            <option>Chrysler</option>
+                            <option>Ram</option>
+                            <option>Infiniti</option>
+                            <option>Acura</option>
+                            <option>Lexus</option>
+                            <option>Porsche</option>
+                            <option>Ferrari</option>
+                            <option>Lamborghini</option>
+                            <option>Maserati</option>
+                            <option>Alfa Romeo</option>
+                            <option>Bugatti</option>
+                            <option>Bentley</option>
+                            <option>Rolls-Royce</option>
+                            <option>Aston Martin</option>
+                            <option>Mini</option>
+                            <option>Smart</option>
+                            <option>Tata Motors</option>
+                            <option>BYD</option>
+                            <option>Geely</option>
+                            <option>Chery</option>
+                            <option>Great Wall</option>
+                            <option>Dongfeng</option>
+                            <option>SAIC</option>
+                            <option>Haval</option>
+                            <option>Lucid</option>
+                            <option>Rivian</option>
+                            <option>NIO</option>
+                            <option>XPeng</option>
+                            <option>Polestar</option>
+                            <option>Dacia</option>
+                            <option>Mahindra</option>
+                            <option>Proton</option>
+                            <option>Perodua</option>
+                            <option>Genesis</option>
+                            <option>Isuzu</option>
+                            <option>Daewoo</option>
+                            <option>Lancia</option>
+                            <option>Roewe</option>
+                            <option>Fisker</option>
+                            <option>Koenigsegg</option>
+                            <option>Pagani</option>
+                            <option>McLaren</option>
+                            <option>Scania</option>
+                            <option>MAN</option>
+                            <option>Peterbilt</option>
+                            <option>Freightliner</option>
+                            <option>Mack</option>
+                            <option>Lincoln</option>
+                            <option>Holden</option>
+                            <option>Vauxhall</option>
+                            <option>Saab</option>
+                            <option>Maybach</option>
+                            <option>DS Automobiles</option>
+                            <option>Faraday Future</option>
+                            <option>Aptera</option>
+                            <option>VinFast</option>
+                            <option>Wuling</option>
+                            <option>Zotye</option>
+                            <option>FAW</option>
+                            <option>BAIC</option>
+                            <option>JAC Motors</option>
+                            <option>Hongqi</option>
+                            <option>Seres</option>
+                            <option>Aiways</option>
+                            <option>Leapmotor</option>
+                            <option>Denza</option>
+                            <option>Borgward</option>
+                            <option>Lotus</option>
+                            <option>TVR</option>
+                            <option>Caterham</option>
+                            <option>Ruf</option>
+                            <option>Brabus</option>
+                            <option>Vector</option>
+                            <option>Arrinera</option>
+                            <option>De Tomaso</option>
+                            <option>Pininfarina</option>
+                            <option>Saleen</option>
+                            <option>SSC North America</option>
+                            <option>Hummer</option>
+                            <option>Eagle</option>
+                            <option>Plymouth</option>
+                            <option>Saturn</option>
+                            <option>Oldsmobile</option>
+                            <option>Mercury</option>
+                            <option>Hudson</option>
+                            <option>Packard</option>
+                            <option>Studebaker</option>
+                            <option>DeLorean</option>
+                            <option>Lucra</option>
+                            <option>Wiesmann</option>
+                            <option>Marussia</option>
+                            <option>Spyker</option>
+                            <option>Rimac</option>
+                            <option>Zenvo</option>
+                            <option>Gumpert</option>
+                            <option>Vanderhall</option>
+                            <option>Rezvani</option>
+                            <option>Drako Motors</option>
+                            <option>Hennessey</option>
+                            <option>Arash</option>
+                            <option>Radical</option>
+                            <option>Noble</option>
+                            <option>Donkervoort</option>
+                            <option>Brilliance</option>
+                            <option>Chang'an</option>
+                            <option>JMC</option>
+                            <option>ZAZ</option>
+                            <option>Lifan</option>
+                            <option>BAW</option>
+                            <option>Wey</option>
+                            <option>Ora</option>
+                            <option>Hongyan</option>
+                            <option>Vanderhall</option>
+                            <option>Maxus</option>
+                            <option>Soueast</option>
+                            <option>Everus</option>
+                            <option>Luxgen</option>
+                            <option>Haima</option>
+                            <option>Dongnan</option>
+                            <option>Yulon</option>
+                            <option>Kamaz</option>
+                            <option>UAZ</option>
+                            <option>GAZ</option>
+                            <option>Lada</option>
+                            <option>Zil</option>
+                            <option>Derways</option>
+                            <option>TagAZ</option>
+                            <option>Iran Khodro</option>
+                            <option>Saipa</option>
+                            <option>Perana</option>
+                            <option>BAIC BJEV</option>
+                            <option>Leapmotor</option>
+                            <option>Aiways</option>
+                            <option>Seres</option>
+                            <option>Hongqi</option>
                         </select>
                     </div>
                     <div class="form-group">
@@ -787,30 +810,29 @@ async function sauvegarderAnnonceFirebase(annonce) {
                         <select class="form-select" id="ville" required>
                             <option value="">Choisir une ville</option>
                             <option>Tunis</option>
-<option>Ariana</option>
-<option>Ben Arous</option>
-<option>Manouba</option>
-<option>Nabeul</option>
-<option>Zaghouan</option>
-<option>Bizerte</option>
-<option>Beja</option>
-<option>Jendouba</option>
-<option>Kef</option>
-<option>Siliana</option>
-<option>Kairouan</option>
-<option>Kasserine</option>
-<option>Sidi Bouzid</option>
-<option>Sousse</option>
-<option>Monastir</option>
-<option>Mahdia</option>
-<option>Sfax</option>
-<option>Gabès</option>
-<option>Medenine</option>
-<option>Tataouine</option>
-<option>Gafsa</option>
-<option>Tozeur</option>
-<option>Kebili</option>
-
+                            <option>Ariana</option>
+                            <option>Ben Arous</option>
+                            <option>Manouba</option>
+                            <option>Nabeul</option>
+                            <option>Zaghouan</option>
+                            <option>Bizerte</option>
+                            <option>Beja</option>
+                            <option>Jendouba</option>
+                            <option>Kef</option>
+                            <option>Siliana</option>
+                            <option>Kairouan</option>
+                            <option>Kasserine</option>
+                            <option>Sidi Bouzid</option>
+                            <option>Sousse</option>
+                            <option>Monastir</option>
+                            <option>Mahdia</option>
+                            <option>Sfax</option>
+                            <option>Gabès</option>
+                            <option>Medenine</option>
+                            <option>Tataouine</option>
+                            <option>Gafsa</option>
+                            <option>Tozeur</option>
+                            <option>Kebili</option>
                         </select>
                     </div>
                 </div>
@@ -884,233 +906,255 @@ async function sauvegarderAnnonceFirebase(annonce) {
     </div>
 
     <script>
-       let imagesBase64 = [];
+        let imagesBase64 = [];
 
-// Fonction pour prévisualiser les images
-function previewImages() {
-    const input = document.getElementById('file-input');
-    const previewContainer = document.getElementById('preview-container');
-    const imagePreview = document.getElementById('image-preview');
-    const photoCount = document.getElementById('photo-count');
-    
-    console.log("📸 previewImages appelée, fichiers:", input.files.length);
-    
-    if (input.files.length > 0) {
-        imagePreview.style.display = 'block';
-        
-        const nouvellesPhotos = Array.from(input.files);
-        const totalPhotos = imagesBase64.length + nouvellesPhotos.length;
-        
-        if (totalPhotos > 10) {
-            alert(`Maximum 10 photos. Vous avez déjà ${imagesBase64.length} photo(s).`);
-            return;
+        // Fonction pour le menu mobile
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('active');
         }
-        
-        nouvellesPhotos.forEach((file, index) => {
-            if (file.size > 5 * 1024 * 1024) {
-                alert(`La photo "${file.name}" est trop volumineuse (max 5MB)`);
+
+        // Fermer le menu en cliquant ailleurs
+        document.addEventListener('click', function(event) {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const menuToggle = document.querySelector('.menu-toggle');
+            
+            if (!mobileMenu.contains(event.target) && !menuToggle.contains(event.target)) {
+                mobileMenu.classList.remove('active');
+            }
+        });
+
+        // Fermer le menu en scrollant
+        window.addEventListener('scroll', function() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.remove('active');
+        });
+
+        // Fonction pour prévisualiser les images
+        function previewImages() {
+            const input = document.getElementById('file-input');
+            const previewContainer = document.getElementById('preview-container');
+            const imagePreview = document.getElementById('image-preview');
+            const photoCount = document.getElementById('photo-count');
+            
+            console.log("📸 previewImages appelée, fichiers:", input.files.length);
+            
+            if (input.files.length > 0) {
+                imagePreview.style.display = 'block';
+                
+                const nouvellesPhotos = Array.from(input.files);
+                const totalPhotos = imagesBase64.length + nouvellesPhotos.length;
+                
+                if (totalPhotos > 10) {
+                    alert(`Maximum 10 photos. Vous avez déjà ${imagesBase64.length} photo(s).`);
+                    return;
+                }
+                
+                nouvellesPhotos.forEach((file, index) => {
+                    if (file.size > 5 * 1024 * 1024) {
+                        alert(`La photo "${file.name}" est trop volumineuse (max 5MB)`);
+                        return;
+                    }
+                    
+                    const reader = new FileReader();
+                    
+                    reader.onload = function(e) {
+                        imagesBase64.push(e.target.result);
+                        
+                        const imgDiv = document.createElement('div');
+                        imgDiv.className = 'preview-image';
+                        
+                        const img = document.createElement('img');
+                        img.src = e.target.result;
+                        img.alt = `Photo ${imagesBase64.length}`;
+                        
+                        const removeBtn = document.createElement('button');
+                        removeBtn.className = 'remove-btn';
+                        removeBtn.textContent = '×';
+                        removeBtn.onclick = function() {
+                            const photoIndex = imagesBase64.indexOf(e.target.result);
+                            if (photoIndex > -1) {
+                                imagesBase64.splice(photoIndex, 1);
+                            }
+                            imgDiv.remove();
+                            
+                            const newCount = imagesBase64.length;
+                            photoCount.textContent = `${newCount} photo(s) sélectionnée(s)`;
+                            
+                            if (newCount === 0) {
+                                imagePreview.style.display = 'none';
+                            }
+                        };
+                        
+                        imgDiv.appendChild(img);
+                        imgDiv.appendChild(removeBtn);
+                        previewContainer.appendChild(imgDiv);
+                        
+                        photoCount.textContent = `${imagesBase64.length} photo(s) sélectionnée(s)`;
+                        console.log("✅ Photo ajoutée, total:", imagesBase64.length);
+                    };
+                    
+                    reader.readAsDataURL(file);
+                });
+                
+                input.value = '';
+            }
+        }
+
+        // Fonction pour supprimer toutes les photos
+        function supprimerToutesPhotos() {
+            if (imagesBase64.length === 0) {
+                alert("Aucune photo à supprimer");
                 return;
             }
             
-            const reader = new FileReader();
+            if (confirm(`Supprimer toutes les ${imagesBase64.length} photo(s) ?`)) {
+                imagesBase64 = [];
+                document.getElementById('preview-container').innerHTML = '';
+                document.getElementById('image-preview').style.display = 'none';
+                document.getElementById('photo-count').textContent = '0 photo(s) sélectionnée(s)';
+                console.log("🗑️ Toutes les photos supprimées");
+            }
+        }
+
+        // Upload vers ImgBB
+        async function uploaderPhotosVersImgBB() {
+            console.log("🔥 Début upload vers ImgBB, photos:", imagesBase64.length);
             
-            reader.onload = function(e) {
-                imagesBase64.push(e.target.result);
-                
-                const imgDiv = document.createElement('div');
-                imgDiv.className = 'preview-image';
-                
-                const img = document.createElement('img');
-                img.src = e.target.result;
-                img.alt = `Photo ${imagesBase64.length}`;
-                
-                const removeBtn = document.createElement('button');
-                removeBtn.className = 'remove-btn';
-                removeBtn.textContent = '×';
-                removeBtn.onclick = function() {
-                    const photoIndex = imagesBase64.indexOf(e.target.result);
-                    if (photoIndex > -1) {
-                        imagesBase64.splice(photoIndex, 1);
-                    }
-                    imgDiv.remove();
+            const uploadedUrls = [];
+            
+            for (const base64Image of imagesBase64) {
+                try {
+                    // Convertir base64 en blob
+                    const response = await fetch(base64Image);
+                    const blob = await response.blob();
                     
-                    const newCount = imagesBase64.length;
-                    photoCount.textContent = `${newCount} photo(s) sélectionnée(s)`;
+                    const formData = new FormData();
+                    formData.append('image', blob);
                     
-                    if (newCount === 0) {
-                        imagePreview.style.display = 'none';
+                    console.log("📤 Upload photo vers ImgBB...");
+                    
+                    const uploadResponse = await fetch('https://api.imgbb.com/1/upload?key=9afc48d54c47fa99b29cf435e762a81c', {
+                        method: 'POST',
+                        body: formData
+                    });
+                    
+                    const data = await uploadResponse.json();
+                    
+                    if (data.success) {
+                        uploadedUrls.push(data.data.url);
+                        console.log("✅ Photo uploadée:", data.data.url);
+                    } else {
+                        console.error('❌ Erreur upload ImgBB:', data);
+                        throw new Error('Échec upload photo');
                     }
+                } catch (error) {
+                    console.error('❌ Erreur upload:', error);
+                    throw error;
+                }
+            }
+            
+            console.log("🎯 Toutes les photos uploadées:", uploadedUrls);
+            return uploadedUrls;
+        }
+
+        // Fonction principale pour publier l'annonce
+        async function publierAnnonce() {
+            console.log("🎯 BOUTON CLIQUE - DÉBUT PUBLICATION");
+            
+            const marque = document.getElementById('marque').value;
+            const modele = document.getElementById('modele').value;
+            const prix = document.getElementById('prix').value;
+            const annee = document.getElementById('annee').value;
+            const kilometrage = document.getElementById('kilometrage').value;
+            const carburant = document.getElementById('carburant').value;
+            const transmission = document.getElementById('transmission').value;
+            const ville = document.getElementById('ville').value;
+            const description = document.getElementById('description').value;
+            const telephone = document.getElementById('telephone').value;
+            const nom = document.getElementById('nom').value;
+            const email = document.getElementById('email').value;
+            
+            console.log("📋 Données récupérées:", { marque, modele, prix });
+            
+            // Validation
+            if (!marque || !modele || !prix || !annee || !kilometrage || !carburant || !transmission || !ville || !description || !telephone || !nom) {
+                alert('Veuillez remplir tous les champs obligatoires (*)');
+                console.log("❌ Validation échouée");
+                return;
+            }
+            
+            console.log("✅ Validation réussie");
+            
+            // Afficher loading
+            const submitBtn = document.querySelector('.btn-orange');
+            submitBtn.disabled = true;
+            submitBtn.textContent = '📤 Upload des photos...';
+            
+            try {
+                // Uploader les photos vers ImgBB
+                let photoUrls = [];
+                if (imagesBase64.length > 0) {
+                    console.log(`📸 Upload de ${imagesBase64.length} photo(s)...`);
+                    photoUrls = await uploaderPhotosVersImgBB();
+                    console.log("✅ Photos uploadées:", photoUrls.length);
+                } else {
+                    console.log("ℹ️ Aucune photo à uploader");
+                }
+                
+                // Créer l'objet annonce
+                const nouvelleAnnonce = {
+                    marque: marque,
+                    modele: modele,
+                    prix: prix + ' TND',
+                    annee: annee,
+                    kilometrage: kilometrage + ' km',
+                    carburant: carburant,
+                    transmission: transmission,
+                    ville: ville,
+                    description: description,
+                    contact: telephone,
+                    nom: nom,
+                    email: email || '',
+                    photos: photoUrls,
+                    hasPhotos: photoUrls.length > 0,
+                    isNew: true,
+                    date: new Date().toLocaleDateString('fr-FR')
                 };
                 
-                imgDiv.appendChild(img);
-                imgDiv.appendChild(removeBtn);
-                previewContainer.appendChild(imgDiv);
+                console.log("📦 Annonce créée:", nouvelleAnnonce);
+                console.log("🔥 Sauvegarde Firebase...");
                 
-                photoCount.textContent = `${imagesBase64.length} photo(s) sélectionnée(s)`;
-                console.log("✅ Photo ajoutée, total:", imagesBase64.length);
-            };
-            
-            reader.readAsDataURL(file);
-        });
-        
-        input.value = '';
-    }
-}
-
-// Fonction pour supprimer toutes les photos
-function supprimerToutesPhotos() {
-    if (imagesBase64.length === 0) {
-        alert("Aucune photo à supprimer");
-        return;
-    }
-    
-    if (confirm(`Supprimer toutes les ${imagesBase64.length} photo(s) ?`)) {
-        imagesBase64 = [];
-        document.getElementById('preview-container').innerHTML = '';
-        document.getElementById('image-preview').style.display = 'none';
-        document.getElementById('photo-count').textContent = '0 photo(s) sélectionnée(s)';
-        console.log("🗑️ Toutes les photos supprimées");
-    }
-}
-
-// Upload vers ImgBB
-async function uploaderPhotosVersImgBB() {
-    console.log("🔥 Début upload vers ImgBB, photos:", imagesBase64.length);
-    
-    const uploadedUrls = [];
-    
-    for (const base64Image of imagesBase64) {
-        try {
-            // Convertir base64 en blob
-            const response = await fetch(base64Image);
-            const blob = await response.blob();
-            
-            const formData = new FormData();
-            formData.append('image', blob);
-            
-            console.log("📤 Upload photo vers ImgBB...");
-            
-            const uploadResponse = await fetch('https://api.imgbb.com/1/upload?key=9afc48d54c47fa99b29cf435e762a81c', {
-                method: 'POST',
-                body: formData
-            });
-            
-            const data = await uploadResponse.json();
-            
-            if (data.success) {
-                uploadedUrls.push(data.data.url);
-                console.log("✅ Photo uploadée:", data.data.url);
-            } else {
-                console.error('❌ Erreur upload ImgBB:', data);
-                throw new Error('Échec upload photo');
+                // SAUVEGARDER DANS FIREBASE
+                const annonceId = await sauvegarderAnnonceFirebase(nouvelleAnnonce);
+                
+                console.log("✅ ID Annonce Firebase:", annonceId);
+                
+                if (annonceId) {
+                    // Succès
+                    submitBtn.textContent = '✅ Annonce publiée !';
+                    document.getElementById('confirmation').style.display = 'block';
+                    console.log("🎉 ANNONCE PUBLIÉE AVEC SUCCÈS !");
+                    
+                    setTimeout(() => {
+                        window.location.href = 'annonces.html';
+                    }, 2000);
+                } else {
+                    throw new Error('Erreur sauvegarde Firebase');
+                }
+                
+            } catch (error) {
+                console.error('❌ ERREUR:', error);
+                submitBtn.disabled = false;
+                submitBtn.textContent = '✅ Publier mon annonce';
+                alert('Erreur lors de la publication: ' + error.message);
             }
-        } catch (error) {
-            console.error('❌ Erreur upload:', error);
-            throw error;
         }
-    }
-    
-    console.log("🎯 Toutes les photos uploadées:", uploadedUrls);
-    return uploadedUrls;
-}
 
-// Fonction principale pour publier l'annonce
-async function publierAnnonce() {
-    console.log("🎯 BOUTON CLIQUE - DÉBUT PUBLICATION");
-    
-    const marque = document.getElementById('marque').value;
-    const modele = document.getElementById('modele').value;
-    const prix = document.getElementById('prix').value;
-    const annee = document.getElementById('annee').value;
-    const kilometrage = document.getElementById('kilometrage').value;
-    const carburant = document.getElementById('carburant').value;
-    const transmission = document.getElementById('transmission').value;
-    const ville = document.getElementById('ville').value;
-    const description = document.getElementById('description').value;
-    const telephone = document.getElementById('telephone').value;
-    const nom = document.getElementById('nom').value;
-    const email = document.getElementById('email').value;
-    
-    console.log("📋 Données récupérées:", { marque, modele, prix });
-    
-    // Validation
-    if (!marque || !modele || !prix || !annee || !kilometrage || !carburant || !transmission || !ville || !description || !telephone || !nom) {
-        alert('Veuillez remplir tous les champs obligatoires (*)');
-        console.log("❌ Validation échouée");
-        return;
-    }
-    
-    console.log("✅ Validation réussie");
-    
-    // Afficher loading
-    const submitBtn = document.querySelector('.btn-orange');
-    submitBtn.disabled = true;
-    submitBtn.textContent = '📤 Upload des photos...';
-    
-    try {
-        // Uploader les photos vers ImgBB
-        let photoUrls = [];
-        if (imagesBase64.length > 0) {
-            console.log(`📸 Upload de ${imagesBase64.length} photo(s)...`);
-            photoUrls = await uploaderPhotosVersImgBB();
-            console.log("✅ Photos uploadées:", photoUrls.length);
-        } else {
-            console.log("ℹ️ Aucune photo à uploader");
-        }
-        
-        // Créer l'objet annonce
-        const nouvelleAnnonce = {
-            marque: marque,
-            modele: modele,
-            prix: prix + ' TND',
-            annee: annee,
-            kilometrage: kilometrage + ' km',
-            carburant: carburant,
-            transmission: transmission,
-            ville: ville,
-            description: description,
-            contact: telephone,
-            nom: nom,
-            email: email || '',
-            photos: photoUrls,
-            hasPhotos: photoUrls.length > 0,
-            isNew: true,
-            date: new Date().toLocaleDateString('fr-FR')
-        };
-        
-        console.log("📦 Annonce créée:", nouvelleAnnonce);
-        console.log("🔥 Sauvegarde Firebase...");
-        
-        // SAUVEGARDER DANS FIREBASE
-        const annonceId = await sauvegarderAnnonceFirebase(nouvelleAnnonce);
-        
-        console.log("✅ ID Annonce Firebase:", annonceId);
-        
-        if (annonceId) {
-            // Succès
-            submitBtn.textContent = '✅ Annonce publiée !';
-            document.getElementById('confirmation').style.display = 'block';
-            console.log("🎉 ANNONCE PUBLIÉE AVEC SUCCÈS !");
-            
-            setTimeout(() => {
-                window.location.href = 'annonces.html';
-            }, 2000);
-        } else {
-            throw new Error('Erreur sauvegarde Firebase');
-        }
-        
-    } catch (error) {
-        console.error('❌ ERREUR:', error);
-        submitBtn.disabled = false;
-        submitBtn.textContent = '✅ Publier mon annonce';
-        alert('Erreur lors de la publication: ' + error.message);
-    }
-}
-
-// Vérification que tout est chargé
-console.log("✅ Script deposer-annonce chargé !");
-console.log("📸 previewImages:", typeof previewImages);
-console.log("🚀 publierAnnonce:", typeof publierAnnonce);                
+        // Vérification que tout est chargé
+        console.log("✅ Script deposer-annonce chargé !");
+        console.log("📸 previewImages:", typeof previewImages);
+        console.log("🚀 publierAnnonce:", typeof publierAnnonce);
     </script>
 </body>
 </html>
