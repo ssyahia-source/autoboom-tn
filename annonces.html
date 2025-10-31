@@ -6,27 +6,9 @@
     <title>Annonces Voitures - AutoBoom TN</title>
    
     <!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
 
-<script>
-// Configuration Firebase
-const firebaseConfig = {
-    apiKey: "AIzaSyCPay-0BB2o9Cefuj4w5k0b70mBG2kwR4E",
-    authDomain: "autoboom-tn.firebaseapp.com",
-    databaseURL: "https://autoboom-tn-default-rtdb.europe-west1.firebasedatabase.app",
-    projectId: "autoboom-tn",
-    storageBucket: "autoboom-tn.firebasestorage.app",
-    messagingSenderId: "291199404228",
-    appId: "1:291199404228:web:b07c622a5f7b8bc9a4e191"
-};
-
-// Initialiser Firebase
-firebase.initializeApp(firebaseConfig);
-const database = firebase.database();
-
-console.log("✅ Firebase initialisé sur annonces.html");
-</script>
     <style>
         * {
             margin: 0;
@@ -256,184 +238,181 @@ console.log("✅ Firebase initialisé sur annonces.html");
             padding: 1rem;
             margin-bottom: 1rem;
             display: none;
-                }
-/* ============================================================================
-   CORRECTIONS MOBILE UNIQUEMENT - NE TOUCHE PAS AU FONCTIONNEMENT PC
-   ============================================================================ */
+        }
 
-@media (max-width: 768px) {
-    /* NAVIGATION MOBILE */
-    .navbar {
-        padding: 10px 0 !important;
-        position: fixed !important;
-        top: 0 !important;
-        width: 100% !important;
-        z-index: 1000 !important;
-        height: auto !important;
-        min-height: 70px !important;
-    }
-    
-    .nav-container {
-        flex-direction: column !important;
-        gap: 12px !important;
-        padding: 0 15px !important;
-        align-items: stretch !important;
-    }
-    
-    .logo {
-        text-align: center !important;
-        font-size: 1.6rem !important;
-        order: 1 !important;
-        padding: 5px 0 !important;
-    }
-    
-    .nav-links {
-        display: flex !important;
-        flex-direction: column !important;
-        gap: 8px !important;
-        width: 100% !important;
-        order: 3 !important;
-        margin-top: 10px !important;
-    }
-    
-    .nav-links a {
-        display: block !important;
-        font-size: 1.1rem !important;
-        padding: 16px 20px !important;
-        background: #f8fafc !important;
-        border-radius: 12px !important;
-        text-align: center !important;
-        border: 2px solid #e5e7eb !important;
-        width: 100% !important;
-        min-height: 54px !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-    }
-    
-    .btn-primary {
-        order: 2 !important;
-        padding: 18px 20px !important;
-        font-size: 1.2rem !important;
-        text-align: center !important;
-        min-height: 60px !important;
-        display: flex !important;
-        align-items: center !important;
-        justify-content: center !important;
-        width: 100% !important;
-        margin: 5px 0 !important;
-        border-radius: 12px !important;
-    }
+        /* ============================================================================
+           CORRECTIONS MOBILE UNIQUEMENT - NE TOUCHE PAS AU FONCTIONNEMENT PC
+           ============================================================================ */
 
-    /* ESPACEMENT POUR LA NAV FIXE */
-    body {
-        padding-top: 180px !important;
-    }
+        @media (max-width: 768px) {
+            /* NAVIGATION MOBILE */
+            .navbar {
+                padding: 10px 0 !important;
+                position: fixed !important;
+                top: 0 !important;
+                width: 100% !important;
+                z-index: 1000 !important;
+                height: auto !important;
+                min-height: 70px !important;
+            }
+            
+            .nav-container {
+                flex-direction: column !important;
+                gap: 12px !important;
+                padding: 0 15px !important;
+                align-items: stretch !important;
+            }
+            
+            .logo {
+                text-align: center !important;
+                font-size: 1.6rem !important;
+                order: 1 !important;
+                padding: 5px 0 !important;
+            }
+            
+            .nav-links {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 8px !important;
+                width: 100% !important;
+                order: 3 !important;
+                margin-top: 10px !important;
+            }
+            
+            .nav-links a {
+                display: block !important;
+                font-size: 1.1rem !important;
+                padding: 16px 20px !important;
+                background: #f8fafc !important;
+                border-radius: 12px !important;
+                text-align: center !important;
+                border: 2px solid #e5e7eb !important;
+                width: 100% !important;
+                min-height: 54px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+            
+            .btn-primary {
+                order: 2 !important;
+                padding: 18px 20px !important;
+                font-size: 1.2rem !important;
+                text-align: center !important;
+                min-height: 60px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                width: 100% !important;
+                margin: 5px 0 !important;
+                border-radius: 12px !important;
+            }
 
-    /* FILTRES MOBILE */
-    .filters {
-        padding: 1.5rem 0 !important;
-        margin-bottom: 1rem !important;
-    }
-    
-    .filter-grid {
-        grid-template-columns: 1fr !important;
-        gap: 12px !important;
-    }
-    
-    .filter-select {
-        padding: 16px !important;
-        font-size: 1.1rem !important;
-        min-height: 55px !important;
-    }
+            /* ESPACEMENT POUR LA NAV FIXE */
+            body {
+                padding-top: 180px !important;
+            }
 
-    /* ANNONCES MOBILE */
-    .container {
-        padding: 0 15px !important;
-    }
-    
-    .annonces-grid {
-        grid-template-columns: 1fr !important;
-        gap: 1.5rem !important;
-        margin-bottom: 2rem !important;
-    }
-    
-    .annonce-card {
-        margin: 0 5px !important;
-    }
-    
-    .annonce-content {
-        padding: 1.25rem !important;
-    }
-    
-    .annonce-title {
-        font-size: 1.3rem !important;
-    }
-    
-    .annonce-price {
-        font-size: 1.4rem !important;
-    }
-    
-    .contact-btn {
-        padding: 16px !important;
-        font-size: 1.1rem !important;
-        min-height: 55px !important;
-    }
+            /* FILTRES MOBILE */
+            .filters {
+                padding: 1.5rem 0 !important;
+                margin-bottom: 1rem !important;
+            }
+            
+            .filter-grid {
+                grid-template-columns: 1fr !important;
+                gap: 12px !important;
+            }
+            
+            .filter-select {
+                padding: 16px !important;
+                font-size: 1.1rem !important;
+                min-height: 55px !important;
+            }
 
-    /* PAGINATION MOBILE */
-    .pagination {
-        flex-direction: column !important;
-        gap: 15px !important;
-    }
-    
-    .page-btn {
-        padding: 12px 20px !important;
-        font-size: 1.1rem !important;
-        min-height: 50px !important;
-    }
-}
+            /* ANNONCES MOBILE */
+            .container {
+                padding: 0 15px !important;
+            }
+            
+            .annonces-grid {
+                grid-template-columns: 1fr !important;
+                gap: 1.5rem !important;
+                margin-bottom: 2rem !important;
+            }
+            
+            .annonce-card {
+                margin: 0 5px !important;
+            }
+            
+            .annonce-content {
+                padding: 1.25rem !important;
+            }
+            
+            .annonce-title {
+                font-size: 1.3rem !important;
+            }
+            
+            .annonce-price {
+                font-size: 1.4rem !important;
+            }
+            
+            .contact-btn {
+                padding: 16px !important;
+                font-size: 1.1rem !important;
+                min-height: 55px !important;
+            }
 
-/* CORRECTIONS POUR TRÈS PETITS ÉCRANS */
-@media (max-width: 480px) {
-    .navbar {
-        min-height: 65px !important;
-    }
-    
-    .logo {
-        font-size: 1.5rem !important;
-    }
-    
-    body {
-        padding-top: 170px !important;
-    }
-    
-    .nav-links a,
-    .btn-primary {
-        min-height: 50px !important;
-        padding: 15px !important;
-    }
-    
-    .filter-select {
-        min-height: 50px !important;
-        padding: 14px !important;
-    }
-}
+            /* PAGINATION MOBILE */
+            .pagination {
+                flex-direction: column !important;
+                gap: 15px !important;
+            }
+            
+            .page-btn {
+                padding: 12px 20px !important;
+                font-size: 1.1rem !important;
+                min-height: 50px !important;
+            }
+        }
 
-/* OPTIMISATIONS TOUCH MOBILE */
-@media (hover: none) and (pointer: coarse) {
-    .nav-links a, 
-    .btn-primary, 
-    .contact-btn,
-    .page-btn,
-    .filter-select {
-        min-height: 44px !important;
-    }
-}
-        
-    
+        /* CORRECTIONS POUR TRÈS PETITS ÉCRANS */
+        @media (max-width: 480px) {
+            .navbar {
+                min-height: 65px !important;
+            }
+            
+            .logo {
+                font-size: 1.5rem !important;
+            }
+            
+            body {
+                padding-top: 170px !important;
+            }
+            
+            .nav-links a,
+            .btn-primary {
+                min-height: 50px !important;
+                padding: 15px !important;
+            }
+            
+            .filter-select {
+                min-height: 50px !important;
+                padding: 14px !important;
+            }
+        }
+
+        /* OPTIMISATIONS TOUCH MOBILE */
+        @media (hover: none) and (pointer: coarse) {
+            .nav-links a, 
+            .btn-primary, 
+            .contact-btn,
+            .page-btn,
+            .filter-select {
+                min-height: 44px !important;
+            }
+        }
     </style>
-    
-    
 </head>
 <body>
     <!-- Navigation -->
@@ -461,178 +440,177 @@ console.log("✅ Firebase initialisé sur annonces.html");
                 <select class="filter-select" onchange="filtrerAnnonces()" id="filtre-marque">
                     <option value="">Toutes les marques</option>
                     <option>Toyota</option>
-<option>Volkswagen</option>
-<option>Mercedes-Benz</option>
-<option>BMW</option>
-<option>Audi</option>
-<option>Ford</option>
-<option>Chevrolet</option>
-<option>Honda</option>
-<option>Hyundai</option>
-<option>Nissan</option>
-<option>Kia</option>
-<option>Peugeot</option>
-<option>Renault</option>
-<option>Citroën</option>
-<option>Fiat</option>
-<option>Jeep</option>
-<option>Volvo</option>
-<option>Tesla</option>
-<option>Land Rover</option>
-<option>Jaguar</option>
-<option>Mazda</option>
-<option>Mitsubishi</option>
-<option>Suzuki</option>
-<option>Subaru</option>
-<option>Skoda</option>
-<option>Seat</option>
-<option>Opel</option>
-<option>GMC</option>
-<option>Cadillac</option>
-<option>Buick</option>
-<option>Dodge</option>
-<option>Chrysler</option>
-<option>Ram</option>
-<option>Infiniti</option>
-<option>Acura</option>
-<option>Lexus</option>
-<option>Porsche</option>
-<option>Ferrari</option>
-<option>Lamborghini</option>
-<option>Maserati</option>
-<option>Alfa Romeo</option>
-<option>Bugatti</option>
-<option>Bentley</option>
-<option>Rolls-Royce</option>
-<option>Aston Martin</option>
-<option>Mini</option>
-<option>Smart</option>
-<option>Tata Motors</option>
-<option>BYD</option>
-<option>Geely</option>
-<option>Chery</option>
-<option>Great Wall</option>
-<option>Dongfeng</option>
-<option>SAIC</option>
-<option>Haval</option>
-<option>Lucid</option>
-<option>Rivian</option>
-<option>NIO</option>
-<option>XPeng</option>
-<option>Polestar</option>
-<option>Dacia</option>
-<option>Mahindra</option>
-<option>Proton</option>
-<option>Perodua</option>
-<option>Genesis</option>
-<option>Isuzu</option>
-<option>Daewoo</option>
-<option>Lancia</option>
-<option>Roewe</option>
-<option>Fisker</option>
-<option>Koenigsegg</option>
-<option>Pagani</option>
-<option>McLaren</option>
-<option>Scania</option>
-<option>MAN</option>
-<option>Peterbilt</option>
-<option>Freightliner</option>
-<option>Mack</option>
-<option>Lincoln</option>
-<option>Holden</option>
-<option>Vauxhall</option>
-<option>Saab</option>
-<option>Maybach</option>
-<option>DS Automobiles</option>
-<option>Faraday Future</option>
-<option>Aptera</option>
-<option>VinFast</option>
-<option>Wuling</option>
-<option>Zotye</option>
-<option>FAW</option>
-<option>BAIC</option>
-<option>JAC Motors</option>
-<option>Hongqi</option>
-<option>Seres</option>
-<option>Aiways</option>
-<option>Leapmotor</option>
-<option>Denza</option>
-<option>Borgward</option>
-<option>Lotus</option>
-<option>TVR</option>
-<option>Caterham</option>
-<option>Ruf</option>
-<option>Brabus</option>
-<option>Vector</option>
-<option>Arrinera</option>
-<option>De Tomaso</option>
-<option>Pininfarina</option>
-<option>Saleen</option>
-<option>SSC North America</option>
-<option>Hummer</option>
-<option>Eagle</option>
-<option>Plymouth</option>
-<option>Saturn</option>
-<option>Oldsmobile</option>
-<option>Mercury</option>
-<option>Hudson</option>
-<option>Packard</option>
-<option>Studebaker</option>
-<option>DeLorean</option>
-<option>Lucra</option>
-<option>Wiesmann</option>
-<option>Marussia</option>
-<option>Spyker</option>
-<option>Rimac</option>
-<option>Zenvo</option>
-<option>Gumpert</option>
-<option>Vanderhall</option>
-<option>Rezvani</option>
-<option>Drako Motors</option>
-<option>Hennessey</option>
-<option>Arash</option>
-<option>Radical</option>
-<option>Noble</option>
-<option>Donkervoort</option>
-<option>Brilliance</option>
-<option>Chang’an</option>
-<option>JMC</option>
-<option>ZAZ</option>
-<option>Lifan</option>
-<option>BAW</option>
-<option>Wey</option>
-<option>Ora</option>
-<option>Hongyan</option>
-<option>Vanderhall</option>
-<option>Maxus</option>
-<option>Soueast</option>
-<option>Everus</option>
-<option>Luxgen</option>
-<option>Haima</option>
-<option>Dongnan</option>
-<option>Yulon</option>
-<option>Kamaz</option>
-<option>UAZ</option>
-<option>GAZ</option>
-<option>Lada</option>
-<option>Zil</option>
-<option>Derways</option>
-<option>TagAZ</option>
-<option>Iran Khodro</option>
-<option>Saipa</option>
-<option>Perana</option>
-<option>BAIC BJEV</option>
-<option>Leapmotor</option>
-<option>Aiways</option>
-<option>Seres</option>
-<option>Hongqi</option>
-
+                    <option>Volkswagen</option>
+                    <option>Mercedes-Benz</option>
+                    <option>BMW</option>
+                    <option>Audi</option>
+                    <option>Ford</option>
+                    <option>Chevrolet</option>
+                    <option>Honda</option>
+                    <option>Hyundai</option>
+                    <option>Nissan</option>
+                    <option>Kia</option>
+                    <option>Peugeot</option>
+                    <option>Renault</option>
+                    <option>Citroën</option>
+                    <option>Fiat</option>
+                    <option>Jeep</option>
+                    <option>Volvo</option>
+                    <option>Tesla</option>
+                    <option>Land Rover</option>
+                    <option>Jaguar</option>
+                    <option>Mazda</option>
+                    <option>Mitsubishi</option>
+                    <option>Suzuki</option>
+                    <option>Subaru</option>
+                    <option>Skoda</option>
+                    <option>Seat</option>
+                    <option>Opel</option>
+                    <option>GMC</option>
+                    <option>Cadillac</option>
+                    <option>Buick</option>
+                    <option>Dodge</option>
+                    <option>Chrysler</option>
+                    <option>Ram</option>
+                    <option>Infiniti</option>
+                    <option>Acura</option>
+                    <option>Lexus</option>
+                    <option>Porsche</option>
+                    <option>Ferrari</option>
+                    <option>Lamborghini</option>
+                    <option>Maserati</option>
+                    <option>Alfa Romeo</option>
+                    <option>Bugatti</option>
+                    <option>Bentley</option>
+                    <option>Rolls-Royce</option>
+                    <option>Aston Martin</option>
+                    <option>Mini</option>
+                    <option>Smart</option>
+                    <option>Tata Motors</option>
+                    <option>BYD</option>
+                    <option>Geely</option>
+                    <option>Chery</option>
+                    <option>Great Wall</option>
+                    <option>Dongfeng</option>
+                    <option>SAIC</option>
+                    <option>Haval</option>
+                    <option>Lucid</option>
+                    <option>Rivian</option>
+                    <option>NIO</option>
+                    <option>XPeng</option>
+                    <option>Polestar</option>
+                    <option>Dacia</option>
+                    <option>Mahindra</option>
+                    <option>Proton</option>
+                    <option>Perodua</option>
+                    <option>Genesis</option>
+                    <option>Isuzu</option>
+                    <option>Daewoo</option>
+                    <option>Lancia</option>
+                    <option>Roewe</option>
+                    <option>Fisker</option>
+                    <option>Koenigsegg</option>
+                    <option>Pagani</option>
+                    <option>McLaren</option>
+                    <option>Scania</option>
+                    <option>MAN</option>
+                    <option>Peterbilt</option>
+                    <option>Freightliner</option>
+                    <option>Mack</option>
+                    <option>Lincoln</option>
+                    <option>Holden</option>
+                    <option>Vauxhall</option>
+                    <option>Saab</option>
+                    <option>Maybach</option>
+                    <option>DS Automobiles</option>
+                    <option>Faraday Future</option>
+                    <option>Aptera</option>
+                    <option>VinFast</option>
+                    <option>Wuling</option>
+                    <option>Zotye</option>
+                    <option>FAW</option>
+                    <option>BAIC</option>
+                    <option>JAC Motors</option>
+                    <option>Hongqi</option>
+                    <option>Seres</option>
+                    <option>Aiways</option>
+                    <option>Leapmotor</option>
+                    <option>Denza</option>
+                    <option>Borgward</option>
+                    <option>Lotus</option>
+                    <option>TVR</option>
+                    <option>Caterham</option>
+                    <option>Ruf</option>
+                    <option>Brabus</option>
+                    <option>Vector</option>
+                    <option>Arrinera</option>
+                    <option>De Tomaso</option>
+                    <option>Pininfarina</option>
+                    <option>Saleen</option>
+                    <option>SSC North America</option>
+                    <option>Hummer</option>
+                    <option>Eagle</option>
+                    <option>Plymouth</option>
+                    <option>Saturn</option>
+                    <option>Oldsmobile</option>
+                    <option>Mercury</option>
+                    <option>Hudson</option>
+                    <option>Packard</option>
+                    <option>Studebaker</option>
+                    <option>DeLorean</option>
+                    <option>Lucra</option>
+                    <option>Wiesmann</option>
+                    <option>Marussia</option>
+                    <option>Spyker</option>
+                    <option>Rimac</option>
+                    <option>Zenvo</option>
+                    <option>Gumpert</option>
+                    <option>Vanderhall</option>
+                    <option>Rezvani</option>
+                    <option>Drako Motors</option>
+                    <option>Hennessey</option>
+                    <option>Arash</option>
+                    <option>Radical</option>
+                    <option>Noble</option>
+                    <option>Donkervoort</option>
+                    <option>Brilliance</option>
+                    <option>Chang’an</option>
+                    <option>JMC</option>
+                    <option>ZAZ</option>
+                    <option>Lifan</option>
+                    <option>BAW</option>
+                    <option>Wey</option>
+                    <option>Ora</option>
+                    <option>Hongyan</option>
+                    <option>Vanderhall</option>
+                    <option>Maxus</option>
+                    <option>Soueast</option>
+                    <option>Everus</option>
+                    <option>Luxgen</option>
+                    <option>Haima</option>
+                    <option>Dongnan</option>
+                    <option>Yulon</option>
+                    <option>Kamaz</option>
+                    <option>UAZ</option>
+                    <option>GAZ</option>
+                    <option>Lada</option>
+                    <option>Zil</option>
+                    <option>Derways</option>
+                    <option>TagAZ</option>
+                    <option>Iran Khodro</option>
+                    <option>Saipa</option>
+                    <option>Perana</option>
+                    <option>BAIC BJEV</option>
+                    <option>Leapmotor</option>
+                    <option>Aiways</option>
+                    <option>Seres</option>
+                    <option>Hongqi</option>
                 </select>
                 
                 <select class="filter-select" onchange="filtrerAnnonces()" id="filtre-prix">
                     <option value="">Prix max</option>
                     <option value="10000">10 000 TND</option>
-                   <option value="15000">15 000 TND</option>
+                    <option value="15000">15 000 TND</option>
                     <option value="20000">20 000 TND</option>
                     <option value="30000">30 000 TND</option>  
                     <option value="40000">40 000 TND</option>
@@ -646,30 +624,29 @@ console.log("✅ Firebase initialisé sur annonces.html");
                 <select class="filter-select" onchange="filtrerAnnonces()" id="filtre-ville">
                     <option value="">Toute la Tunisie</option>
                     <option>Tunis</option>
-<option>Ariana</option>
-<option>Ben Arous</option>
-<option>Manouba</option>
-<option>Nabeul</option>
-<option>Zaghouan</option>
-<option>Bizerte</option>
-<option>Beja</option>
-<option>Jendouba</option>
-<option>Kef</option>
-<option>Siliana</option>
-<option>Kairouan</option>
-<option>Kasserine</option>
-<option>Sidi Bouzid</option>
-<option>Sousse</option>
-<option>Monastir</option>
-<option>Mahdia</option>
-<option>Sfax</option>
-<option>Gabès</option>
-<option>Medenine</option>
-<option>Tataouine</option>
-<option>Gafsa</option>
-<option>Tozeur</option>
-<option>Kebili</option>
-
+                    <option>Ariana</option>
+                    <option>Ben Arous</option>
+                    <option>Manouba</option>
+                    <option>Nabeul</option>
+                    <option>Zaghouan</option>
+                    <option>Bizerte</option>
+                    <option>Beja</option>
+                    <option>Jendouba</option>
+                    <option>Kef</option>
+                    <option>Siliana</option>
+                    <option>Kairouan</option>
+                    <option>Kasserine</option>
+                    <option>Sidi Bouzid</option>
+                    <option>Sousse</option>
+                    <option>Monastir</option>
+                    <option>Mahdia</option>
+                    <option>Sfax</option>
+                    <option>Gabès</option>
+                    <option>Medenine</option>
+                    <option>Tataouine</option>
+                    <option>Gafsa</option>
+                    <option>Tozeur</option>
+                    <option>Kebili</option>
                 </select>
 
                 <select class="filter-select" onchange="filtrerAnnonces()" id="filtre-carburant">
@@ -693,36 +670,34 @@ console.log("✅ Firebase initialisé sur annonces.html");
 
         <!-- Pagination -->
         <div class="pagination" id="pagination">
-            <button class="page-btn" id="prev-btn" onclick="changerPage(pageActuelle - 1)">← Précédent</button>
-            
-            <div id="pages-numbers" style="display: flex; gap: 0.5rem;">
-                <!-- Les numéros de page seront générés ici -->
-            </div>
-            
-            <button class="page-btn" id="next-btn" onclick="changerPage(pageActuelle + 1)">Suivant →</button>
+            <button class="page-btn" id="prev-btn">← Précédent</button>
+            <div id="pages-numbers" style="display: flex; gap: 0.5rem;"></div>
+            <button class="page-btn" id="next-btn">Suivant →</button>
         </div>
     </div>
 
     <script>
-        // Variables de pagination
+        // Configuration Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyCPay-0BB2o9Cefuj4w5k0b70mBG2kwR4E",
+            authDomain: "autoboom-tn.firebaseapp.com",
+            databaseURL: "https://autoboom-tn-default-rtdb.europe-west1.firebasedatabase.app",
+            projectId: "autoboom-tn",
+            storageBucket: "autoboom-tn.firebasestorage.app",
+            messagingSenderId: "291199404228",
+            appId: "1:291199404228:web:b07c622a5f7b8bc9a4e191"
+        };
+
+        // Initialiser Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+
+        // Variables globales
         let pageActuelle = 1;
         const annoncesParPage = 6;
+        let toutesLesAnnonces = [];
 
-        // Générer des dates aléatoires réalistes
-        function genererDateAleatoire() {
-            const aujourdhui = new Date();
-            const joursAleatoires = Math.floor(Math.random() * 90) + 1; // 1-90 jours dans le passé
-            const date = new Date(aujourdhui);
-            date.setDate(aujourdhui.getDate() - joursAleatoires);
-            
-            return date.toLocaleDateString('fr-FR', {
-                day: '2-digit',
-                month: '2-digit',
-                year: 'numeric'
-            });
-        }
-
-        // Annonces par défaut avec dates différentes
+        // Annonces par défaut
         const annoncesParDefaut = [
             {
                 id: 1,
@@ -737,7 +712,7 @@ console.log("✅ Firebase initialisé sur annonces.html");
                 description: 'Voiture en excellent état, entretien chez concessionnaire, 1 seul propriétaire',
                 contact: '12 345 678',
                 nom: 'Ahmed',
-                date: genererDateAleatoire(),
+                date: '15/01/2024',
                 hasPhotos: false
             },
             {
@@ -753,7 +728,7 @@ console.log("✅ Firebase initialisé sur annonces.html");
                 description: 'Presque neuve, garantie constructeur encore valable',
                 contact: '98 765 432',
                 nom: 'Marie',
-                date: genererDateAleatoire(),
+                date: '10/01/2024',
                 hasPhotos: false
             },
             {
@@ -769,311 +744,75 @@ console.log("✅ Firebase initialisé sur annonces.html");
                 description: 'SUV familial spacieux, tous options, clim automatique',
                 contact: '55 123 456',
                 nom: 'Mohamed',
-                date: genererDateAleatoire(),
-                hasPhotos: false
-            },
-            {
-                id: 4,
-                marque: 'Peugeot',
-                modele: '208',
-                prix: '19,500 TND',
-                annee: '2016',
-                kilometrage: '80,000 km',
-                carburant: 'Essence',
-                transmission: 'Manuelle',
-                ville: 'Nabeul',
-                description: 'Parfaite pour ville, consommation réduite, bon état général',
-                contact: '33 987 654',
-                nom: 'Sophie',
-                date: genererDateAleatoire(),
-                hasPhotos: false
-            },
-            {
-                id: 5,
-                marque: 'Kia',
-                modele: 'Sportage',
-                prix: '42,000 TND',
-                annee: '2019',
-                kilometrage: '55,000 km',
-                carburant: 'Diesel',
-                transmission: 'Automatique',
-                ville: 'Tunis',
-                description: 'SUV confortable, entretien régulier, carnet d entretien complet',
-                contact: '77 456 123',
-                nom: 'Karim',
-                date: genererDateAleatoire(),
-                hasPhotos: false
-            },
-            {
-                id: 6,
-                marque: 'Mercedes',
-                modele: 'Classe A',
-                prix: '68,000 TND',
-                annee: '2020',
-                kilometrage: '35,000 km',
-                carburant: 'Essence',
-                transmission: 'Automatique',
-                ville: 'Sfax',
-                description: 'Voiture premium, toutes options, très bon état',
-                contact: '22 333 444',
-                nom: 'Ali',
-                date: genererDateAleatoire(),
-                hasPhotos: false
-            },
-            {
-                id: 7,
-                marque: 'Audi',
-                modele: 'A3',
-                prix: '45,000 TND',
-                annee: '2019',
-                kilometrage: '40,000 km',
-                carburant: 'Essence',
-                transmission: 'Automatique',
-                ville: 'Tunis',
-                description: 'Compacte premium, toutes options, état impeccable',
-                contact: '66 777 888',
-                nom: 'Samir',
-                date: genererDateAleatoire(),
-                hasPhotos: false
-            },
-            {
-                id: 8,
-                marque: 'BMW',
-                modele: 'Série 1',
-                prix: '58,000 TND',
-                annee: '2020',
-                kilometrage: '28,000 km',
-                carburant: 'Essence',
-                transmission: 'Automatique',
-                ville: 'Sousse',
-                description: 'Berline compacte sportive, entretien BMW',
-                contact: '99 888 777',
-                nom: 'Youssef',
-                date: genererDateAleatoire(),
+                date: '05/01/2024',
                 hasPhotos: false
             }
         ];
 
-        // Charger les annonces du localStorage
+        // Charger les annonces
         function chargerAnnonces() {
-    console.log("🔄 Chargement EN TEMPS RÉEL depuis Firebase...");
-    
-    const annoncesRef = database.ref('annonces');
-    
-    // Écouter les changements en temps réel
-    annoncesRef.on('value', (snapshot) => {
-        const data = snapshot.val();
-        let toutesAnnonces = [];
-        
-        // 1. Charger depuis Firebase
-        if (data) {
-            Object.keys(data).forEach(key => {
-                toutesAnnonces.push({
-                    id: key,
-                    ...data[key]
-                });
-            });
-            console.log(`✅ ${toutesAnnonces.length} annonces depuis Firebase`);
-        }
-        
-        // 2. Ajouter les annonces par défaut si Firebase vide
-        if (toutesAnnonces.length === 0) {
-            toutesAnnonces = [...annoncesParDefaut];
-            console.log("📦 Utilisation des annonces par défaut");
-        }
-        
-        // 3. Trier par date (récentes d'abord)
-        toutesAnnonces.sort((a, b) => {
-            return new Date(b.date || 0) - new Date(a.date || 0);
-        });
-        
-        console.log("🎯 TOTAL annonces à afficher:", toutesAnnonces.length);
-        
-        // 4. AFFICHER
-        pageActuelle = 1;
-        afficherAnnoncesAvecPagination(toutesAnnonces);
-    });
-}
-
-        // Pagination functions
-
-
-function afficherAnnoncesAvecPagination(annonces) {
-    const container = document.getElementById('annonces-container');
-    const titre = document.getElementById('titre-compteur');
-    
-    // Calculer les annonces à afficher pour cette page
-    const debut = (pageActuelle - 1) * annoncesParPage;
-    const fin = debut + annoncesParPage;
-    const annoncesPage = annonces.slice(debut, fin);
-    
-    const totalPages = Math.ceil(annonces.length / annoncesParPage);
-    titre.textContent = `🎯 ${annonces.length} voitures disponibles - Page ${pageActuelle}/${totalPages}`;
-    
-    if (annoncesPage.length === 0) {
-        container.innerHTML = `
-            <div style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
-                <div style="font-size: 4rem; margin-bottom: 1rem;">🔍</div>
-                <h3 style="color: #6b7280; margin-bottom: 1rem;">Aucune annonce trouvée</h3>
-                <p style="color: #9ca3af;">Essayez de modifier vos critères de recherche</p>
-                <a href="deposer-annonce.html" class="btn-primary" style="display: inline-block; margin-top: 1rem;">➕ Déposer la première annonce</a>
-            </div>
-        `;
-        document.getElementById('pagination').style.display = 'none';
-        return;
-    }
-    
-    // Afficher les annonces de la page actuelle
-    container.innerHTML = annoncesPage.map(annonce => `
-        <div class="annonce-card">
-            <div class="annonce-image">
-                ${annonce.hasPhotos && annonce.photos && annonce.photos.length > 0 ? 
-                    `<img src="${annonce.photos[0]}" alt="${annonce.marque} ${annonce.modele}" style="width: 100%; height: 100%; object-fit: cover;">` : 
-                    '🚗'
+            console.log("🔄 Chargement depuis Firebase...");
+            
+            const annoncesRef = database.ref('annonces');
+            
+            annoncesRef.on('value', (snapshot) => {
+                const data = snapshot.val();
+                toutesLesAnnonces = [];
+                
+                // Charger depuis Firebase
+                if (data) {
+                    Object.keys(data).forEach(key => {
+                        toutesLesAnnonces.push({
+                            id: key,
+                            ...data[key]
+                        });
+                    });
+                    console.log(`✅ ${toutesLesAnnonces.length} annonces depuis Firebase`);
                 }
-            </div>
-            <div class="annonce-content">
-                <h3 class="annonce-title">
-                    ${annonce.marque} ${annonce.modele}
-                    ${annonce.isNew ? '<span class="new-badge">NOUVEAU</span>' : ''}
-                </h3>
-                <div class="annonce-price">${annonce.prix}</div>
-                <div class="annonce-details">
-                    <div class="detail">📅 ${annonce.annee}</div>
-                    <div class="detail">🎯 ${annonce.kilometrage}</div>
-                    <div class="detail">⛽ ${annonce.carburant}</div>
-                    <div class="detail">⚙️ ${annonce.transmission}</div>
-                </div>
-                <div class="annonce-location">📍 ${annonce.ville}, Tunisie</div>
-                <div style="font-size: 0.875rem; color: #6b7280; margin-bottom: 1rem;">
-                    📞 ${annonce.nom} • Publié le ${annonce.date}
-                    ${annonce.hasPhotos ? ' • 📸 Avec photos' : ''}
-                </div>
-                <button class="contact-btn" onclick="afficherContact('${annonce.contact}', '${annonce.nom}', '${annonce.marque} ${annonce.modele}')">
-                    📞 Contacter
-                </button>
-            </div>
-        </div>
-    `).join('');
-    
-    // Afficher la pagination
-    afficherPagination(annonces.length);
-}
-
-function afficherPagination(totalAnnonces) {
-    const pagination = document.getElementById('pagination');
-    const pagesNumbers = document.getElementById('pages-numbers');
-    const prevBtn = document.getElementById('prev-btn');
-    const nextBtn = document.getElementById('next-btn');
-    
-    const totalPages = Math.ceil(totalAnnonces / annoncesParPage);
-    
-    if (totalPages <= 1) {
-        pagination.style.display = 'none';
-        return;
-    }
-    
-    pagination.style.display = 'flex';
-    
-    // Bouton précédent
-    prevBtn.disabled = pageActuelle === 1;
-    prevBtn.style.opacity = pageActuelle === 1 ? '0.5' : '1';
-    prevBtn.onclick = () => changerPage(pageActuelle - 1);
-    
-    // Bouton suivant
-    nextBtn.disabled = pageActuelle === totalPages;
-    nextBtn.style.opacity = pageActuelle === totalPages ? '0.5' : '1';
-    nextBtn.onclick = () => changerPage(pageActuelle + 1);
-    
-    // Numéros de page
-    pagesNumbers.innerHTML = '';
-    
-    for (let i = 1; i <= totalPages; i++) {
-        const pageBtn = document.createElement('button');
-        pageBtn.className = `page-btn ${i === pageActuelle ? 'active' : ''}`;
-        pageBtn.textContent = i;
-        pageBtn.onclick = () => changerPage(i);
-        pagesNumbers.appendChild(pageBtn);
-    }
-}
-
-function changerPage(nouvellePage) {
-    const annoncesRef = database.ref('annonces');
-    annoncesRef.once('value').then(snapshot => {
-        const data = snapshot.val();
-        let toutesAnnonces = [];
-        
-        if (data) {
-            Object.keys(data).forEach(key => {
-                toutesAnnonces.push({
-                    id: key,
-                    ...data[key]
+                
+                // Ajouter annonces par défaut si vide
+                if (toutesLesAnnonces.length === 0) {
+                    toutesLesAnnonces = [...annoncesParDefaut];
+                    console.log("📦 Utilisation des annonces par défaut");
+                }
+                
+                // Trier par date
+                toutesLesAnnonces.sort((a, b) => {
+                    return new Date(b.date || 0) - new Date(a.date || 0);
                 });
+                
+                console.log("🎯 TOTAL annonces:", toutesLesAnnonces.length);
+                
+                // Afficher
+                afficherAnnoncesPage(1);
             });
         }
-        
-        if (toutesAnnonces.length === 0) {
-            toutesAnnonces = [...annoncesParDefaut];
-        }
-        
-        toutesAnnonces.sort((a, b) => {
-            return new Date(b.date || 0) - new Date(a.date || 0);
-        });
-        
-        const totalPages = Math.ceil(toutesAnnonces.length / annoncesParPage);
-        
-        if (nouvellePage < 1 || nouvellePage > totalPages) {
-            return;
-        }
-        
-        pageActuelle = nouvellePage;
-        afficherAnnoncesAvecPagination(toutesAnnonces);
-    });
-}
 
-        
-        function changerPage(nouvellePage) {
-            const annonces = chargerAnnonces();
-            const totalPages = Math.ceil(annonces.length / annoncesParPage);
-            
-            if (nouvellePage < 1 || nouvellePage > totalPages) {
-                return;
-            }
-            
-            pageActuelle = nouvellePage;
-            afficherAnnoncesAvecPagination(annonces);
-        }
-
-        function afficherAnnoncesAvecPagination(annonces) {
+        // Afficher une page d'annonces
+        function afficherAnnoncesPage(page) {
+            pageActuelle = page;
             const container = document.getElementById('annonces-container');
             const titre = document.getElementById('titre-compteur');
             
-            // Calculer les annonces à afficher pour cette page
-            const debut = (pageActuelle - 1) * annoncesParPage;
-            const fin = debut + annoncesParPage;
-            const annoncesPage = annonces.slice(debut, fin);
-            
-            const totalPages = Math.ceil(annonces.length / annoncesParPage);
-            titre.textContent = `🎯 ${annonces.length} voitures disponibles - Page ${pageActuelle}/${totalPages}`;
-            
-            if (annoncesPage.length === 0) {
-                container.innerHTML = `
-                    <div style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
-                        <div style="font-size: 4rem; margin-bottom: 1rem;">🔍</div>
-                        <h3 style="color: #6b7280; margin-bottom: 1rem;">Aucune annonce trouvée</h3>
-                        <p style="color: #9ca3af;">Essayez de modifier vos critères de recherche</p>
-                        <a href="deposer-annonce.html" class="btn-primary" style="display: inline-block; margin-top: 1rem;">➕ Déposer la première annonce</a>
-                    </div>
-                `;
-                document.getElementById('pagination').style.display = 'none';
+            if (!toutesLesAnnonces || toutesLesAnnonces.length === 0) {
+                container.innerHTML = '<div style="text-align: center; padding: 2rem;">Aucune annonce disponible</div>';
                 return;
             }
             
-            // Afficher les annonces de la page actuelle
+            // Calculer les annonces de la page
+            const debut = (page - 1) * annoncesParPage;
+            const fin = debut + annoncesParPage;
+            const annoncesPage = toutesLesAnnonces.slice(debut, fin);
+            
+            // Mettre à jour le titre
+            const totalPages = Math.ceil(toutesLesAnnonces.length / annoncesParPage);
+            titre.textContent = `🎯 ${toutesLesAnnonces.length} voitures disponibles - Page ${page}/${totalPages}`;
+            
+            // Générer le HTML
             container.innerHTML = annoncesPage.map(annonce => `
                 <div class="annonce-card">
                     <div class="annonce-image">
-                        ${annonce.hasPhotos && annonce.photos && annonce.photos.length > 0 ? 
+                        ${annonce.photos && annonce.photos.length > 0 ? 
                             `<img src="${annonce.photos[0]}" alt="${annonce.marque} ${annonce.modele}" style="width: 100%; height: 100%; object-fit: cover;">` : 
                             '🚗'
                         }
@@ -1081,7 +820,7 @@ function changerPage(nouvellePage) {
                     <div class="annonce-content">
                         <h3 class="annonce-title">
                             ${annonce.marque} ${annonce.modele}
-                            ${annonce.isNew ? '<span class="new-badge">NOUVEAU</span>' : ''}
+                            ${estNouvelle(annonce.date) ? '<span class="new-badge">NOUVEAU</span>' : ''}
                         </h3>
                         <div class="annonce-price">${annonce.prix}</div>
                         <div class="annonce-details">
@@ -1090,137 +829,122 @@ function changerPage(nouvellePage) {
                             <div class="detail">⛽ ${annonce.carburant}</div>
                             <div class="detail">⚙️ ${annonce.transmission}</div>
                         </div>
-                        <div class="annonce-location">📍 ${annonce.ville}, Tunisie</div>
+                        <div class="annonce-location">📍 ${annonce.ville}</div>
                         <div style="font-size: 0.875rem; color: #6b7280; margin-bottom: 1rem;">
-                            📞 ${annonce.nom} • Publié le ${annonce.date}
-                            ${annonce.hasPhotos ? ' • 📸 Avec photos' : ''}
+                            📞 ${annonce.nom} • ${annonce.date}
+                            ${annonce.photos && annonce.photos.length > 0 ? ' • 📸 Avec photos' : ''}
                         </div>
-                        <a href="details-annonce.html?id=${annonce.id}" style="text-decoration: none;">
-                            <button class="contact-btn" style="width: 100%;">
-                                🔍 Voir détails
-                            </button>
-                        </a>
+                        <button class="contact-btn" onclick="contacter('${annonce.contact}', '${annonce.nom}', '${annonce.marque} ${annonce.modele}')">
+                            📞 Contacter
+                        </button>
                     </div>
                 </div>
             `).join('');
             
             // Afficher la pagination
-            afficherPagination(annonces.length);
+            afficherPagination();
         }
 
-        function afficherContact(telephone, nom, vehicule) {
-            alert(`📞 Contact de ${nom}\n🚗 ${vehicule}\n📱 Téléphone: ${telephone}\n\nAppelez ce numéro pour plus d'informations sur le véhicule`);
+        // Vérifier si une annonce est nouvelle
+        function estNouvelle(dateStr) {
+            if (!dateStr) return false;
+            try {
+                const [day, month, year] = dateStr.split('/');
+                const datePublication = new Date(year, month - 1, day);
+                const maintenant = new Date();
+                const difference = maintenant - datePublication;
+                return difference < 7 * 24 * 60 * 60 * 1000;
+            } catch (e) {
+                return false;
+            }
         }
 
-        function voirDetails(annonceId) {
-            window.location.href = `details-annonce.html?id=${annonceId}`;
+        // Afficher la pagination
+        function afficherPagination() {
+            const pagination = document.getElementById('pagination');
+            const pagesNumbers = document.getElementById('pages-numbers');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            
+            const totalPages = Math.ceil(toutesLesAnnonces.length / annoncesParPage);
+            
+            if (totalPages <= 1) {
+                pagination.style.display = 'none';
+                return;
+            }
+            
+            pagination.style.display = 'flex';
+            
+            // Boutons précédent/suivant
+            prevBtn.disabled = pageActuelle === 1;
+            prevBtn.style.opacity = pageActuelle === 1 ? '0.5' : '1';
+            prevBtn.onclick = () => afficherAnnoncesPage(pageActuelle - 1);
+            
+            nextBtn.disabled = pageActuelle === totalPages;
+            nextBtn.style.opacity = pageActuelle === totalPages ? '0.5' : '1';
+            nextBtn.onclick = () => afficherAnnoncesPage(pageActuelle + 1);
+            
+            // Numéros de page
+            pagesNumbers.innerHTML = '';
+            for (let i = 1; i <= totalPages; i++) {
+                const btn = document.createElement('button');
+                btn.className = `page-btn ${i === pageActuelle ? 'active' : ''}`;
+                btn.textContent = i;
+                btn.onclick = () => afficherAnnoncesPage(i);
+                pagesNumbers.appendChild(btn);
+            }
         }
 
+        // Fonction contact
+        function contacter(telephone, nom, vehicule) {
+            alert(`Contact: ${nom}\nTéléphone: ${telephone}\nVéhicule: ${vehicule}`);
+        }
+
+        // Filtres
         function filtrerAnnonces() {
             const marque = document.getElementById('filtre-marque').value;
             const prixMax = document.getElementById('filtre-prix').value;
             const ville = document.getElementById('filtre-ville').value;
             const carburant = document.getElementById('filtre-carburant').value;
             
-            let annonces = chargerAnnonces();
+            let annoncesFiltrees = [...toutesLesAnnonces];
             
-            // Appliquer les filtres
             if (marque) {
-                annonces = annonces.filter(a => a.marque === marque);
+                annoncesFiltrees = annoncesFiltrees.filter(a => a.marque === marque);
             }
-            
             if (prixMax) {
-                annonces = annonces.filter(a => {
+                annoncesFiltrees = annoncesFiltrees.filter(a => {
                     const prix = parseInt(a.prix.replace(/[^0-9]/g, ''));
                     return prix <= parseInt(prixMax);
                 });
             }
-            
             if (ville) {
-                annonces = annonces.filter(a => a.ville === ville);
+                annoncesFiltrees = annoncesFiltrees.filter(a => a.ville === ville);
             }
-            
             if (carburant) {
-                annonces = annonces.filter(a => a.carburant === carburant);
+                annoncesFiltrees = annoncesFiltrees.filter(a => a.carburant === carburant);
             }
             
-            // Réinitialiser à la page 1 quand on filtre
-            pageActuelle = 1;
-            afficherAnnoncesAvecPagination(annonces);
-            
-            // Afficher les filtres actifs
-            afficherFiltresActifs(marque, prixMax, ville, carburant);
+            toutesLesAnnonces = annoncesFiltrees;
+            afficherAnnoncesPage(1);
         }
 
-        function afficherFiltresActifs(marque, prixMax, ville, carburant) {
-            const searchInfo = document.getElementById('search-info');
-            const filtresActifs = [];
-            
-            if (marque) filtresActifs.push(`Marque: ${marque}`);
-            if (prixMax) filtresActifs.push(`Prix max: ${prixMax} TND`);
-            if (ville) filtresActifs.push(`Ville: ${ville}`);
-            if (carburant) filtresActifs.push(`Carburant: ${carburant}`);
-            
-            if (filtresActifs.length > 0) {
-                searchInfo.style.display = 'block';
-                searchInfo.innerHTML = `
-                    <strong>🔍 Filtres actifs:</strong> ${filtresActifs.join(' • ')}
-                    <button onclick="reinitialiserFiltres()" style="margin-left: 1rem; background: #6b7280; color: white; border: none; padding: 0.25rem 0.5rem; border-radius: 4px; cursor: pointer;">
-                        ✖️ Tout effacer
-                    </button>
-                `;
-            } else {
-                searchInfo.style.display = 'none';
-            }
-        }
-
+        // Réinitialiser les filtres
         function reinitialiserFiltres() {
             document.getElementById('filtre-marque').value = '';
             document.getElementById('filtre-prix').value = '';
             document.getElementById('filtre-ville').value = '';
             document.getElementById('filtre-carburant').value = '';
-            document.getElementById('search-info').style.display = 'none';
             
-            pageActuelle = 1;
-            const annonces = chargerAnnonces();
-            afficherAnnoncesAvecPagination(annonces);
+            // Recharger depuis Firebase
+            chargerAnnonces();
         }
 
-        // Charger les annonces au démarrage
+        // Démarrer au chargement
         document.addEventListener('DOMContentLoaded', function() {
-            const annonces = chargerAnnonces();
-            pageActuelle = 1;
-            afficherAnnoncesAvecPagination(annonces);
+            console.log("🚀 AutoBoom - Chargement des annonces");
+            chargerAnnonces();
         });
-   
-      
     </script>
-
-  <!-- Firebase -->
-<script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
-<script>
-// Configuration Firebase
-const firebaseConfig = {
-    apiKey: "AIzaSyCPay-0BB2o9Cefuj4w5k0b70mBG2kwR4E",
-    authDomain: "autoboom-tn.firebaseapp.com",
-    databaseURL: "https://autoboom-tn-default-rtdb.europe-west1.firebasedatabase.app", 
-    projectId: "autoboom-tn",
-    storageBucket: "autoboom-tn.firebasestorage.app",
-    messagingSenderId: "291199404228",
-    appId: "1:291199404228:web:b07c622a5f7b8bc9a4e191"
-};
-
-// Initialiser Firebase
-firebase.initializeApp(firebaseConfig);
-const database = firebase.database();
-
-console.log("✅ Firebase chargé sur annonces.html");
-</script>  
 </body>
 </html>
-
-
-
-
-
