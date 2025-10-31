@@ -243,6 +243,252 @@
             font-size: 0.875rem;
             color: #6b7280;
         }
+
+        /* ============================================================================
+           CORRECTIONS MOBILE OPTIMISÉES - GARANTI SANS IMPACT PC
+           ============================================================================ */
+
+        @media (max-width: 768px) {
+            /* NAVIGATION MOBILE COMPLÈTEMENT REDESIGNÉE */
+            .navbar {
+                padding: 10px 0 !important;
+                position: fixed !important;
+                top: 0 !important;
+                width: 100% !important;
+                z-index: 1000 !important;
+                height: auto !important;
+                min-height: 70px !important;
+            }
+            
+            .nav-container {
+                flex-direction: column !important;
+                gap: 12px !important;
+                padding: 0 15px !important;
+                align-items: stretch !important;
+            }
+            
+            .logo {
+                text-align: center !important;
+                font-size: 1.6rem !important;
+                order: 1 !important;
+                padding: 5px 0 !important;
+            }
+            
+            .nav-links {
+                display: flex !important;
+                flex-direction: column !important;
+                gap: 8px !important;
+                width: 100% !important;
+                order: 3 !important;
+                margin-top: 10px !important;
+            }
+            
+            .nav-links a {
+                display: block !important;
+                font-size: 1.1rem !important;
+                padding: 16px 20px !important;
+                background: #f8fafc !important;
+                border-radius: 12px !important;
+                text-align: center !important;
+                border: 2px solid #e5e7eb !important;
+                width: 100% !important;
+                min-height: 54px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+            }
+            
+            .btn-primary {
+                order: 2 !important;
+                padding: 18px 20px !important;
+                font-size: 1.2rem !important;
+                text-align: center !important;
+                min-height: 60px !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                width: 100% !important;
+                margin: 5px 0 !important;
+                border-radius: 12px !important;
+            }
+
+            /* ESPACEMENT POUR LA NAV FIXE */
+            body {
+                padding-top: 180px !important;
+            }
+
+            /* HERO MOBILE */
+            .hero {
+                padding: 40px 15px !important;
+                margin-top: 0 !important;
+            }
+            
+            .hero h1 {
+                font-size: 1.8rem !important;
+                margin-bottom: 0.5rem !important;
+            }
+
+            /* FEATURES MOBILE */
+            .features {
+                padding: 40px 0 !important;
+            }
+            
+            .feature-grid {
+                grid-template-columns: 1fr !important;
+                gap: 1.5rem !important;
+            }
+            
+            .feature-card {
+                padding: 1.5rem !important;
+                margin: 0 10px !important;
+            }
+            
+            .feature-icon {
+                font-size: 2.5rem !important;
+            }
+
+            /* PRICING MOBILE */
+            .pricing {
+                padding: 40px 0 !important;
+            }
+            
+            .pricing-grid {
+                grid-template-columns: 1fr !important;
+                gap: 1.5rem !important;
+            }
+            
+            .pricing-card {
+                padding: 1.5rem !important;
+                margin: 0 10px !important;
+            }
+            
+            .price {
+                font-size: 1.8rem !important;
+            }
+            
+            .btn-orange {
+                padding: 16px !important;
+                font-size: 1.1rem !important;
+                min-height: 55px !important;
+            }
+
+            /* CONCESSIONNAIRES MOBILE */
+            .concessionnaires-list {
+                padding: 40px 0 !important;
+            }
+            
+            .dealer-card {
+                flex-direction: column !important;
+                gap: 1rem !important;
+                padding: 1.5rem !important;
+                margin-bottom: 1.5rem !important;
+                text-align: center !important;
+            }
+            
+            .dealer-logo {
+                width: 80px !important;
+                height: 80px !important;
+                font-size: 1.8rem !important;
+            }
+            
+            .dealer-stats {
+                justify-content: center !important;
+                gap: 1.5rem !important;
+                flex-wrap: wrap !important;
+            }
+            
+            .stat-number {
+                font-size: 1.3rem !important;
+            }
+            
+            .stat-label {
+                font-size: 0.8rem !important;
+            }
+
+            /* TITRES MOBILE */
+            h2 {
+                font-size: 1.6rem !important;
+                margin-bottom: 2rem !important;
+                padding: 0 10px !important;
+            }
+        }
+
+        /* CORRECTIONS POUR TRÈS PETITS ÉCRANS */
+        @media (max-width: 480px) {
+            .navbar {
+                min-height: 65px !important;
+            }
+            
+            .logo {
+                font-size: 1.5rem !important;
+            }
+            
+            body {
+                padding-top: 170px !important;
+            }
+            
+            .nav-links a,
+            .btn-primary {
+                min-height: 50px !important;
+                padding: 15px !important;
+            }
+            
+            .hero {
+                padding: 30px 10px !important;
+            }
+            
+            .hero h1 {
+                font-size: 1.6rem !important;
+            }
+            
+            .feature-card,
+            .pricing-card,
+            .dealer-card {
+                padding: 1.25rem !important;
+                margin: 0 5px !important;
+            }
+            
+            .btn-orange {
+                min-height: 50px !important;
+                padding: 14px !important;
+            }
+            
+            .dealer-stats {
+                gap: 1rem !important;
+            }
+            
+            .stat {
+                min-width: 80px !important;
+            }
+        }
+
+        /* OPTIMISATIONS TOUCH - CRITIQUE POUR MOBILE */
+        @media (hover: none) and (pointer: coarse) {
+            .nav-links a, 
+            .btn-primary, 
+            .btn-orange {
+                min-height: 44px !important;
+                cursor: pointer !important;
+            }
+            
+            /* Désactiver les effets hover sur mobile */
+            .nav-links a:hover {
+                color: inherit !important;
+            }
+            
+            .btn-primary:hover, 
+            .btn-orange:hover {
+                transform: none !important;
+            }
+            
+            .pricing-card:hover {
+                border-color: #e5e7eb !important;
+            }
+            
+            .pricing-card.recommended:hover {
+                border-color: #f97316 !important;
+            }
+        }
     </style>
 </head>
 <body>
@@ -394,4 +640,3 @@
     </section>
 </body>
 </html>
-
