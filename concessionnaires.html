@@ -72,6 +72,51 @@
             background: #1d4ed8;
         }
 
+        /* Menu Mobile Hamburger */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 8px;
+            color: #2563eb;
+        }
+
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 60px;
+            left: 0;
+            width: 100%;
+            background: white;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.1);
+            flex-direction: column;
+            z-index: 1001;
+            max-height: 70vh;
+            overflow-y: auto;
+        }
+        
+        .mobile-menu.active {
+            display: flex;
+        }
+        
+        .mobile-menu a {
+            padding: 14px 20px;
+            text-decoration: none;
+            color: #4b5563;
+            border-bottom: 1px solid #f1f5f9;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: background 0.3s;
+        }
+        
+        .mobile-menu a:hover {
+            background: #f8fafc;
+        }
+
         .hero {
             background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
             color: white;
@@ -245,76 +290,57 @@
         }
 
         /* ============================================================================
-           CORRECTIONS MOBILE OPTIMISÉES - GARANTI SANS IMPACT PC
+           CORRECTIONS MOBILE OPTIMISÉES - MENU HAMBURGER COMPACT
            ============================================================================ */
 
         @media (max-width: 768px) {
-            /* NAVIGATION MOBILE COMPLÈTEMENT REDESIGNÉE */
+            /* NAVIGATION FIXE COMPACTE */
             .navbar {
-                padding: 10px 0 !important;
+                padding: 8px 0 !important;
                 position: fixed !important;
                 top: 0 !important;
                 width: 100% !important;
                 z-index: 1000 !important;
-                height: auto !important;
-                min-height: 70px !important;
+                height: 60px !important;
+                min-height: 60px !important;
+                background: white !important;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1) !important;
             }
             
             .nav-container {
-                flex-direction: column !important;
-                gap: 12px !important;
                 padding: 0 15px !important;
-                align-items: stretch !important;
+                height: 100% !important;
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
             }
             
             .logo {
-                text-align: center !important;
-                font-size: 1.6rem !important;
-                order: 1 !important;
-                padding: 5px 0 !important;
+                font-size: 1.3rem !important;
+                margin: 0 !important;
             }
             
+            /* CACHER LE MENU DESKTOP */
             .nav-links {
-                display: flex !important;
-                flex-direction: column !important;
-                gap: 8px !important;
-                width: 100% !important;
-                order: 3 !important;
-                margin-top: 10px !important;
-            }
-            
-            .nav-links a {
-                display: block !important;
-                font-size: 1.1rem !important;
-                padding: 16px 20px !important;
-                background: #f8fafc !important;
-                border-radius: 12px !important;
-                text-align: center !important;
-                border: 2px solid #e5e7eb !important;
-                width: 100% !important;
-                min-height: 54px !important;
-                display: flex !important;
-                align-items: center !important;
-                justify-content: center !important;
+                display: none !important;
             }
             
             .btn-primary {
-                order: 2 !important;
-                padding: 18px 20px !important;
-                font-size: 1.2rem !important;
-                text-align: center !important;
-                min-height: 60px !important;
-                display: flex !important;
-                align-items: center !important;
-                justify-content: center !important;
-                width: 100% !important;
-                margin: 5px 0 !important;
-                border-radius: 12px !important;
+                display: none !important;
+            }
+
+            /* AFFICHER BOUTON HAMBURGER */
+            .menu-toggle {
+                display: block !important;
             }
 
             /* ESPACEMENT POUR LA NAV FIXE */
             body {
-                padding-top: 180px !important;
+                padding-top: 60px !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                overflow-x: hidden !important;
+                margin: 0 !important;
             }
 
             /* HERO MOBILE */
@@ -336,11 +362,12 @@
             .feature-grid {
                 grid-template-columns: 1fr !important;
                 gap: 1.5rem !important;
+                padding: 0 10px !important;
             }
             
             .feature-card {
                 padding: 1.5rem !important;
-                margin: 0 10px !important;
+                margin: 0 !important;
             }
             
             .feature-icon {
@@ -355,11 +382,12 @@
             .pricing-grid {
                 grid-template-columns: 1fr !important;
                 gap: 1.5rem !important;
+                padding: 0 10px !important;
             }
             
             .pricing-card {
                 padding: 1.5rem !important;
-                margin: 0 10px !important;
+                margin: 0 !important;
             }
             
             .price {
@@ -367,9 +395,9 @@
             }
             
             .btn-orange {
-                padding: 16px !important;
-                font-size: 1.1rem !important;
-                min-height: 55px !important;
+                padding: 14px !important;
+                font-size: 1rem !important;
+                min-height: 50px !important;
             }
 
             /* CONCESSIONNAIRES MOBILE */
@@ -383,6 +411,7 @@
                 padding: 1.5rem !important;
                 margin-bottom: 1.5rem !important;
                 text-align: center !important;
+                margin: 0 10px 1.5rem 10px !important;
             }
             
             .dealer-logo {
@@ -409,28 +438,36 @@
             h2 {
                 font-size: 1.6rem !important;
                 margin-bottom: 2rem !important;
+                padding: 0 15px !important;
+                text-align: center !important;
+            }
+
+            /* CONTAINER MOBILE */
+            .container {
                 padding: 0 10px !important;
+                width: 100% !important;
+                max-width: 100% !important;
             }
         }
 
         /* CORRECTIONS POUR TRÈS PETITS ÉCRANS */
         @media (max-width: 480px) {
             .navbar {
-                min-height: 65px !important;
+                height: 55px !important;
+                min-height: 55px !important;
             }
             
             .logo {
-                font-size: 1.5rem !important;
+                font-size: 1.2rem !important;
             }
             
             body {
-                padding-top: 170px !important;
+                padding-top: 55px !important;
             }
             
-            .nav-links a,
-            .btn-primary {
-                min-height: 50px !important;
-                padding: 15px !important;
+            .mobile-menu a {
+                padding: 12px 15px !important;
+                font-size: 0.95rem !important;
             }
             
             .hero {
@@ -445,12 +482,12 @@
             .pricing-card,
             .dealer-card {
                 padding: 1.25rem !important;
-                margin: 0 5px !important;
+                margin: 0 5px 1rem 5px !important;
             }
             
             .btn-orange {
-                min-height: 50px !important;
-                padding: 14px !important;
+                min-height: 48px !important;
+                padding: 12px !important;
             }
             
             .dealer-stats {
@@ -458,35 +495,19 @@
             }
             
             .stat {
-                min-width: 80px !important;
+                min-width: 70px !important;
+            }
+            
+            .price {
+                font-size: 1.6rem !important;
             }
         }
 
-        /* OPTIMISATIONS TOUCH - CRITIQUE POUR MOBILE */
+        /* OPTIMISATIONS TOUCH MOBILE */
         @media (hover: none) and (pointer: coarse) {
-            .nav-links a, 
-            .btn-primary, 
+            .mobile-menu a, 
             .btn-orange {
                 min-height: 44px !important;
-                cursor: pointer !important;
-            }
-            
-            /* Désactiver les effets hover sur mobile */
-            .nav-links a:hover {
-                color: inherit !important;
-            }
-            
-            .btn-primary:hover, 
-            .btn-orange:hover {
-                transform: none !important;
-            }
-            
-            .pricing-card:hover {
-                border-color: #e5e7eb !important;
-            }
-            
-            .pricing-card.recommended:hover {
-                border-color: #f97316 !important;
             }
         }
     </style>
@@ -501,11 +522,24 @@
                 <a href="annonces.html">Annonces</a>
                 <a href="deposer-annonce.html">Déposer une annonce</a>
                 <a href="concessionnaires.html" style="color: #2563eb;">Concessionnaires</a>
-               <a href="assureurs.html">Assureurs</a>
+                <a href="assureurs.html">Assureurs</a>
             </div>
             <a href="deposer-annonce.html" class="btn-primary">+ Vendre ma voiture</a>
+            
+            <!-- Bouton Hamburger Mobile -->
+            <button class="menu-toggle" onclick="toggleMobileMenu()">☰</button>
         </div>
     </nav>
+
+    <!-- Menu Mobile -->
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="index.html">🏠 Accueil</a>
+        <a href="annonces.html">🚗 Annonces</a>
+        <a href="deposer-annonce.html">➕ Déposer une annonce</a>
+        <a href="concessionnaires.html" style="color: #2563eb; background: #f0f4ff;">🏢 Concessionnaires</a>
+        <a href="assureurs.html">🛡️ Assureurs</a>
+        <a href="deposer-annonce.html" style="background: #2563eb; color: white;">💰 Vendre ma voiture</a>
+    </div>
 
     <!-- Hero Section -->
     <section class="hero">
@@ -522,7 +556,7 @@
                 <div class="feature-card">
                     <div class="feature-icon">👥</div>
                     <h3>50,000+ visiteurs/mois</h3>
-                    <p>Touchrez le plus grand marché automobile de Tunisie</p>
+                    <p>Touchez le plus grand marché automobile de Tunisie</p>
                 </div>
                 <div class="feature-card">
                     <div class="feature-icon">📈</div>
@@ -638,5 +672,29 @@
             </div>
         </div>
     </section>
+
+    <script>
+        // Fonction pour le menu mobile
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('active');
+        }
+
+        // Fermer le menu en cliquant ailleurs
+        document.addEventListener('click', function(event) {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const menuToggle = document.querySelector('.menu-toggle');
+            
+            if (!mobileMenu.contains(event.target) && !menuToggle.contains(event.target)) {
+                mobileMenu.classList.remove('active');
+            }
+        });
+
+        // Fermer le menu en scrollant
+        window.addEventListener('scroll', function() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.remove('active');
+        });
+    </script>
 </body>
 </html>
