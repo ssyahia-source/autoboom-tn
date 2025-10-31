@@ -896,45 +896,142 @@ console.log("✅ Firebase initialisé sur annonces.html");
 }
 
         // Pagination functions
-        function afficherPagination(totalAnnonces) {
-            const pagination = document.getElementById('pagination');
-            const pagesNumbers = document.getElementById('pages-numbers');
-            const prevBtn = document.getElementById('prev-btn');
-            const nextBtn = document.getElementById('next-btn');
-            
-            const totalPages = Math.ceil(totalAnnonces / annoncesParPage);
-            
-            if (totalPages <= 1) {
-                pagination.style.display = 'none';
-                return;
-            }
-            
-            pagination.style.display = 'flex';
-            
-            // Bouton précédent
-            prevBtn.disabled = pageActuelle === 1;
-            prevBtn.style.opacity = pageActuelle === 1 ? '0.5' : '1';
-            
-            // Bouton suivant
-            nextBtn.disabled = pageActuelle === totalPages;
-            nextBtn.style.opacity = pageActuelle === totalPages ? '0.5' : '1';
-            
-            // Numéros de page
-            pagesNumbers.innerHTML = '';
-            
-            // Afficher max 5 pages autour de la page actuelle
-            let startPage = Math.max(1, pageActuelle - 2);
-            let endPage = Math.min(totalPages, pageActuelle + 2);
-            
-            for (let i = startPage; i <= endPage; i++) {
-                const pageBtn = document.createElement('button');
-                pageBtn.className = `page-btn ${i === pageActuelle ? 'active' : ''}`;
-                pageBtn.textContent = i;
-                pageBtn.onclick = () => changerPage(i);
-                pagesNumbers.appendChild(pageBtn);
-            }
-        }
 
+
+function afficherAnnoncesAvecPagination(annonces) {
+    const container = document.getElementById('annonces-container');
+    const titre = document.getElementById('titre-compteur');
+    
+    // Calculer les annonces à afficher pour cette page
+    const debut = (pageActuelle - 1) * annoncesParPage;
+    const fin = debut + annoncesParPage;
+    const annoncesPage = annonces.slice(debut, fin);
+    
+    const totalPages = Math.ceil(annonces.length / annoncesParPage);
+    titre.textContent = `🎯 ${annonces.length} voitures disponibles - Page ${pageActuelle}/${totalPages}`;
+    
+    if (annoncesPage.length === 0) {
+        container.innerHTML = `
+            <div style="grid-column: 1 / -1; text-align: center; padding: 3rem;">
+                <div style="font-size: 4rem; margin-bottom: 1rem;">🔍</div>
+                <h3 style="color: #6b7280; margin-bottom: 1rem;">Aucune annonce trouvée</h3>
+                <p style="color: #9ca3af;">Essayez de modifier vos critères de recherche</p>
+                <a href="deposer-annonce.html" class="btn-primary" style="display: inline-block; margin-top: 1rem;">➕ Déposer la première annonce</a>
+            </div>
+        `;
+        document.getElementById('pagination').style.display = 'none';
+        return;
+    }
+    
+    // Afficher les annonces de la page actuelle
+    container.innerHTML = annoncesPage.map(annonce => `
+        <div class="annonce-card">
+            <div class="annonce-image">
+                ${annonce.hasPhotos && annonce.photos && annonce.photos.length > 0 ? 
+                    `<img src="${annonce.photos[0]}" alt="${annonce.marque} ${annonce.modele}" style="width: 100%; height: 100%; object-fit: cover;">` : 
+                    '🚗'
+                }
+            </div>
+            <div class="annonce-content">
+                <h3 class="annonce-title">
+                    ${annonce.marque} ${annonce.modele}
+                    ${annonce.isNew ? '<span class="new-badge">NOUVEAU</span>' : ''}
+                </h3>
+                <div class="annonce-price">${annonce.prix}</div>
+                <div class="annonce-details">
+                    <div class="detail">📅 ${annonce.annee}</div>
+                    <div class="detail">🎯 ${annonce.kilometrage}</div>
+                    <div class="detail">⛽ ${annonce.carburant}</div>
+                    <div class="detail">⚙️ ${annonce.transmission}</div>
+                </div>
+                <div class="annonce-location">📍 ${annonce.ville}, Tunisie</div>
+                <div style="font-size: 0.875rem; color: #6b7280; margin-bottom: 1rem;">
+                    📞 ${annonce.nom} • Publié le ${annonce.date}
+                    ${annonce.hasPhotos ? ' • 📸 Avec photos' : ''}
+                </div>
+                <button class="contact-btn" onclick="afficherContact('${annonce.contact}', '${annonce.nom}', '${annonce.marque} ${annonce.modele}')">
+                    📞 Contacter
+                </button>
+            </div>
+        </div>
+    `).join('');
+    
+    // Afficher la pagination
+    afficherPagination(annonces.length);
+}
+
+function afficherPagination(totalAnnonces) {
+    const pagination = document.getElementById('pagination');
+    const pagesNumbers = document.getElementById('pages-numbers');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    
+    const totalPages = Math.ceil(totalAnnonces / annoncesParPage);
+    
+    if (totalPages <= 1) {
+        pagination.style.display = 'none';
+        return;
+    }
+    
+    pagination.style.display = 'flex';
+    
+    // Bouton précédent
+    prevBtn.disabled = pageActuelle === 1;
+    prevBtn.style.opacity = pageActuelle === 1 ? '0.5' : '1';
+    prevBtn.onclick = () => changerPage(pageActuelle - 1);
+    
+    // Bouton suivant
+    nextBtn.disabled = pageActuelle === totalPages;
+    nextBtn.style.opacity = pageActuelle === totalPages ? '0.5' : '1';
+    nextBtn.onclick = () => changerPage(pageActuelle + 1);
+    
+    // Numéros de page
+    pagesNumbers.innerHTML = '';
+    
+    for (let i = 1; i <= totalPages; i++) {
+        const pageBtn = document.createElement('button');
+        pageBtn.className = `page-btn ${i === pageActuelle ? 'active' : ''}`;
+        pageBtn.textContent = i;
+        pageBtn.onclick = () => changerPage(i);
+        pagesNumbers.appendChild(pageBtn);
+    }
+}
+
+function changerPage(nouvellePage) {
+    const annoncesRef = database.ref('annonces');
+    annoncesRef.once('value').then(snapshot => {
+        const data = snapshot.val();
+        let toutesAnnonces = [];
+        
+        if (data) {
+            Object.keys(data).forEach(key => {
+                toutesAnnonces.push({
+                    id: key,
+                    ...data[key]
+                });
+            });
+        }
+        
+        if (toutesAnnonces.length === 0) {
+            toutesAnnonces = [...annoncesParDefaut];
+        }
+        
+        toutesAnnonces.sort((a, b) => {
+            return new Date(b.date || 0) - new Date(a.date || 0);
+        });
+        
+        const totalPages = Math.ceil(toutesAnnonces.length / annoncesParPage);
+        
+        if (nouvellePage < 1 || nouvellePage > totalPages) {
+            return;
+        }
+        
+        pageActuelle = nouvellePage;
+        afficherAnnoncesAvecPagination(toutesAnnonces);
+    });
+}
+
+        
         function changerPage(nouvellePage) {
             const annonces = chargerAnnonces();
             const totalPages = Math.ceil(annonces.length / annoncesParPage);
@@ -1122,6 +1219,7 @@ console.log("✅ Firebase chargé sur annonces.html");
 </script>  
 </body>
 </html>
+
 
 
 
