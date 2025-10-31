@@ -318,196 +318,217 @@
             color: white;
         }
 
-        /* ============================================================================
-           CORRECTIONS MOBILE OPTIMISÉES - GARANTI SANS IMPACT PC
-           ============================================================================ */
-
-       /* ============================================================================
-   CORRECTIONS MOBILE OPTIMISÉES - ESPACE RÉDUIT
-   ============================================================================ */
-
-/* ============================================================================
-   CORRECTIONS MOBILE ULTRA-COMPACT
-   ============================================================================ */
-
-/* ============================================================================
-   MENU HAMBURGER POUR MOBILE - OCCUPE 0% D'ESPACE QUAND FERMÉ
-   ============================================================================ */
-
-@media (max-width: 768px) {
-    /* NAVIGATION COMPACTE AVEC HAMBURGER */
-    .navbar {
-        padding: 5px 0 !important;
-        position: fixed !important;
-        top: 0 !important;
-        width: 100% !important;
-        z-index: 1000 !important;
-        height: 50px !important;
-        min-height: 50px !important;
-        background: white !important;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1) !important;
-    }
-    
-    .nav-container {
-        display: flex !important;
-        justify-content: space-between !important;
-        align-items: center !important;
-        padding: 0 15px !important;
-        height: 100% !important;
-    }
-    
-    .logo {
-        font-size: 1.2rem !important;
-        margin: 0 !important;
-    }
-    
-    /* CACHER LE MENU ORIGINAL */
-    .nav-links {
-        display: none !important;
-    }
-    
-    .btn-primary {
-        display: none !important;
-    }
-
-    /* BOUTON HAMBURGER */
-    .menu-toggle {
-        display: block !important;
-        background: none;
-        border: none;
-        font-size: 1.5rem;
-        cursor: pointer;
-        padding: 5px;
-    }
-
-    /* MENU DÉROULANT */
-    .mobile-menu {
-        position: fixed;
-        top: 50px;
-        left: 0;
-        width: 100%;
-        background: white;
-        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-        display: none;
-        flex-direction: column;
-        z-index: 999;
-    }
-    
-    .mobile-menu.active {
-        display: flex;
-    }
-    
-    .mobile-menu a {
-        display: block;
-        padding: 12px 20px;
-        text-decoration: none;
-        color: #4b5563;
-        border-bottom: 1px solid #e5e7eb;
-        font-size: 1rem;
-    }
-    
-    .mobile-menu a:hover {
-        background: #f8fafc;
-    }
-
-    /* ESPACEMENT CORRECT */
-    body {
-        padding-top: 50px !important;
-        margin: 0 !important;
-    }
-
-    /* TOUT LE CONTENU EST MAINTENANT VISIBLE */
-    .hero-slider {
-        margin-top: 0 !important;
-        height: 250px !important;
-    }
-    
-    .slide-content h1 {
-        font-size: 1.5rem !important;
-    }
-}
-
-/* AJOUTEZ CE HTML APRÈS LA NAVIGATION DANS index.html */
-        
-    .slide-content p {
-        font-size: 1rem !important; /* RÉDUIT de 1.1rem */
-    }
-}
-
-/* CORRECTIONS POUR TRÈS PETITS ÉCRANS */
-@media (max-width: 480px) {
-    .navbar {
-        min-height: 55px !important; /* RÉDUIT de 65px */
-    }
-    
-    .logo {
-        font-size: 1.3rem !important; /* RÉDUIT de 1.5rem */
-    }
-    
-    body {
-        padding-top: 130px !important; /* RÉDUIT de 170px */
-    }
-    
-    .nav-links a,
-    .btn-primary {
-        min-height: 42px !important; /* RÉDUIT de 50px */
-        padding: 10px 12px !important; /* RÉDUIT de 15px */
-    }
-    
-    .hero-slider {
-        height: 200px !important; /* ENCORE PLUS RÉDUIT */
-        margin-top: 110px !important;
-    }
-    
-    .slide-content h1 {
-        font-size: 1.3rem !important;
-    }
-}
-            .slider-prev, 
-            .slider-next {
-                width: 50px !important;
-                height: 50px !important;
-                font-size: 1.8rem !important;
-                background: rgba(255,255,255,0.3) !important;
-            }
-            
-            .dot {
-                width: 14px !important;
-                height: 14px !important;
-            }
+        /* Menu mobile hamburger */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px;
         }
 
-        /* CORRECTIONS POUR TRÈS PETITS ÉCRANS */
-        @media (max-width: 480px) {
-            .navbar {
-                min-height: 65px !important;
+        .mobile-menu {
+            display: none;
+            position: fixed;
+            top: 50px;
+            left: 0;
+            width: 100%;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            flex-direction: column;
+            z-index: 999;
+        }
+        
+        .mobile-menu.active {
+            display: flex;
+        }
+        
+        .mobile-menu a {
+            display: block;
+            padding: 12px 20px;
+            text-decoration: none;
+            color: #4b5563;
+            border-bottom: 1px solid #e5e7eb;
+            font-size: 1rem;
+        }
+        
+        .mobile-menu a:hover {
+            background: #f8fafc;
+        }
+
+        /* ============================================================================
+           CORRECTION DÉCALAGE DROITE - TOUT CENTRÉ
+           ============================================================================ */
+
+        @media (max-width: 768px) {
+            /* FORCER TOUTE LA LARGEUR À RESTER DANS L'ÉCRAN */
+            body {
+                width: 100% !important;
+                max-width: 100% !important;
+                overflow-x: hidden !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                padding-top: 50px !important;
             }
             
-            .logo {
-                font-size: 1.6rem !important;
+            /* CORRECTION CONTAINER PRINCIPAL */
+            .container, .search-container, .filter-container {
+                width: 100% !important;
+                max-width: 100% !important;
+                padding: 0 15px !important;
+                margin: 0 auto !important;
+                box-sizing: border-box !important;
             }
             
+            /* CORRECTION HERO SECTION */
             .hero-slider {
-                height: 300px !important;
-                margin-top: 140px !important;
+                width: 100% !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                height: 250px !important;
+                margin-top: 0 !important;
+            }
+            
+            .slide-content {
+                width: 100% !important;
+                max-width: 100% !important;
+                padding: 0 15px !important;
+                box-sizing: border-box !important;
             }
             
             .slide-content h1 {
-                font-size: 1.7rem !important;
+                font-size: 1.5rem !important;
             }
             
-            .nav-links a,
-            .btn-primary,
-            .btn-secondary {
-                min-height: 50px !important;
+            .slide-content p {
+                font-size: 1rem !important;
+            }
+            
+            /* CORRECTION BARRE DE RECHERCHE */
+            .search-box {
+                width: 100% !important;
+                max-width: 100% !important;
+                margin: 0 !important;
                 padding: 15px !important;
+                box-sizing: border-box !important;
             }
             
-            .search-input, 
-            .search-select, 
-            .search-button {
-                min-height: 55px !important;
-                padding: 16px !important;
+            .search-box .flex {
+                width: 100% !important;
+                max-width: 100% !important;
+                flex-direction: column !important;
+            }
+            
+            .search-input, .search-select, .search-button {
+                width: 100% !important;
+                max-width: 100% !important;
+                box-sizing: border-box !important;
+                margin-bottom: 10px !important;
+            }
+            
+            /* NAVIGATION MOBILE COMPACTE */
+            .navbar {
+                padding: 5px 0 !important;
+                position: fixed !important;
+                top: 0 !important;
+                width: 100% !important;
+                z-index: 1000 !important;
+                height: 50px !important;
+                min-height: 50px !important;
+                background: white !important;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.1) !important;
+            }
+            
+            .nav-container {
+                display: flex !important;
+                justify-content: space-between !important;
+                align-items: center !important;
+                padding: 0 15px !important;
+                height: 100% !important;
+            }
+            
+            .logo {
+                font-size: 1.2rem !important;
+                margin: 0 !important;
+            }
+            
+            /* CACHER LE MENU ORIGINAL */
+            .nav-links {
+                display: none !important;
+            }
+            
+            .btn-primary {
+                display: none !important;
+            }
+
+            /* AFFICHER BOUTON HAMBURGER */
+            .menu-toggle {
+                display: block !important;
+            }
+
+            /* CORRECTION FEATURES */
+            .feature-grid {
+                grid-template-columns: 1fr !important;
+                gap: 20px !important;
+                padding: 0 15px !important;
+            }
+            
+            .feature-card {
+                padding: 20px !important;
+            }
+            
+            /* CORRECTION BOUTONS CTA */
+            .cta-buttons {
+                flex-direction: column !important;
+                gap: 10px !important;
+            }
+            
+            .btn-primary, .btn-secondary {
+                width: 100% !important;
+                text-align: center !important;
+            }
+            
+            /* CORRECTION SLIDER CONTROLS */
+            .slider-controls {
+                bottom: 15px !important;
+            }
+            
+            .slider-prev, .slider-next {
+                width: 40px !important;
+                height: 40px !important;
+                font-size: 1.2rem !important;
+            }
+        }
+
+        /* CORRECTION SPÉCIALE POUR TRÈS PETITS ÉCRANS */
+        @media (max-width: 480px) {
+            .container, .search-container, .filter-container {
+                padding: 0 10px !important;
+            }
+            
+            .search-box {
+                padding: 10px !important;
+            }
+            
+            .hero-slider {
+                height: 200px !important;
+            }
+            
+            .slide-content h1 {
+                font-size: 1.3rem !important;
+            }
+            
+            .navbar {
+                min-height: 50px !important;
+            }
+            
+            .logo {
+                font-size: 1.1rem !important;
+            }
+            
+            body {
+                padding-top: 50px !important;
             }
         }
 
@@ -524,8 +545,10 @@
                 cursor: pointer !important;
             }
             
-            .nav-links a {
-                padding: 16px 20px !important;
+            .mobile-menu a {
+                min-height: 44px !important;
+                display: flex !important;
+                align-items: center !important;
             }
         }
     </style>
@@ -546,19 +569,16 @@
         </div>
     </nav>
 
-<!-- Menu mobile hamburger -->
-<button class="menu-toggle" onclick="toggleMobileMenu()">☰</button>
-<div class="mobile-menu" id="mobileMenu">
-    <a href="index.html">🏠 Accueil</a>
-    <a href="annonces.html">🚗 Annonces</a>
-    <a href="deposer-annonce.html">➕ Déposer une annonce</a>
-    <a href="concessionnaires.html">🏢 Concessionnaires</a>
-    <a href="assureurs.html">🛡️ Assureurs</a>
-    <a href="deposer-annonce.html" style="background: #2563eb; color: white;">💰 Vendre ma voiture</a>
-</div>
-
-
-
+    <!-- Menu mobile hamburger -->
+    <button class="menu-toggle" onclick="toggleMobileMenu()">☰</button>
+    <div class="mobile-menu" id="mobileMenu">
+        <a href="index.html">🏠 Accueil</a>
+        <a href="annonces.html">🚗 Annonces</a>
+        <a href="deposer-annonce.html">➕ Déposer une annonce</a>
+        <a href="concessionnaires.html">🏢 Concessionnaires</a>
+        <a href="assureurs.html">🛡️ Assureurs</a>
+        <a href="deposer-annonce.html" style="background: #2563eb; color: white;">💰 Vendre ma voiture</a>
+    </div>
     
     <!-- Bannière glissante CENTRÉE -->
     <section class="hero-slider">
@@ -602,126 +622,6 @@
             <button class="slider-next">›</button>
         </div>
     </section>
-
-
-    ============================================================================
-   CORRECTION DÉCALAGE DROITE - TOUT CENTRÉ
-   ============================================================================ */
-
-@media (max-width: 768px) {
-    /* FORCER TOUTE LA LARGEUR À RESTER DANS L'ÉCRAN */
-    body {
-        width: 100% !important;
-        max-width: 100% !important;
-        overflow-x: hidden !important;
-        margin: 0 !important;
-        padding: 0 !important;
-    }
-    
-    /* CORRECTION CONTAINER PRINCIPAL */
-    .container, .search-container, .filter-container {
-        width: 100% !important;
-        max-width: 100% !important;
-        padding: 0 15px !important;
-        margin: 0 auto !important;
-        box-sizing: border-box !important;
-    }
-    
-    /* CORRECTION HERO SECTION */
-    .hero-slider {
-        width: 100% !important;
-        padding: 0 !important;
-        margin: 0 !important;
-    }
-    
-    .slide-content {
-        width: 100% !important;
-        max-width: 100% !important;
-        padding: 0 15px !important;
-        box-sizing: border-box !important;
-    }
-    
-    /* CORRECTION BARRE DE RECHERCHE */
-    .search-box {
-        width: 100% !important;
-        max-width: 100% !important;
-        margin: 0 !important;
-        padding: 15px !important;
-        box-sizing: border-box !important;
-    }
-    
-    .search-box .flex {
-        width: 100% !important;
-        max-width: 100% !important;
-    }
-    
-    .search-input, .search-select, .search-button {
-        width: 100% !important;
-        max-width: 100% !important;
-        box-sizing: border-box !important;
-    }
-    
-    /* CORRECTION FILTRES */
-    .filter-grid {
-        width: 100% !important;
-        max-width: 100% !important;
-        padding: 0 10px !important;
-        box-sizing: border-box !important;
-    }
-    
-    .filter-select {
-        width: 100% !important;
-        max-width: 100% !important;
-        box-sizing: border-box !important;
-    }
-    
-    /* CORRECTION GRID ANNONCES */
-    .annonces-grid {
-        width: 100% !important;
-        max-width: 100% !important;
-        padding: 0 10px !important;
-        box-sizing: border-box !important;
-    }
-    
-    .annonce-card {
-        width: 100% !important;
-        max-width: 100% !important;
-        margin: 10px 0 !important;
-        box-sizing: border-box !important;
-    }
-    
-    /* CORRECTION PAGINATION */
-    .pagination {
-        width: 100% !important;
-        max-width: 100% !important;
-        padding: 0 15px !important;
-        box-sizing: border-box !important;
-        justify-content: center !important;
-    }
-}
-
-/* CORRECTION SPÉCIALE POUR TRÈS PETITS ÉCRANS */
-@media (max-width: 480px) {
-    .container, .search-container, .filter-container {
-        padding: 0 10px !important;
-    }
-    
-    .search-box {
-        padding: 10px !important;
-    }
-    
-    .annonces-grid {
-        padding: 0 5px !important;
-    }
-}
-
-
-
-
-    
-
-
-
     
     <!-- Barre de recherche -->
     <section class="search-section">
@@ -769,8 +669,6 @@
         </div>
     </section>
 
-
-    
     <script>
         // Bannière glissante
         let currentSlide = 0;
@@ -823,30 +721,22 @@
             
             window.location.href = 'annonces.html';
         }
-      </script>
 
-    <script>
-function toggleMobileMenu() {
-    const mobileMenu = document.getElementById('mobileMenu');
-    mobileMenu.classList.toggle('active');
-}
+        // Menu mobile
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('active');
+        }
 
-// Fermer le menu si on clique ailleurs
-document.addEventListener('click', function(event) {
-    const mobileMenu = document.getElementById('mobileMenu');
-    const menuToggle = document.querySelector('.menu-toggle');
-    
-    if (!mobileMenu.contains(event.target) && !menuToggle.contains(event.target)) {
-        mobileMenu.classList.remove('active');
-    }
-});
-</script>
-
+        // Fermer le menu si on clique ailleurs
+        document.addEventListener('click', function(event) {
+            const mobileMenu = document.getElementById('mobileMenu');
+            const menuToggle = document.querySelector('.menu-toggle');
+            
+            if (!mobileMenu.contains(event.target) && !menuToggle.contains(event.target)) {
+                mobileMenu.classList.remove('active');
+            }
+        });
+    </script>
 </body>
 </html>
-
-
-
-
-
-
